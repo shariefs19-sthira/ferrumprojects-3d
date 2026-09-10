@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ferrum Projects — Client Preview</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<style>
+  :root{
+    --bg:#171D1F; --panel:#1E2628; --line:#37403F;
+    --ink:#ECE7DD; --ink-soft:#A9B4B2; --ink-faint:#71807E;
+    --ped:#7F77DD; --good:#7FBF9C;
+  }
+  *{box-sizing:border-box;}
+  body{ margin:0; background:var(--bg); color:var(--ink); font-family:'IBM Plex Sans',-apple-system,sans-serif; overflow:hidden; }
+  #wrap{ position:relative; width:100%; height:100vh; min-height:520px; touch-action:none; }
+  canvas{ display:block; width:100%; height:100%; }
+  .hud{
+    position:absolute; z-index:2; pointer-events:none;
+  }
+  .title{ top:14px; left:14px; max-width:62%; }
+  .title h1{ font-size:15px; font-weight:500; margin:0; color:var(--ink); line-height:1.3; }
+  .title p{ font-size:11px; margin:2px 0 0; color:var(--ink-faint); }
+  .legend{
+    bottom:14px; left:14px; right:14px;
+    background:rgba(30,38,40,0.88); border:1px solid var(--line); border-radius:8px;
+    padding:10px 14px; font-size:12px; color:var(--ink-soft); line-height:1.6;
+    display:flex; flex-wrap:wrap; gap:4px 22px; pointer-events:none;
+  }
+  .legend b{ color:var(--ink); font-weight:500; }
+  .hint{
+    top:14px; right:14px; font-size:12px; color:var(--ink-faint);
+    text-align:right; line-height:1.5;
+  }
+  .swatch{ display:inline-block; width:9px; height:9px; border-radius:2px; margin-right:5px; vertical-align:middle; }
+  .watermark{
+    display:inline-block; margin-top:7px;
+    background:rgba(224,138,69,0.14); border:1px solid rgba(224,138,69,0.5); border-radius:20px;
+    padding:4px 12px; font:600 10px 'IBM Plex Sans',sans-serif; letter-spacing:.06em; color:#E08A45; text-transform:uppercase;
+  }
+</style>
+</head>
+<body>
+<div id="wrap">
+  <div class="hud title">
+    <h1>CHRA-2502 — Outdoor Multi Sports, Ramanagara</h1>
+    <p>Pickleball &amp; football — concept layout preview</p>
+    <div class="watermark">Concept preview — for client review</div>
+  </div>
+  <div class="hud hint">drag to orbit · scroll / pinch to zoom</div>
+  <div class="hud" style="top:60px; right:14px; pointer-events:auto; display:flex; flex-direction:column; gap:8px; align-items:flex-end;">
+    <button id="btnRoof" style="pointer-events:auto; font:500 12px 'IBM Plex Sans',sans-serif; padding:7px 12px; border-radius:6px; border:1px solid #37403F; background:#1E2628; color:#ECE7DD; cursor:pointer;">Click here to add roofing sheet &amp; gutter</button>
+    <button id="btnNet" style="pointer-events:auto; font:500 12px 'IBM Plex Sans',sans-serif; padding:7px 12px; border-radius:6px; border:1px solid #37403F; background:#1E2628; color:#ECE7DD; cursor:pointer;">Click here to add football net</button>
+    <button id="btnMesh" style="pointer-events:auto; font:600 13px 'IBM Plex Sans',sans-serif; padding:10px 16px; border-radius:22px; border:none; background:#E08A45; color:#241102; cursor:pointer; display:flex; align-items:center; gap:6px; transform:scale(1); transition:transform .15s ease;">
+      <i class="ti ti-plus" aria-hidden="true" style="font-size:16px;"></i> Click here to add 8ft wire mesh
+    </button>
+    <button id="btnDayNight" style="pointer-events:auto; font:600 13px 'IBM Plex Sans',sans-serif; padding:10px 16px; border-radius:22px; border:none; background:#3A4A5A; color:#ECE7DD; cursor:pointer; display:flex; align-items:center; gap:6px; transform:scale(1); transition:transform .15s ease, background .2s ease;">
+      Click here for night view
+    </button>
+  </div>
+  <div class="hud legend" id="legend">
+    <span><span class="swatch" style="background:#9AD1E8"></span>columns · football masts</span>
+    <span><span class="swatch" style="background:#ECE7DD"></span>roof truss</span>
+    <span><span class="swatch" style="background:#7FBF9C"></span>purlins</span>
+    <span><span class="swatch" style="background:#7F77DD"></span>pedestal</span>
+    <span><span class="swatch" style="background:#C9B896"></span>footing (concrete)</span>
+    <span><span class="swatch" style="background:#7F77DD"></span>bracing</span>
+    <span><span class="swatch" style="background:#E08A45"></span>partition beam + net — centre, splits field into two equal halves</span>
+    <span><span class="swatch" style="background:#E24B4A"></span>survey boundary</span>
+    <span><span class="swatch" style="background:#F0AE7A"></span>natural ground level</span>
+    <span><span class="swatch" style="background:#E08A45"></span>wire mesh — pickleball enclosure (toggle, top right)</span>
+    <span><span class="swatch" style="background:#2E7D46"></span>turf &amp; court markings</span>
+    <span><span class="swatch" style="background:#FFE9B0"></span>floodlights — day/night toggle, top right</span>
+    <span>pickleball grid 1–9 · football grid A–E</span>
+    <span style="flex-basis:100%; height:1px; background:#37403F; margin:2px 0;"></span>
+    <span style="flex-basis:100%; text-align:center; font:700 15px 'IBM Plex Sans',sans-serif; letter-spacing:.03em; color:#E08A45; padding-top:2px;">
+      SHARIEF SATYALA <span style="color:#ECE7DD; font-weight:500; font-size:12px;">— Structural Engineer</span> · <span style="color:#E08A45;">FERRUM PROJECTS</span>
+    </span>
+  </div>
+</div>
+
+<script>
+(function(){
+  const wrap = document.getElementById('wrap');
+
+  // ---- real geometry (metres) ----
+  const PB_run=44.83, PB_bays=8, PB_bay=PB_run/PB_bays;
+  const PB_short_near=18.60, PB_short_far=20.63;
+  const col_h_high=6.71, col_h_low=5.27;
+  const depth=1.0;
+  const PASSAGE=3.56;
+  const FB_run=40.60, FB_bays=4, FB_bay=FB_run/FB_bays;
+  const FB_width=28.41, FB_h=12.2;
+  const FOOT_D=1.2; // illustrative only — not the actual foundation depth
+  function pbShort(y){ return PB_short_near + (PB_short_far-PB_short_near)*(y/PB_run); }
+
+  // world mapping: real X -> three X, real Y(run) -> three Z, real height -> three Y(up)
+  const cx = ( (0+pbShort(0)+pbShort(PB_run)) /3 + (-PASSAGE) + (-PASSAGE-FB_width) )/2;
+  const cz = PB_run/2;
+  function V(x,y,z){ return new THREE.Vector3(x-cx, z, y-cz); }
+
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x171D1F);
+
+  const camera = new THREE.PerspectiveCamera(42, wrap.clientWidth/wrap.clientHeight, 0.1, 500);
+  const renderer = new THREE.WebGLRenderer({antialias:true});
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+  renderer.setSize(wrap.clientWidth, wrap.clientHeight);
+  wrap.appendChild(renderer.domElement);
+
+  const ambLight = new THREE.AmbientLight(0xffffff,0.65); scene.add(ambLight);
+  const dl = new THREE.DirectionalLight(0xffffff,0.55); dl.position.set(20,30,10); scene.add(dl);
+
+  // ---- natural ground level (NGL): solid plane + rim + datum markers ----
+  const nglPlane = new THREE.Mesh(
+    new THREE.PlaneGeometry(90,90),
+    new THREE.MeshStandardMaterial({color:0x3A3226, transparent:true, opacity:0.55, roughness:1, side:THREE.DoubleSide})
+  );
+  nglPlane.rotation.x = -Math.PI/2;
+  nglPlane.position.set(-8, -0.02, 3);
+  scene.add(nglPlane);
+
+  const grid = new THREE.GridHelper(90, 36, 0x5B5040, 0x453B2E);
+  grid.position.set(-8,0,3);
+  scene.add(grid);
+
+  function nglDatum(pos){
+    const s=1.1;
+    const tri=new THREE.BufferGeometry().setFromPoints([
+      new THREE.Vector3(pos.x-s*0.5,pos.y+s*0.9,pos.z), new THREE.Vector3(pos.x+s*0.5,pos.y+s*0.9,pos.z), new THREE.Vector3(pos.x,pos.y,pos.z), new THREE.Vector3(pos.x-s*0.5,pos.y+s*0.9,pos.z)
+    ]);
+    scene.add(new THREE.Line(tri, new THREE.LineBasicMaterial({color:0xF0AE7A})));
+    scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([
+      new THREE.Vector3(pos.x-1.4,pos.y+s*0.9,pos.z), new THREE.Vector3(pos.x+1.4,pos.y+s*0.9,pos.z)
+    ]), new THREE.LineBasicMaterial({color:0xF0AE7A})));
+    addLabel('NGL ±0.00', new THREE.Vector3(pos.x, pos.y+s*0.9+1.0, pos.z), '#F0AE7A', 1.0);
+  }
+  nglDatum(V(-40,0,-3));
+  nglDatum(V(28,0,50));
+
+  const inkMat = new THREE.LineBasicMaterial({color:0xECE7DD});
+  const inkMatThin = new THREE.LineBasicMaterial({color:0xA9B4B2});
+  const colMat = new THREE.LineBasicMaterial({color:0x9AD1E8});
+  const pedMat = new THREE.MeshBasicMaterial({color:0x7F77DD});
+  const passMat = new THREE.LineBasicMaterial({color:0x7FBF9C});
+  const purlinMatColor = 0x7FBF9C;
+  const footConcMat = new THREE.MeshStandardMaterial({color:0xC9B896, transparent:true, opacity:0.85, roughness:0.9});
+
+  function line(pts, mat){
+    const g = new THREE.BufferGeometry().setFromPoints(pts);
+    scene.add(new THREE.Line(g, mat));
+  }
+  function pedestal(p, w){
+    const s = new THREE.Mesh(new THREE.BoxGeometry(w*0.5,0.45,w*0.5), pedMat);
+    s.position.set(p.x, p.y+0.225, p.z);
+    scene.add(s);
+  }
+  function footingPit(pGround, sizeM, depthM){
+    const footGeo = new THREE.BoxGeometry(sizeM, depthM, sizeM);
+    const footMesh = new THREE.Mesh(footGeo, footConcMat);
+    footMesh.position.set(pGround.x, pGround.y - depthM/2, pGround.z);
+    scene.add(footMesh);
+    const footEdges = new THREE.LineSegments(new THREE.EdgesGeometry(footGeo), new THREE.LineBasicMaterial({color:0x8A7A5C}));
+    footEdges.position.copy(footMesh.position);
+    scene.add(footEdges);
+  }
+  function verticalMember(pTop,pGround,pFootBot,footSizeM,depthM){
+    line([pTop,pGround], colMat);
+    pedestal(pGround, footSizeM*0.55);
+    footingPit(pGround, footSizeM, depthM);
+  }
+
+  const diagMat = new THREE.LineBasicMaterial({color:0xECE7DD, linewidth:1});
+  function chordHeight(f){ return col_h_high + (col_h_low-col_h_high)*f; }
+  function trussPoint(y,f,topOrBot){
+    const L=pbShort(y);
+    const hBot=chordHeight(f);
+    const h = topOrBot==='top' ? hBot+depth : hBot;
+    return V(L*f, y, h);
+  }
+  const PANELS=8;
+  for(let i=0;i<9;i++){
+    const y=i*PB_bay, L=pbShort(y);
+    verticalMember(V(0,y,col_h_high), V(0,y,0), V(0,y,-FOOT_D), 1.0, FOOT_D);
+    verticalMember(V(L,y,col_h_low), V(L,y,0), V(L,y,-FOOT_D), 1.0, FOOT_D);
+    const topPts=[], botPts=[];
+    for(let k=0;k<=PANELS;k++){ const f=k/PANELS; topPts.push(trussPoint(y,f,'top')); botPts.push(trussPoint(y,f,'bot')); }
+    line(topPts, inkMat); line(botPts, inkMatThin);
+    for(let k=0;k<PANELS;k++){
+      const f0=k/PANELS, f1=(k+1)/PANELS;
+      if(k%2===0){ line([trussPoint(y,f0,'top'), trussPoint(y,f1,'bot')], diagMat); }
+      else       { line([trussPoint(y,f0,'bot'), trussPoint(y,f1,'top')], diagMat); }
+    }
+  }
+
+  const braceMat = new THREE.LineBasicMaterial({color:0x7F77DD});
+  function braceBay(i0,i1){
+    const y0=i0*PB_bay, y1=i1*PB_bay;
+    const L0=pbShort(y0), L1=pbShort(y1);
+    line([V(0,y0,col_h_high), V(0,y1,0)], braceMat);
+    line([V(0,y0,0), V(0,y1,col_h_high)], braceMat);
+    line([V(L0,y0,col_h_low), V(L1,y1,0)], braceMat);
+    line([V(L0,y0,0), V(L1,y1,col_h_low)], braceMat);
+  }
+  braceBay(1,2); braceBay(7,8);
+
+  function fbBraceBay(i0,i1){
+    const y0=i0*FB_bay, y1=i1*FB_bay;
+    line([V(-PASSAGE,y0,FB_h), V(-PASSAGE,y1,0)], braceMat);
+    line([V(-PASSAGE,y0,0), V(-PASSAGE,y1,FB_h)], braceMat);
+    line([V(-PASSAGE-FB_width,y0,FB_h), V(-PASSAGE-FB_width,y1,0)], braceMat);
+    line([V(-PASSAGE-FB_width,y0,0), V(-PASSAGE-FB_width,y1,FB_h)], braceMat);
+  }
+  fbBraceBay(1,2); fbBraceBay(3,4);
+
+  const gridLineMat = new THREE.LineDashedMaterial({color:0x71807E, dashSize:0.4, gapSize:0.3});
+  function gridMarker(x,y,topZ,text){
+    const bottom=V(x,y,-FOOT_D-0.6), top=V(x,y,topZ+1.4);
+    const g=new THREE.BufferGeometry().setFromPoints([bottom,top]);
+    const l=new THREE.Line(g,gridLineMat); l.computeLineDistances(); scene.add(l);
+    addLabel('GRID '+text, V(x,y,topZ+1.6), '#9AD1E8', 0.95);
+  }
+  for(let i=0;i<9;i++){ const y=i*PB_bay; gridMarker(0,y,col_h_high+depth, String(i+1)); }
+  for(let i=0;i<5;i++){ const y=i*FB_bay; gridMarker(-PASSAGE,y,FB_h, 'ABCDE'[i]); }
+
+  const purlinCount=10;
+  const purlinMat = new THREE.LineBasicMaterial({color:purlinMatColor, linewidth:1});
+  for(let k=0;k<=purlinCount;k++){
+    const f=k/purlinCount;
+    const pts=[];
+    for(let i=0;i<9;i++){ pts.push(trussPoint(i*PB_bay, f, 'top')); }
+    line(pts, purlinMat);
+  }
+
+  const fbNear=[], fbFar=[];
+  const LEG_OFF = 0.2;
+  const LACE_PANELS = 6;
+  function latticeMast(mx,my){
+    const legs = [
+      [mx-LEG_OFF, my-LEG_OFF], [mx+LEG_OFF, my-LEG_OFF],
+      [mx+LEG_OFF, my+LEG_OFF], [mx-LEG_OFF, my+LEG_OFF]
+    ];
+    for(const [lx,ly] of legs){ line([V(lx,ly,0), V(lx,ly,FB_h)], colMat); }
+    for(let k=0;k<=LACE_PANELS;k++){
+      const h = FB_h*k/LACE_PANELS;
+      const ring = legs.map(([lx,ly])=>V(lx,ly,h));
+      ring.push(ring[0]); line(ring, colMat);
+    }
+    const faces = [[0,1],[1,2],[2,3],[3,0]];
+    for(const [a,b] of faces){
+      for(let k=0;k<LACE_PANELS;k++){
+        const h0=FB_h*k/LACE_PANELS, h1=FB_h*(k+1)/LACE_PANELS;
+        const pa=legs[a], pb=legs[b];
+        if(k%2===0) line([V(pa[0],pa[1],h0), V(pb[0],pb[1],h1)], colMat);
+        else        line([V(pb[0],pb[1],h0), V(pa[0],pa[1],h1)], colMat);
+      }
+    }
+    verticalMember(V(mx,my,0), V(mx,my,0), V(mx,my,-FOOT_D), 1.0, FOOT_D);
+  }
+  const tieMat = new THREE.LineBasicMaterial({color:0x9AD1E8, linewidth:2});
+  for(let i=0;i<5;i++){
+    const y=i*FB_bay;
+    fbNear.push(V(-PASSAGE,y,FB_h));
+    fbFar.push(V(-PASSAGE-FB_width,y,FB_h));
+    latticeMast(-PASSAGE, y);
+    latticeMast(-PASSAGE-FB_width, y);
+  }
+  line(fbNear, tieMat); line(fbFar, tieMat);
+  line([fbNear[0],fbFar[0]], tieMat);
+  line([fbNear[4],fbFar[4]], tieMat);
+  addLabel('perimeter tie beam — all mast tops connected', V(-PASSAGE-FB_width/2, FB_run/2, FB_h+1.4), '#9AD1E8', 0.9);
+
+  const partitionY = 2*FB_bay;
+  const partBeamMat = new THREE.LineBasicMaterial({color:0xE08A45, linewidth:2});
+  line([V(-PASSAGE,partitionY,FB_h), V(-PASSAGE-FB_width,partitionY,FB_h)], partBeamMat);
+  {
+    const bl=V(-PASSAGE,partitionY,0), br=V(-PASSAGE-FB_width,partitionY,0);
+    const tl=V(-PASSAGE,partitionY,FB_h), tr=V(-PASSAGE-FB_width,partitionY,FB_h);
+    const g=new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.Float32BufferAttribute([bl.x,bl.y,bl.z, br.x,br.y,br.z, tl.x,tl.y,tl.z, tr.x,tr.y,tr.z],3));
+    g.setIndex([0,1,2, 1,3,2]);
+    g.computeVertexNormals();
+    const partNetMat = new THREE.MeshBasicMaterial({color:0xECE7DD, transparent:true, opacity:0.18, side:THREE.DoubleSide});
+    scene.add(new THREE.Mesh(g, partNetMat));
+  }
+  addLabel('partition beam + net — centre, divides field into two equal halves', V(-PASSAGE-FB_width/2, partitionY, FB_h+1.4), '#E08A45', 0.95);
+
+  const fbTurfMat = new THREE.MeshStandardMaterial({color:0x2E7D46, roughness:0.95, side:THREE.DoubleSide});
+  {
+    const nw=V(-PASSAGE,0,0.02), ne=V(-PASSAGE-FB_width,0,0.02), sw=V(-PASSAGE,FB_run,0.02), se=V(-PASSAGE-FB_width,FB_run,0.02);
+    const g=new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.Float32BufferAttribute([nw.x,nw.y,nw.z, ne.x,ne.y,ne.z, sw.x,sw.y,sw.z, se.x,se.y,se.z],3));
+    g.setIndex([0,1,2, 1,3,2]);
+    g.computeVertexNormals();
+    scene.add(new THREE.Mesh(g, fbTurfMat));
+  }
+  {
+    const pitchLineMat = new THREE.LineBasicMaterial({color:0xF4F1E8});
+    const fbMargin = 0.6;
+    line([
+      V(-PASSAGE-fbMargin, fbMargin, 0.05), V(-PASSAGE-FB_width+fbMargin, fbMargin, 0.05),
+      V(-PASSAGE-FB_width+fbMargin, FB_run-fbMargin, 0.05), V(-PASSAGE-fbMargin, FB_run-fbMargin, 0.05),
+      V(-PASSAGE-fbMargin, fbMargin, 0.05)
+    ], pitchLineMat);
+    line([V(-PASSAGE-fbMargin, partitionY, 0.05), V(-PASSAGE-FB_width+fbMargin, partitionY, 0.05)], pitchLineMat);
+    const segs=48, r=FB_width*0.13, ccx=-PASSAGE-FB_width/2, ccy=partitionY;
+    const circPts=[];
+    for(let k=0;k<=segs;k++){ const a=(k/segs)*Math.PI*2; circPts.push(V(ccx+Math.cos(a)*r, ccy+Math.sin(a)*r, 0.05)); }
+    line(circPts, pitchLineMat);
+  }
+
+  line([V(0,0,0), V(-PASSAGE,0,0)], passMat);
+  line([V(0,PB_run,0), V(-PASSAGE,PB_run,0)], passMat);
+
+  const turfMat = new THREE.MeshStandardMaterial({color:0x2E7D46, roughness:0.95, side:THREE.DoubleSide});
+  {
+    const nw=V(0,0,0.02), ne=V(pbShort(0),0,0.02), sw=V(0,PB_run,0.02), se=V(pbShort(PB_run),PB_run,0.02);
+    const g=new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.Float32BufferAttribute([nw.x,nw.y,nw.z, ne.x,ne.y,ne.z, sw.x,sw.y,sw.z, se.x,se.y,se.z],3));
+    g.setIndex([0,1,2, 1,3,2]);
+    g.computeVertexNormals();
+    scene.add(new THREE.Mesh(g, turfMat));
+  }
+  const courtLineMat = new THREE.LineBasicMaterial({color:0xF4F1E8});
+  function courtPt(yA,yB,fA,fB,u,v){
+    const y=yA+(yB-yA)*v, f=fA+(fB-fA)*u;
+    return V(pbShort(y)*f, y, 0.05);
+  }
+  const COURTS_ALONG=4, COURTS_ACROSS=2, mU=0.12, mV=0.10;
+  for(let a=0;a<COURTS_ALONG;a++){
+    const yA=a*PB_run/COURTS_ALONG, yB=(a+1)*PB_run/COURTS_ALONG;
+    for(let c=0;c<COURTS_ACROSS;c++){
+      const fA=c/COURTS_ACROSS, fB=(c+1)/COURTS_ACROSS;
+      const p=(u,v)=>courtPt(yA,yB,fA,fB,u,v);
+      line([p(mU,mV),p(1-mU,mV),p(1-mU,1-mV),p(mU,1-mV),p(mU,mV)], courtLineMat);
+      line([p(mU,0.5), p(1-mU,0.5)], courtLineMat);
+      line([p(mU,0.32), p(1-mU,0.32)], courtLineMat);
+      line([p(mU,0.68), p(1-mU,0.68)], courtLineMat);
+      line([p(0.5,mV), p(0.5,0.32)], courtLineMat);
+      line([p(0.5,0.68), p(0.5,1-mV)], courtLineMat);
+    }
+  }
+
+  const fixtureMat = new THREE.MeshBasicMaterial({color:0x6B6B62});
+  const fixtures = [];
+  function beamCone(pos, aimPos, spreadRadius){
+    const dir = new THREE.Vector3().subVectors(pos, aimPos);
+    const dist = dir.length();
+    const mid = new THREE.Vector3().addVectors(pos, aimPos).multiplyScalar(0.5);
+    const geo = new THREE.CylinderGeometry(0.05, spreadRadius, dist, 20, 1, true);
+    const mesh = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({color:0xFFE9B0, transparent:true, opacity:0, side:THREE.DoubleSide, depthWrite:false}));
+    mesh.position.copy(mid);
+    mesh.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0), dir.clone().normalize());
+    return mesh;
+  }
+  function addFloodlight(pos, aimPos, spreadRadius){
+    const housing = new THREE.Mesh(new THREE.BoxGeometry(0.42,0.26,0.42), fixtureMat);
+    housing.position.copy(pos);
+    scene.add(housing);
+    const glow = new THREE.Mesh(new THREE.SphereGeometry(0.15,10,10), new THREE.MeshBasicMaterial({color:0x6B6B62, transparent:true, opacity:0.15}));
+    glow.position.set(pos.x, pos.y-0.15, pos.z);
+    scene.add(glow);
+    const cone = beamCone(pos, aimPos, spreadRadius);
+    scene.add(cone);
+    fixtures.push({glow, cone});
+  }
+  for(let i=0;i<9;i++){
+    const y=i*PB_bay, L=pbShort(y);
+    addFloodlight(V(0,y,col_h_high+depth), V(L*0.5,y,0), 2.2);
+    addFloodlight(V(L,y,col_h_low+depth), V(L*0.5,y,0), 2.2);
+  }
+  for(let i=0;i<5;i++){
+    const y=i*FB_bay;
+    addFloodlight(V(-PASSAGE,y,FB_h), V(-PASSAGE-FB_width*0.5,y,0), 3.2);
+    addFloodlight(V(-PASSAGE-FB_width,y,FB_h), V(-PASSAGE-FB_width*0.5,y,0), 3.2);
+  }
+  const nightLightPB = new THREE.PointLight(0xFFE3AE, 0, 40, 2);
+  nightLightPB.position.copy(V(pbShort(PB_run/2)*0.5, PB_run/2, 8));
+  scene.add(nightLightPB);
+  const nightLightFB = new THREE.PointLight(0xFFE3AE, 0, 45, 2);
+  nightLightFB.position.copy(V(-PASSAGE-FB_width/2, FB_run/2, 9));
+  scene.add(nightLightFB);
+
+  function makeLabel(text,color,size){
+    const c=document.createElement('canvas'); const pad=8;
+    const ctx=c.getContext('2d');
+    ctx.font='600 44px IBM Plex Sans, Arial';
+    const w=Math.ceil(ctx.measureText(text).width)+pad*2;
+    c.width=w; c.height=64;
+    const ctx2=c.getContext('2d');
+    ctx2.font='600 44px IBM Plex Sans, Arial';
+    ctx2.fillStyle='rgba(0,0,0,0.55)';
+    ctx2.fillRect(0,0,w,64);
+    ctx2.fillStyle=color;
+    ctx2.textBaseline='middle';
+    ctx2.fillText(text,pad,34);
+    const tex=new THREE.CanvasTexture(c);
+    tex.minFilter=THREE.LinearFilter;
+    const mat=new THREE.SpriteMaterial({map:tex, depthTest:false});
+    const spr=new THREE.Sprite(mat);
+    const scl=(size||1.1);
+    spr.scale.set(scl*w/64, scl, 1);
+    return spr;
+  }
+  function addLabel(text,pos,color,size){
+    const s=makeLabel(text,color,size);
+    s.position.copy(pos);
+    scene.add(s);
+  }
+
+  addLabel("44.83m [147'-1\"] run · 8 bays x 5.60m [18'-5\"]", V(pbShort(PB_run/2)/2, PB_run+3, 2), '#ECE7DD', 1.3);
+  addLabel("short span 18.60m [61'-0\"] – 20.63m [67'-6\"] (site taper)", V(pbShort(PB_run)/2, -3, 2), '#ECE7DD', 1.1);
+  addLabel("HIGH 6.71m [22'-0\"]", V(0,0,col_h_high+depth+2.2), '#7FBF9C', 1.0);
+  addLabel("LOW 5.27m [17'-3\"]", V(pbShort(PB_run),PB_run,col_h_low+depth+1.6), '#7FBF9C', 1.0);
+  addLabel('footing (concrete, below grade)', V(0, PB_run/2, -3.2), '#A9B4B2', 0.9);
+  addLabel("40.60m [133'-2\"] run · 4 bays x 10.15m [33'-3\"]", V(-PASSAGE-FB_width/2, FB_run+3, 2), '#ECE7DD', 1.1);
+  addLabel("width 28.41m [93'-3\"]", V(-PASSAGE-FB_width-3, FB_run/2, 2), '#ECE7DD', 1.0);
+  addLabel("masts 12.2m [40'-0\"]", V(-PASSAGE-FB_width-3, FB_run/2, FB_h*0.6), '#ECE7DD', 1.0);
+  addLabel('footing (concrete, below grade)', V(-PASSAGE-FB_width, FB_run/2, -3.2), '#A9B4B2', 0.9);
+  addLabel('PASSAGE 3.56m [11\'-8"]', V(-PASSAGE/2, PB_run/2, 3.5), '#7FBF9C', 1.2);
+
+  const NW=[-33.49, -1.0], NE=[19.52, 0.2], SE=[21.6, 45.8], SW=[-37.5, 46.8];
+  const boundMat = new THREE.LineBasicMaterial({color:0xE24B4A});
+  const bPts=[NW,NE,SE,SW,NW].map(p=>V(p[0],p[1],0));
+  line(bPts, boundMat);
+  addLabel("SURVEY BOUNDARY", V((NW[0]+NE[0])/2,(NW[1]+NE[1])/2-2.5,0.3), '#E24B4A', 1.1);
+  addLabel("N 53.01m [173'-11\"]", V((NW[0]+NE[0])/2,(NW[1]+NE[1])/2-0.8,0.3), '#E24B4A', 0.85);
+  addLabel("E 44.83m [147'-1\"]", V((NE[0]+SE[0])/2+2,(NE[1]+SE[1])/2,0.3), '#E24B4A', 0.85);
+  addLabel("S 58.48m [191'-10\"]", V((SE[0]+SW[0])/2,(SE[1]+SW[1])/2+1.6,0.3), '#E24B4A', 0.85);
+  addLabel("W 44.83m [147'-1\"]", V((SW[0]+NW[0])/2-2,(SW[1]+NW[1])/2,0.3), '#E24B4A', 0.85);
+
+  const roofGroup = new THREE.Group(); roofGroup.visible=false; scene.add(roofGroup);
+  {
+    const rows=9, cols=PANELS+1;
+    const verts=[], idx=[];
+    for(let i=0;i<rows;i++){
+      const y=i*PB_bay;
+      for(let k=0;k<cols;k++){
+        const p=trussPoint(y, k/PANELS, 'top');
+        verts.push(p.x,p.y,p.z);
+      }
+    }
+    for(let i=0;i<rows-1;i++){
+      for(let k=0;k<cols-1;k++){
+        const a=i*cols+k, b=a+1, c=a+cols, d=c+1;
+        idx.push(a,c,b, b,c,d);
+      }
+    }
+    const roofGeo=new THREE.BufferGeometry();
+    roofGeo.setAttribute('position', new THREE.Float32BufferAttribute(verts,3));
+    roofGeo.setIndex(idx);
+    roofGeo.computeVertexNormals();
+    const roofMat=new THREE.MeshStandardMaterial({color:0xB8C4C2, metalness:0.3, roughness:0.55, side:THREE.DoubleSide, transparent:true, opacity:0.92});
+    roofGroup.add(new THREE.Mesh(roofGeo, roofMat));
+
+    const gutterPts=[];
+    for(let i=0;i<9;i++){ const y=i*PB_bay, L=pbShort(y); gutterPts.push(V(L,y,col_h_low+depth-0.15)); }
+    const gutterGeo=new THREE.TubeGeometry(new THREE.CatmullRomCurve3(gutterPts), 60, 0.18, 8, false);
+    roofGroup.add(new THREE.Mesh(gutterGeo, new THREE.MeshStandardMaterial({color:0x9AD1E8, metalness:0.6, roughness:0.3})));
+  }
+
+  const netGroup = new THREE.Group(); netGroup.visible=false; scene.add(netGroup);
+  {
+    const netMat = new THREE.MeshBasicMaterial({color:0xECE7DD, transparent:true, opacity:0.16, side:THREE.DoubleSide});
+    function wallPanel(pA,pB){
+      const bl=new THREE.Vector3(pA.x,0,pA.z), br=new THREE.Vector3(pB.x,0,pB.z);
+      const tl=new THREE.Vector3(pA.x,FB_h,pA.z), tr=new THREE.Vector3(pB.x,FB_h,pB.z);
+      const g=new THREE.BufferGeometry();
+      const v=[bl.x,bl.y,bl.z, br.x,br.y,br.z, tl.x,tl.y,tl.z, tr.x,tr.y,tr.z];
+      g.setAttribute('position', new THREE.Float32BufferAttribute(v,3));
+      g.setIndex([0,1,2, 1,3,2]);
+      g.computeVertexNormals();
+      netGroup.add(new THREE.Mesh(g, netMat));
+    }
+    for(let i=0;i<4;i++){ wallPanel(fbNear[i], fbNear[i+1]); wallPanel(fbFar[i], fbFar[i+1]); }
+    wallPanel(fbNear[0], fbFar[0]);
+    wallPanel(fbNear[4], fbFar[4]);
+  }
+
+  const meshGroup = new THREE.Group(); meshGroup.visible=false; scene.add(meshGroup);
+  {
+    const MESH_H = 2.4384;
+    const tc=document.createElement('canvas'); tc.width=128; tc.height=128;
+    const tctx=tc.getContext('2d');
+    tctx.strokeStyle='rgba(230,230,225,0.9)'; tctx.lineWidth=2;
+    for(let i=-1;i<3;i++){
+      tctx.beginPath(); tctx.moveTo(i*64,0); tctx.lineTo(i*64+128,128); tctx.stroke();
+      tctx.beginPath(); tctx.moveTo(i*64,128); tctx.lineTo(i*64+128,0); tctx.stroke();
+    }
+    const meshTex=new THREE.CanvasTexture(tc);
+    meshTex.wrapS=THREE.RepeatWrapping; meshTex.wrapT=THREE.RepeatWrapping;
+    function meshMatFor(lengthM){
+      const t=meshTex.clone(); t.needsUpdate=true;
+      t.wrapS=THREE.RepeatWrapping; t.wrapT=THREE.RepeatWrapping;
+      t.repeat.set(Math.max(1,Math.round(lengthM/0.6)), Math.max(1,Math.round(MESH_H/0.6)));
+      return new THREE.MeshBasicMaterial({map:t, transparent:true, opacity:0.55, side:THREE.DoubleSide, color:0xffffff});
+    }
+    function meshPanel(pA,pB){
+      const len=Math.hypot(pB.x-pA.x,pB.z-pA.z);
+      const bl=new THREE.Vector3(pA.x,0,pA.z), br=new THREE.Vector3(pB.x,0,pB.z);
+      const tl=new THREE.Vector3(pA.x,MESH_H,pA.z), tr=new THREE.Vector3(pB.x,MESH_H,pB.z);
+      const g=new THREE.BufferGeometry();
+      g.setAttribute('position', new THREE.Float32BufferAttribute([bl.x,bl.y,bl.z, br.x,br.y,br.z, tl.x,tl.y,tl.z, tr.x,tr.y,tr.z],3));
+      g.setAttribute('uv', new THREE.Float32BufferAttribute([0,0, 1,0, 0,1, 1,1],2));
+      g.setIndex([0,1,2, 1,3,2]);
+      meshGroup.add(new THREE.Mesh(g, meshMatFor(len)));
+      meshGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([tl,tr]), new THREE.LineBasicMaterial({color:0xECE7DD})));
+    }
+    const westPts=[], eastPts=[];
+    for(let i=0;i<9;i++){ const y=i*PB_bay, L=pbShort(y); westPts.push(V(0,y,0)); eastPts.push(V(L,y,0)); }
+    for(let i=0;i<8;i++){ meshPanel(westPts[i],westPts[i+1]); meshPanel(eastPts[i],eastPts[i+1]); }
+    meshPanel(westPts[0],eastPts[0]);
+    meshPanel(westPts[8],eastPts[8]);
+  }
+  const btnMesh=document.getElementById('btnMesh');
+  btnMesh.addEventListener('click', function(){
+    meshGroup.visible=!meshGroup.visible;
+    this.style.background = meshGroup.visible ? '#7FBF9C' : '#E08A45';
+    this.style.color = '#241102';
+    this.innerHTML = meshGroup.visible
+      ? '<i class="ti ti-check" aria-hidden="true" style="font-size:16px;"></i> Wire mesh added'
+      : '<i class="ti ti-plus" aria-hidden="true" style="font-size:16px;"></i> Add 8ft wire mesh';
+    this.style.transform='scale(0.95)';
+    setTimeout(()=>{ this.style.transform='scale(1)'; }, 140);
+  });
+
+  document.getElementById('btnRoof').addEventListener('click', function(){
+    roofGroup.visible=!roofGroup.visible;
+    this.style.background = roofGroup.visible ? '#7FBF9C' : '#1E2628';
+    this.style.color = roofGroup.visible ? '#0C2A1D' : '#ECE7DD';
+  });
+  document.getElementById('btnNet').addEventListener('click', function(){
+    netGroup.visible=!netGroup.visible;
+    this.style.background = netGroup.visible ? '#7FBF9C' : '#1E2628';
+    this.style.color = netGroup.visible ? '#0C2A1D' : '#ECE7DD';
+  });
+
+  let isNight=false;
+  const DAY_BG=0x87A9B8, NIGHT_BG=0x0A0F16;
+  function setDayNight(night){
+    isNight=night;
+    scene.background = new THREE.Color(night?NIGHT_BG:DAY_BG);
+    ambLight.intensity = night?0.20:0.75;
+    dl.intensity = night?0.12:0.6;
+    nightLightPB.intensity = night?1.1:0;
+    nightLightFB.intensity = night?1.1:0;
+    fixtures.forEach(fx=>{
+      fx.glow.material.opacity = night?0.95:0.15;
+      fx.glow.material.color.set(night?0xFFE9B0:0x6B6B62);
+      fx.cone.material.opacity = night?0.14:0;
+    });
+  }
+  setDayNight(false);
+  document.getElementById('btnDayNight').addEventListener('click', function(){
+    setDayNight(!isNight);
+    this.textContent = isNight ? 'Click here for day view' : 'Click here for night view';
+    this.style.background = isNight ? '#1B2430' : '#3A4A5A';
+  });
+
+  const target = new THREE.Vector3(-8, 3, 3);
+  const modelHalfW = 34, modelHalfD = 30, modelHalfH = 8;
+  let radius=62, az=Math.PI*0.28, pol=Math.PI*0.36;
+  function fitRadius(){
+    const aspect = wrap.clientWidth / wrap.clientHeight;
+    const vfov = camera.fov * Math.PI/180;
+    const hfov = 2*Math.atan(Math.tan(vfov/2)*aspect);
+    const boundRadius = Math.sqrt(modelHalfW*modelHalfW + modelHalfD*modelHalfD + modelHalfH*modelHalfH);
+    const distV = boundRadius / Math.sin(vfov/2);
+    const distH = boundRadius / Math.sin(hfov/2);
+    radius = Math.max(distV, distH) * 1.08;
+    radius = Math.max(24, Math.min(220, radius));
+  }
+  function updateCam(){
+    const x = target.x + radius*Math.sin(pol)*Math.sin(az);
+    const y = target.y + radius*Math.cos(pol);
+    const z = target.z + radius*Math.sin(pol)*Math.cos(az);
+    camera.position.set(x,y,z);
+    camera.lookAt(target);
+  }
+  fitRadius();
+  updateCam();
+
+  let dragging=false, lastX=0, lastY=0, pinching=false;
+  renderer.domElement.addEventListener('pointerdown', e=>{
+    if(pinching) return;
+    dragging=true; lastX=e.clientX; lastY=e.clientY;
+    renderer.domElement.setPointerCapture(e.pointerId);
+  });
+  renderer.domElement.addEventListener('pointermove', e=>{
+    if(!dragging || pinching) return;
+    const dx=e.clientX-lastX, dy=e.clientY-lastY;
+    lastX=e.clientX; lastY=e.clientY;
+    az -= dx*0.0055;
+    pol -= dy*0.0055;
+    pol = Math.max(0.15, Math.min(Math.PI-0.15, pol));
+    updateCam();
+  });
+  window.addEventListener('pointerup', ()=>{ dragging=false; });
+  renderer.domElement.addEventListener('wheel', e=>{
+    e.preventDefault();
+    radius *= (1 + e.deltaY*0.001);
+    radius = Math.max(18, Math.min(140, radius));
+    updateCam();
+  }, {passive:false});
+
+  let pinchStartDist=0, pinchStartRadius=radius;
+  function touchDist(t){
+    const dx=t[0].clientX-t[1].clientX, dy=t[0].clientY-t[1].clientY;
+    return Math.sqrt(dx*dx+dy*dy);
+  }
+  renderer.domElement.addEventListener('touchstart', e=>{
+    if(e.touches.length===2){
+      pinching=true; dragging=false;
+      pinchStartDist=touchDist(e.touches);
+      pinchStartRadius=radius;
+    }
+  }, {passive:true});
+  renderer.domElement.addEventListener('touchmove', e=>{
+    if(e.touches.length===2){
+      e.preventDefault();
+      const d=touchDist(e.touches);
+      const scale=pinchStartDist/Math.max(d,1);
+      radius = Math.max(18, Math.min(140, pinchStartRadius*scale));
+      updateCam();
+      autoRotate=false;
+    }
+  }, {passive:false});
+  renderer.domElement.addEventListener('touchend', e=>{
+    if(e.touches.length<2) pinching=false;
+  }, {passive:true});
+
+  let autoRotate=true;
+  renderer.domElement.addEventListener('pointerdown', ()=>{ autoRotate=false; });
+
+  function animate(){
+    requestAnimationFrame(animate);
+    if(autoRotate){ az += 0.0022; updateCam(); }
+    renderer.render(scene, camera);
+  }
+  animate();
+
+  window.addEventListener('resize', ()=>{
+    camera.aspect = wrap.clientWidth/wrap.clientHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(wrap.clientWidth, wrap.clientHeight);
+    fitRadius();
+    updateCam();
+  });
+})();
+</script>
+</body>
+</html>
