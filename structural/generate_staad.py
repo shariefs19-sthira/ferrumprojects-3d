@@ -153,15 +153,29 @@ def parse_label(lbl):
 
 # Grouped sections per truss type, from structural/optimize.js (Node engine),
 # deck-lateral-credit-declared case -- see tailored_schedule.json.
+# UNIFORM-CHORD RULING (engineer's ruling, post-round-7): fabricator will not splice two SHS
+# sizes along one continuous chord run, so top chord and bottom chord each use ONE section for
+# their full length within a given truss type. Verified through optimize.js's groupMembers with
+# a single top band and single bottom band (uniformChords option), on the SAME full 44-member
+# topology this generator builds (no pruning -- pruning is a 2D-optimizer-only artifact that
+# never reached this 3D model; confirmed the un-pruned engine reproduces the prior per-band
+# numbers bit-for-bit, so this is a clean like-for-like re-check). Result: in every one of
+# T1/T2/T3 the governing member for the whole chord is the SAME one that drove the old
+# "_large" band, so the uniform section equals the old large-panel section run the full
+# length -- top_small/bottom_small are simply set equal to top_large/bottom_large below.
+# Web sections are unaffected (unchanged from the original tailored schedule).
+# Net effect: truss steel (bare, no allowance) up 5.856t -> 6.298t (+0.442t, ~+7.5%),
+# with 8% allowance 6.324t -> 6.802t. All utils remain <=0.930 (T1 0.894, T2 0.930, T3
+# 0.884), no slenderness or capacity failures introduced.
 SCHEDULE = {
-    "T1": {"top_small": "110x110x3 SHS", "top_large": "150x150x3 SHS",
-           "bottom_small": "75x75x3.6 SHS", "bottom_large": "100x100x3 SHS",
+    "T1": {"top_small": "150x150x3 SHS", "top_large": "150x150x3 SHS",
+           "bottom_small": "100x100x3 SHS", "bottom_large": "100x100x3 SHS",
            "web_small": "40x40x3.6 SHS", "web_large": "60x60x3 SHS"},
-    "T2": {"top_small": "120x120x3 SHS", "top_large": "160x160x3 SHS",
-           "bottom_small": "100x100x3 SHS", "bottom_large": "90x90x3.6 SHS",
+    "T2": {"top_small": "160x160x3 SHS", "top_large": "160x160x3 SHS",
+           "bottom_small": "90x90x3.6 SHS", "bottom_large": "90x90x3.6 SHS",
            "web_small": "50x50x3 SHS", "web_large": "60x60x3 SHS"},
-    "T3": {"top_small": "150x150x3 SHS", "top_large": "200x200x3 SHS",
-           "bottom_small": "120x120x3 SHS", "bottom_large": "140x140x3 SHS",
+    "T3": {"top_small": "200x200x3 SHS", "top_large": "200x200x3 SHS",
+           "bottom_small": "140x140x3 SHS", "bottom_large": "140x140x3 SHS",
            "web_small": "50x50x3 SHS", "web_large": "75x75x3 SHS"},
 }
 COLUMN_SECTION = "150x150x4 SHS"

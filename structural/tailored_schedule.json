@@ -7,44 +7,18 @@
  },
  "opts": {
   "deckLateralCredit": true,
-  "bottomChordKLop": 2948
+  "bottomChordKLop": 2948,
+  "uniformChords": true
  },
  "actual": {
   "T1": {
-   "mass": 600.9515883485708,
-   "maxUtil": 0.9361108432789684,
-   "defl": 19.6597641326877,
+   "mass": 651.0704146187101,
+   "maxUtil": 0.8935515090207053,
+   "defl": 18.440693998416315,
    "groupSummary": [
     {
      "cat": "top",
      "band": 0,
-     "section": "110x110x3 SHS",
-     "util": 0.9477937444357116,
-     "governing": {
-      "util": 0.9477937444357116,
-      "KLr": 33.727132476035564,
-      "clause": "9.3.1.1 beam-column",
-      "Nd": 279587.1600523401,
-      "Md": 11712272.727272727,
-      "lambda": 0.37956359581708793,
-      "combo": "C1_1.5(DL+LL)",
-      "N": -143287.69583705103,
-      "M": 5187412.038492858
-     },
-     "members": [
-      0,
-      12,
-      13,
-      2,
-      4,
-      11,
-      3
-     ],
-     "count": 7
-    },
-    {
-     "cat": "top",
-     "band": 1,
      "section": "150x150x3 SHS",
      "util": 0.9034624843863408,
      "governing": {
@@ -59,6 +33,13 @@
       "M": 12150865.609138109
      },
      "members": [
+      0,
+      12,
+      13,
+      2,
+      4,
+      11,
+      3,
       8,
       10,
       1,
@@ -67,37 +48,11 @@
       7,
       9
      ],
-     "count": 7
+     "count": 14
     },
     {
      "cat": "bottom",
      "band": 0,
-     "section": "75x75x3.6 SHS",
-     "util": 0.925890108896215,
-     "governing": {
-      "util": 0.925890108896215,
-      "KLr": 101.0074861970637,
-      "clause": "9.3 beam-column (tension)",
-      "Nd": 233672.7272727273,
-      "Md": 6261889.090909091,
-      "combo": "C1_1.5(DL+LL)",
-      "N": 136123.86650802393,
-      "M": 2150016.121823216
-     },
-     "members": [
-      14,
-      27,
-      15,
-      26,
-      16,
-      17,
-      24
-     ],
-     "count": 7
-    },
-    {
-     "cat": "bottom",
-     "band": 1,
      "section": "100x100x3 SHS",
      "util": 0.8702967165599093,
      "governing": {
@@ -111,6 +66,13 @@
       "M": 2550236.8482733024
      },
      "members": [
+      14,
+      27,
+      15,
+      26,
+      16,
+      17,
+      24,
       25,
       18,
       23,
@@ -119,7 +81,7 @@
       21,
       22
      ],
-     "count": 7
+     "count": 14
     },
     {
      "cat": "web",
@@ -131,7 +93,7 @@
       "KLr": 178.0104217417713,
       "clause": "7.1.2 compression",
       "Nd": 26471.631223072352,
-      "Md": 1631389.0909090915,
+      "Md": 1593827.6072727276,
       "lambda": 2.0033210892515547,
       "combo": "C1_1.5(DL+LL)",
       "N": -23148.391046667723,
@@ -190,7 +152,7 @@
       "T",
       1
      ],
-     "section": "110x110x3 SHS"
+     "section": "150x150x3 SHS"
     },
     {
      "i": 1,
@@ -216,7 +178,7 @@
       "T",
       3
      ],
-     "section": "110x110x3 SHS"
+     "section": "150x150x3 SHS"
     },
     {
      "i": 3,
@@ -229,7 +191,7 @@
       "T",
       4
      ],
-     "section": "110x110x3 SHS"
+     "section": "150x150x3 SHS"
     },
     {
      "i": 4,
@@ -242,7 +204,7 @@
       "T",
       5
      ],
-     "section": "110x110x3 SHS"
+     "section": "150x150x3 SHS"
     },
     {
      "i": 5,
@@ -333,7 +295,7 @@
       "T",
       12
      ],
-     "section": "110x110x3 SHS"
+     "section": "150x150x3 SHS"
     },
     {
      "i": 12,
@@ -346,7 +308,7 @@
       "T",
       13
      ],
-     "section": "110x110x3 SHS"
+     "section": "150x150x3 SHS"
     },
     {
      "i": 13,
@@ -359,7 +321,7 @@
       "T",
       14
      ],
-     "section": "110x110x3 SHS"
+     "section": "150x150x3 SHS"
     },
     {
      "i": 14,
@@ -372,7 +334,7 @@
       "B",
       1
      ],
-     "section": "75x75x3.6 SHS"
+     "section": "100x100x3 SHS"
     },
     {
      "i": 15,
@@ -385,7 +347,7 @@
       "B",
       2
      ],
-     "section": "75x75x3.6 SHS"
+     "section": "100x100x3 SHS"
     },
     {
      "i": 16,
@@ -398,7 +360,7 @@
       "B",
       3
      ],
-     "section": "75x75x3.6 SHS"
+     "section": "100x100x3 SHS"
     },
     {
      "i": 17,
@@ -411,7 +373,7 @@
       "B",
       4
      ],
-     "section": "75x75x3.6 SHS"
+     "section": "100x100x3 SHS"
     },
     {
      "i": 18,
@@ -502,7 +464,7 @@
       "B",
       11
      ],
-     "section": "75x75x3.6 SHS"
+     "section": "100x100x3 SHS"
     },
     {
      "i": 25,
@@ -528,7 +490,7 @@
       "B",
       13
      ],
-     "section": "75x75x3.6 SHS"
+     "section": "100x100x3 SHS"
     },
     {
      "i": 27,
@@ -541,7 +503,7 @@
       "B",
       14
      ],
-     "section": "75x75x3.6 SHS"
+     "section": "100x100x3 SHS"
     },
     {
      "i": 28,
@@ -754,40 +716,13 @@
    ]
   },
   "T2": {
-   "mass": 643.8755440615863,
-   "maxUtil": 0.9290904091141279,
-   "defl": 19.76589488696322,
+   "mass": 689.3906515042171,
+   "maxUtil": 0.9300990223661472,
+   "defl": 18.983184097004745,
    "groupSummary": [
     {
      "cat": "top",
      "band": 0,
-     "section": "120x120x3 SHS",
-     "util": 0.9104177180707795,
-     "governing": {
-      "util": 0.9104177180707795,
-      "KLr": 30.84645401672716,
-      "clause": "9.3.1.1 beam-column",
-      "Nd": 308308.5997281963,
-      "Md": 14003181.818181816,
-      "lambda": 0.3471445730856171,
-      "combo": "C1_1.5(DL+LL)",
-      "N": -159044.31989446573,
-      "M": 5705838.932068205
-     },
-     "members": [
-      0,
-      12,
-      13,
-      2,
-      11,
-      3,
-      4
-     ],
-     "count": 7
-    },
-    {
-     "cat": "top",
-     "band": 1,
      "section": "160x160x3 SHS",
      "util": 0.903879329648173,
      "governing": {
@@ -802,6 +737,13 @@
       "M": 13567693.153256712
      },
      "members": [
+      0,
+      12,
+      13,
+      2,
+      11,
+      3,
+      4,
       6,
       8,
       10,
@@ -810,37 +752,11 @@
       7,
       9
      ],
-     "count": 7
+     "count": 14
     },
     {
      "cat": "bottom",
      "band": 0,
-     "section": "100x100x3 SHS",
-     "util": 0.8464545047525571,
-     "governing": {
-      "util": 0.8464545047525571,
-      "KLr": 74.40870759229271,
-      "clause": "9.3 beam-column (tension)",
-      "Nd": 264545.45454545453,
-      "Md": 9625909.09090909,
-      "combo": "C1_1.5(DL+LL)",
-      "N": 151150.40918633583,
-      "M": 2648044.9450893924
-     },
-     "members": [
-      14,
-      27,
-      15,
-      26,
-      16,
-      25,
-      17
-     ],
-     "count": 7
-    },
-    {
-     "cat": "bottom",
-     "band": 1,
      "section": "90x90x3.6 SHS",
      "util": 0.9243836701503892,
      "governing": {
@@ -854,6 +770,13 @@
       "M": 2707650.016130549
      },
      "members": [
+      14,
+      27,
+      15,
+      26,
+      16,
+      25,
+      17,
       18,
       19,
       22,
@@ -862,7 +785,7 @@
       20,
       21
      ],
-     "count": 7
+     "count": 14
     },
     {
      "cat": "web",
@@ -933,7 +856,7 @@
       "T",
       1
      ],
-     "section": "120x120x3 SHS"
+     "section": "160x160x3 SHS"
     },
     {
      "i": 1,
@@ -959,7 +882,7 @@
       "T",
       3
      ],
-     "section": "120x120x3 SHS"
+     "section": "160x160x3 SHS"
     },
     {
      "i": 3,
@@ -972,7 +895,7 @@
       "T",
       4
      ],
-     "section": "120x120x3 SHS"
+     "section": "160x160x3 SHS"
     },
     {
      "i": 4,
@@ -985,7 +908,7 @@
       "T",
       5
      ],
-     "section": "120x120x3 SHS"
+     "section": "160x160x3 SHS"
     },
     {
      "i": 5,
@@ -1076,7 +999,7 @@
       "T",
       12
      ],
-     "section": "120x120x3 SHS"
+     "section": "160x160x3 SHS"
     },
     {
      "i": 12,
@@ -1089,7 +1012,7 @@
       "T",
       13
      ],
-     "section": "120x120x3 SHS"
+     "section": "160x160x3 SHS"
     },
     {
      "i": 13,
@@ -1102,7 +1025,7 @@
       "T",
       14
      ],
-     "section": "120x120x3 SHS"
+     "section": "160x160x3 SHS"
     },
     {
      "i": 14,
@@ -1115,7 +1038,7 @@
       "B",
       1
      ],
-     "section": "100x100x3 SHS"
+     "section": "90x90x3.6 SHS"
     },
     {
      "i": 15,
@@ -1128,7 +1051,7 @@
       "B",
       2
      ],
-     "section": "100x100x3 SHS"
+     "section": "90x90x3.6 SHS"
     },
     {
      "i": 16,
@@ -1141,7 +1064,7 @@
       "B",
       3
      ],
-     "section": "100x100x3 SHS"
+     "section": "90x90x3.6 SHS"
     },
     {
      "i": 17,
@@ -1154,7 +1077,7 @@
       "B",
       4
      ],
-     "section": "100x100x3 SHS"
+     "section": "90x90x3.6 SHS"
     },
     {
      "i": 18,
@@ -1258,7 +1181,7 @@
       "B",
       12
      ],
-     "section": "100x100x3 SHS"
+     "section": "90x90x3.6 SHS"
     },
     {
      "i": 26,
@@ -1271,7 +1194,7 @@
       "B",
       13
      ],
-     "section": "100x100x3 SHS"
+     "section": "90x90x3.6 SHS"
     },
     {
      "i": 27,
@@ -1284,7 +1207,7 @@
       "B",
       14
      ],
-     "section": "100x100x3 SHS"
+     "section": "90x90x3.6 SHS"
     },
     {
      "i": 28,
@@ -1497,40 +1420,13 @@
    ]
   },
   "T3": {
-   "mass": 790.8217939098713,
-   "maxUtil": 0.9223725903969882,
-   "defl": 22.770104671289033,
+   "mass": 859.2966149195174,
+   "maxUtil": 0.8835172186792254,
+   "defl": 21.53913527177253,
    "groupSummary": [
     {
      "cat": "top",
      "band": 0,
-     "section": "150x150x3 SHS",
-     "util": 0.8900722835365635,
-     "governing": {
-      "util": 0.8900722835365635,
-      "KLr": 24.554215956951833,
-      "clause": "9.3.1.1 beam-column",
-      "Nd": 394079.48531716125,
-      "Md": 22103181.818181816,
-      "lambda": 0.2763320157061113,
-      "combo": "C1_1.5(DL+LL)",
-      "N": -220231.27785339043,
-      "M": 7801714.214703819
-     },
-     "members": [
-      0,
-      13,
-      12,
-      2,
-      11,
-      4,
-      3
-     ],
-     "count": 7
-    },
-    {
-     "cat": "top",
-     "band": 1,
      "section": "200x200x3 SHS",
      "util": 0.8611080348328459,
      "governing": {
@@ -1545,6 +1441,13 @@
       "M": 18316196.70440589
      },
      "members": [
+      0,
+      13,
+      12,
+      2,
+      11,
+      4,
+      3,
       6,
       7,
       8,
@@ -1553,37 +1456,11 @@
       5,
       9
      ],
-     "count": 7
+     "count": 14
     },
     {
      "cat": "bottom",
      "band": 0,
-     "section": "120x120x3 SHS",
-     "util": 0.9284005643191153,
-     "governing": {
-      "util": 0.9284005643191153,
-      "KLr": 61.69848831502419,
-      "clause": "9.3 beam-column (tension)",
-      "Nd": 319090.90909090906,
-      "Md": 14003181.818181816,
-      "combo": "C1_1.5(DL+LL)",
-      "N": 209365.8084402557,
-      "M": 3812623.92417349
-     },
-     "members": [
-      14,
-      27,
-      15,
-      26,
-      16,
-      25,
-      17
-     ],
-     "count": 7
-    },
-    {
-     "cat": "bottom",
-     "band": 1,
      "section": "140x140x3 SHS",
      "util": 0.875112655420351,
      "governing": {
@@ -1597,6 +1474,13 @@
       "M": 4153237.7050963743
      },
      "members": [
+      14,
+      27,
+      15,
+      26,
+      16,
+      25,
+      17,
       24,
       18,
       19,
@@ -1605,7 +1489,7 @@
       20,
       21
      ],
-     "count": 7
+     "count": 14
     },
     {
      "cat": "web",
@@ -1676,7 +1560,7 @@
       "T",
       1
      ],
-     "section": "150x150x3 SHS"
+     "section": "200x200x3 SHS"
     },
     {
      "i": 1,
@@ -1702,7 +1586,7 @@
       "T",
       3
      ],
-     "section": "150x150x3 SHS"
+     "section": "200x200x3 SHS"
     },
     {
      "i": 3,
@@ -1715,7 +1599,7 @@
       "T",
       4
      ],
-     "section": "150x150x3 SHS"
+     "section": "200x200x3 SHS"
     },
     {
      "i": 4,
@@ -1728,7 +1612,7 @@
       "T",
       5
      ],
-     "section": "150x150x3 SHS"
+     "section": "200x200x3 SHS"
     },
     {
      "i": 5,
@@ -1819,7 +1703,7 @@
       "T",
       12
      ],
-     "section": "150x150x3 SHS"
+     "section": "200x200x3 SHS"
     },
     {
      "i": 12,
@@ -1832,7 +1716,7 @@
       "T",
       13
      ],
-     "section": "150x150x3 SHS"
+     "section": "200x200x3 SHS"
     },
     {
      "i": 13,
@@ -1845,7 +1729,7 @@
       "T",
       14
      ],
-     "section": "150x150x3 SHS"
+     "section": "200x200x3 SHS"
     },
     {
      "i": 14,
@@ -1858,7 +1742,7 @@
       "B",
       1
      ],
-     "section": "120x120x3 SHS"
+     "section": "140x140x3 SHS"
     },
     {
      "i": 15,
@@ -1871,7 +1755,7 @@
       "B",
       2
      ],
-     "section": "120x120x3 SHS"
+     "section": "140x140x3 SHS"
     },
     {
      "i": 16,
@@ -1884,7 +1768,7 @@
       "B",
       3
      ],
-     "section": "120x120x3 SHS"
+     "section": "140x140x3 SHS"
     },
     {
      "i": 17,
@@ -1897,7 +1781,7 @@
       "B",
       4
      ],
-     "section": "120x120x3 SHS"
+     "section": "140x140x3 SHS"
     },
     {
      "i": 18,
@@ -2001,7 +1885,7 @@
       "B",
       12
      ],
-     "section": "120x120x3 SHS"
+     "section": "140x140x3 SHS"
     },
     {
      "i": 26,
@@ -2014,7 +1898,7 @@
       "B",
       13
      ],
-     "section": "120x120x3 SHS"
+     "section": "140x140x3 SHS"
     },
     {
      "i": 27,
@@ -2027,7 +1911,7 @@
       "B",
       14
      ],
-     "section": "120x120x3 SHS"
+     "section": "140x140x3 SHS"
     },
     {
      "i": 28,
@@ -4470,5 +4354,6 @@
     }
    ]
   }
- }
+ },
+ "note": "UNIFORM-CHORD RULING applied (engineer's fabrication constraint): top chord and bottom chord each use one section for their full run per truss type -- no splicing. 'actual' block below is the current issued design. Verified on the full 44-member topology (no pruning -- generate_staad.py never omits a physical member). 'fabricationEnvelope' block below is the NOT-ISSUED spare-parts/interchangeability variant and has NOT been re-run under the uniform-chord ruling -- do not use it as-is if that variant is ever invoked; re-run it first."
 }

@@ -85,6 +85,36 @@ engineer's own `.ANL` output — Case 1 (DL) reaction summary balances to the kN
 of the total gravity load is accounted for. This is the first real external validation of the
 model against a live STAAD run, independent of this project's own Node engine.
 
+**ERRATA 5 (uniform-chord ruling, engineer's fabrication constraint):** the tailored T1/T2/T3
+design above split each chord into two SHS sizes per truss (a lighter section over the
+lightly-loaded end panels, a heavier one over the mid panels). The engineer has ruled this
+out — no splicing between two SHS sizes along one continuous chord run in the field — so
+each truss type now uses **one section for its whole top chord and one for its whole bottom
+chord**. Re-run through `optimize.js` on the full, un-pruned 44-member topology (the one
+`generate_staad.py` actually builds — the optimizer's own low-utilization pruning is a
+2D-report artifact that was never carried into the 3D model, confirmed by reproducing the
+prior per-band numbers bit-for-bit once pruning is left out of the check): in every one of
+T1/T2/T3 the single governing member for the full chord is the same one that already drove
+the old *large*-panel band, so the uniform section is simply that band's section run the
+full length — no new section size was needed anywhere.
+
+| Truss | Old top (2 bands) | Uniform top | Old bottom (2 bands) | Uniform bottom | Mass old→new | Max util |
+|---|---|---|---|---|---|---|
+| T1 | 110×110×3 / 150×150×3 | **150×150×3** | 75×75×3.6 / 100×100×3 | **100×100×3** | 600.95 → 651.07 kg (+8.3%) | 0.894 |
+| T2 | 120×120×3 / 160×160×3 | **160×160×3** | 100×100×3 / 90×90×3.6 | **90×90×3.6** | 643.88 → 689.39 kg (+7.5%) | 0.930 |
+| T3 | 150×150×3 / 200×200×3 | **200×200×3** | 120×120×3 / 140×140×3 | **140×140×3** | 790.82 → 859.30 kg (+8.7%) | 0.884 |
+
+Web members are unaffected (unchanged sections, same as before). Project truss total
+(T1×2, T2×6, T3×1, per `TRUSS_TYPE` in `generate_staad.py`), bare: **5.856t → 6.298t
+(+0.442t, +7.5%)**; with the 8% fabrication allowance: **6.324t → 6.802t (+0.478t)**. All
+utilizations remain ≤0.930 — no capacity or slenderness failures introduced. `tailored_schedule.json`
+and `CHRA2502_3D_Final.std` are both regenerated to match; re-run the file before trusting
+further STAAD output. (Self-check note: an initial pass at this re-verification wrongly
+flagged the cached schedule as stale relative to the Cl 8.2.1.2 Md-cap fix — that flag was
+a false positive caused by including the optimizer's pruning step, which the 3D model never
+uses; retracted once isolated. No Md-cap regression exists; the pre-existing tailored numbers
+were correct all along.)
+
 ---
 
 ## 0. Input Echo (as modeled)

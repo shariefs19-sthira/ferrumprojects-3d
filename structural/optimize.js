@@ -80,7 +80,8 @@ function lowerBoundMass(truss, sizing, demandsByMember) {
   return kg;
 }
 
-function groupMembers(truss, sizing, demandsByMember, fy) {
+function groupMembers(truss, sizing, demandsByMember, fy, opts) {
+  opts = opts || {};
   const categories = { top: [], bottom: [], web: [] };
   truss.members.forEach((m, i) => {
     const cat = (m.type === 'top') ? 'top' : (m.type === 'bottom') ? 'bottom' : 'web';
@@ -97,7 +98,11 @@ function groupMembers(truss, sizing, demandsByMember, fy) {
     if (list.length === 0) continue;
     list.sort((a, b) => a.peak - b.peak);
     const mid = Math.ceil(list.length / 2);
-    const bands = list.length >= 4 ? [list.slice(0, mid), list.slice(mid)] : [list];
+    // opts.uniformChords: one section for the whole top chord and one for the whole bottom
+    // chord (fabricator constraint -- no splicing between two SHS sizes along a continuous
+    // chord run). Web members are unaffected -- they're discrete cut-to-length pieces anyway.
+    const forceSingleBand = opts.uniformChords && (cat === 'top' || cat === 'bottom');
+    const bands = (!forceSingleBand && list.length >= 4) ? [list.slice(0, mid), list.slice(mid)] : [list];
     bands.forEach((band, bi) => {
       if (band.length === 0) return;
       const demands = [];
@@ -137,7 +142,7 @@ function runTopology({ n, dMid, webPattern, Lt, fy = 250, L, opts }) {
     workTruss = pruned.truss; workSizing = step2.sizing; workPass = step2.pass;
   }
 
-  const grouped = groupMembers(workTruss, workSizing, workPass.demandsByMember, fy);
+  const grouped = groupMembers(workTruss, workSizing, workPass.demandsByMember, fy, opts);
   // final FEM check with grouped sizes (one more pass to get final report/util per member, no resizing)
   const finalPass = sizingPassNoResize(workTruss, grouped.newSizing, Lt, fy, opts);
 
