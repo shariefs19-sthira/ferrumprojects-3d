@@ -51,6 +51,19 @@ not higher, so nothing here understates risk — but re-verify before citing a t
   interchangeability option, at **6.62t** trusses if ever invoked (one SHS step, 200×200×3→
   200×200×4, on T3's top1 group to clear its 0.952 marginal overage under that variant).
 
+**ERRATA 3 (first live STAAD.Pro run, engineer-side):** the file as issued in errata 2 failed
+to parse — every `PRIS` line threw `PRISMATIC specification NOT valid` (33 errors), because
+the `PY`/`PZ` tokens I'd added and explicitly flagged as `[Guessing]` are **not valid
+PRISMATIC keywords** in STAAD.Pro; their presence invalidated the whole property line, not
+just those two tokens, so every member was left without a section. This is now confirmed,
+not guessed: `PY`/`PZ` are removed from every `PRIS` line, and `is800.js`/`optimize.js`
+remain the source of truth for `Md` — it was never meant to reach STAAD anyway, only AX/AY/
+AZ/IX/IY/IZ/YD/ZD are. Also fixed: the `START JOB INFORMATION` block's multi-word `ENGINEER`/
+`JOB NAME` values were rejected ("JOB INFORMATION command ignored") — underscored, cosmetic
+only, no effect on analysis. Neither issue changes any tonnage, utilization, or force number
+in this document — both are STAAD input syntax only. Re-run the regenerated file before
+trusting any further STAAD output.
+
 ---
 
 ## 0. Input Echo (as modeled)

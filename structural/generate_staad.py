@@ -279,8 +279,8 @@ def w(s=""):
 
 w("STAAD SPACE")
 w(f"START JOB INFORMATION")
-w(f"ENGINEER Sharief Satyala")
-w(f"JOB NAME CHRA-2502 Pickleball Roof - 3D Global Model")
+w(f"ENGINEER Sharief_Satyala")  # a live STAAD session rejected the multi-word value ("JOB
+w(f"JOB NAME CHRA-2502_Pickleball_Roof_3D_Global_Model")  # INFORMATION command ignored") -- underscored, cosmetic only
 w(f"END JOB INFORMATION")
 w("* ================================================================")
 w("* GENERATED FILE -- CLOSE-OUT PATCH SET (ROUND 3). See generate_staad.py")
@@ -321,10 +321,11 @@ w("*  D-6 FINAL: PRIS stands for every SHS in this design, including")
 w("*      100x100x4 (the round-2 'switch to TABLE' flag on it is withdrawn --")
 w("*      the engineer's own hand Md references were the ones in error; this")
 w("*      engine's Zp*fy/gamma_m0 values, capped at 1.2*Ze*fy/gamma_m0 per")
-w("*      Cl 8.2.1.2, are validated). PRIS carries AY/AZ (shear area) and")
-w("*      PY/PZ (plastic modulus) -- PY/PZ flagged [Guessing] as possibly")
-w("*      unsupported by STAAD's PRIS command; delete those two tokens per")
-w("*      line if the parser rejects them.")
+w("*      Cl 8.2.1.2, are validated). PRIS carries AX/AY/AZ/IX/IY/IZ/YD/ZD.")
+w("*      PY/PZ were tried and CONFIRMED rejected by a live STAAD.Pro session")
+w("*      ('PRISMATIC specification NOT valid' on all 33 PRIS lines) --")
+w("*      removed. Md itself is never passed to STAAD; it's used directly by")
+w("*      is800.js/optimize.js for member sizing, outside this file.")
 w("*")
 w("*  DESIGN CASE: this file is TAILORED-AT-ACTUAL tributaries (T1=4.572m,")
 w("*      T2=5.098m, T3=7.121m) -- 6.32t trusses. The envelope variant")
@@ -371,9 +372,10 @@ def ranges(ids):
     out.append((start, prev))
     return out
 
-w("* D-6 ruling: AY/AZ (shear area, 2*t*(B-2t) per wall pair) added below. PY/PZ (plastic")
-w("* modulus) added too, but [Guessing] STAAD's PRIS may not accept them as inputs at all --")
-w("* if the parser rejects the PY/PZ tokens, delete them from every PRIS line below.")
+w("* D-6 CONFIRMED (was flagged [Guessing] in round 3, now verified against a live STAAD")
+w("* session): PY/PZ are NOT valid PRISMATIC keywords -- STAAD.Pro rejected all 33 PRIS")
+w("* lines with 'PRISMATIC specification NOT valid' when they were present. Removed. AX/AY/")
+w("* AZ/IX/IY/IZ/YD/ZD are the accepted set and remain below.")
 for sec_label, ids in by_section.items():
     p = SECTION_PROPS[sec_label]
     ax = p["A"] / 1e6         # mm^2 -> m^2
@@ -383,12 +385,12 @@ for sec_label, ids in by_section.items():
     yd = p["B"] / 1000.0
     zd = p["B"] / 1000.0
     ay = az = 2 * p["t"] * (p["B"] - 2 * p["t"]) / 1e6  # m^2, two walls carry shear each direction
-    py = pz = p["Zp"] / 1e9  # mm^3 -> m^3
     id_ranges = ranges(ids)
     range_str = " ".join(f"{a} TO {b}" if a != b else f"{a}" for a, b in id_ranges)
-    w(f"* {sec_label}  (A={p['A']:.0f}mm2 I={p['I']:.0f}mm4 Zp={p['Zp']:.0f}mm3 -- sharp-corner formula)")
+    w(f"* {sec_label}  (A={p['A']:.0f}mm2 I={p['I']:.0f}mm4 Zp={p['Zp']:.0f}mm3 -- sharp-corner formula;")
+    w(f"* Zp used directly by is800.js/optimize.js for capacity, not passed to STAAD -- see D-6)")
     w(f"{range_str} PRIS AX {ax:.6f} AY {ay:.6f} AZ {az:.6f} IX {ix:.8f} IY {iy:.8f} IZ {iz:.8f} "
-      f"YD {yd:.4f} ZD {zd:.4f} PY {py:.8f} PZ {pz:.8f}")
+      f"YD {yd:.4f} ZD {zd:.4f}")
 
 # D-6 FINAL: report the validated Md (Cl 8.2.1.2, capped at 1.2*Ze*fy/gamma_m0) for the two
 # sections the engineer's own (now-withdrawn) hand references named. PRIS stands for both.
