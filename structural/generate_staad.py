@@ -277,63 +277,93 @@ lines = []
 def w(s=""):
     lines.append(s)
 
+# STAAD.Pro V8i SELECTseries6 (confirmed via a live session, round 5) has a hard
+# ~80-column input line limit. Data lines (e.g. PRIS) that exceed it get auto-split
+# with a valid "-" continuation and still parse. COMMENT lines do NOT get that
+# treatment -- the wrapped remainder loses its leading "*" and STAAD tries to parse
+# it as a real command, erroring whenever the cut lands near a quote character
+# (confirmed: two comments containing an apostrophe threw "ABOVE LINE CONTAINS
+# ERRONEOUS DATA"; every other long comment was silently corrupted instead, just
+# without an error). Fix: never let a comment line need auto-wrapping, and strip
+# apostrophes/quotes from ordinary commentary as a second layer of safety. The
+# engineer's verbatim drawing note is reflowed the same way (line breaks only,
+# words unchanged) since it happens to contain no apostrophes.
+COMMENT_WIDTH = 70
+
+def wc(text):
+    text = text.replace("'", "").replace('"', "")
+    for para in text.split("\n\n"):
+        words = para.split()
+        cur = ""
+        for word in words:
+            if cur and len(cur) + 1 + len(word) > COMMENT_WIDTH:
+                w(f"* {cur}")
+                cur = word
+            else:
+                cur = f"{cur} {word}".strip()
+        if cur:
+            w(f"* {cur}")
+        w("*")
+
 w("STAAD SPACE")
-w(f"* Engineer: Sharief Satyala | Job: CHRA-2502 Pickleball Roof - 3D Global Model")
-w(f"* (job metadata as a plain comment -- two guesses at STAAD's JOB INFORMATION")
-w(f"* ENGINEER/JOB NAME syntax were both rejected by a live session; not worth a third guess")
-w(f"* for a purely cosmetic field with zero effect on the analysis.)")
+wc("Engineer: Sharief Satyala | Job: CHRA-2502 Pickleball Roof - 3D "
+   "Global Model (job metadata as a plain comment -- two guesses at "
+   "STAADs JOB INFORMATION ENGINEER/JOB NAME syntax were both rejected "
+   "by a live session; not worth a third guess for a purely cosmetic "
+   "field with zero effect on the analysis.)")
 w("* ================================================================")
-w("* GENERATED FILE -- CLOSE-OUT PATCH SET (ROUND 3). See generate_staad.py")
-w("* docstring for the full ruling history. Summary of what's built in below:")
-w("*")
-w("*  D-1: column top node = bottom-chord end node (Y=7.752 / 7.339m), K=1.0,")
-w("*      no stub. The brief's separate '~8.75/8.34m' figures are superseded.")
-w("*")
-w("*  D-2: DECK LATERAL-RESTRAINT CREDIT IS DECLARED for the top chord")
-w("*      (KL_op = 1.0 x panel = 1.474m). Without it the worst truss's top")
-w("*      chord does not close within the 40-200mm SHS catalog -- this")
-w("*      declaration is load-bearing. Drawing note (verbatim, engineer-issued):")
-w("*")
-w("*      NOTE: THE STRUCTURAL DECK SHALL BE MECHANICALLY FASTENED TO THE TRUSS")
-w("*      TOP CHORD AT EVERY CREST (SCREWS AT <= 300 mm CENTRES) PRIOR TO")
-w("*      IMPOSITION OF ANY SUPERIMPOSED LOAD. THIS FASTENING CONSTITUTES THE")
-w("*      LATERAL RESTRAINT SYSTEM TO THE TOP CHORD IN COMPRESSION (KL = 1.474 m)")
-w("*      AND FORMS PART OF THE ROOF DIAPHRAGM. ADHESIVE-ONLY, CLIP-ONLY OR")
-w("*      INTERMITTENT FASTENING SYSTEMS VOID THE TOP-CHORD CAPACITY SHOWN ON")
-w("*      THESE DRAWINGS AND SHALL NOT BE SUBSTITUTED WITHOUT RECERTIFICATION BY")
-w("*      THE STRUCTURAL ENGINEER. DECK FASTENER PULL-OUT AND SHEAR CAPACITIES")
-w("*      SHALL BE CERTIFIED BY THE DECK SUPPLIER FOR BOTH GRAVITY AND NET")
-w("*      UPLIFT (0.82 kN/m2) CONDITIONS.")
-w("*")
-w("*  D-3 FINAL: braced bays = {1,3,4,6,8} (5 of 8). Plan bracing at the")
-w("*      BOTTOM-chord level, PARTIAL coverage only -- a single zig-zag chain")
-w("*      through panel-points {3,5,7,9,11} (4 modules/bay x 5 bays = 20")
-w("*      diagonals), section 100x100x4 SHS, ~1.60t. Bottom-chord KL_op is")
-w("*      segment-wise: 2.947m within the braced field (panels 3-10), 4.421m")
-w("*      at the two unbraced end stretches (panels 0-2, 11-13). Verified")
-w("*      against the real C4 (0.9DL+1.5WLup) bottom-chord axial diagram")
-w("*      (peaks 109.6kN at midspan, worst truss) -- max util 0.854, max")
-w("*      KL/r 92.5, both within limits. ACCEPTANCE MET, scheme ADOPTED.")
-w("*")
-w("*  D-5: ring = 76x76x4 SHS. Plan bracing = 100x100x4 SHS (per D-3 final).")
-w("*")
-w("*  D-6 FINAL: PRIS stands for every SHS in this design, including")
-w("*      100x100x4 (the round-2 'switch to TABLE' flag on it is withdrawn --")
-w("*      the engineer's own hand Md references were the ones in error; this")
-w("*      engine's Zp*fy/gamma_m0 values, capped at 1.2*Ze*fy/gamma_m0 per")
-w("*      Cl 8.2.1.2, are validated). PRIS carries AX/AY/AZ/IX/IY/IZ/YD/ZD.")
-w("*      PY/PZ were tried and CONFIRMED rejected by a live STAAD.Pro session")
-w("*      ('PRISMATIC specification NOT valid' on all 33 PRIS lines) --")
-w("*      removed. Md itself is never passed to STAAD; it's used directly by")
-w("*      is800.js/optimize.js for member sizing, outside this file.")
-w("*")
-w("*  DESIGN CASE: this file is TAILORED-AT-ACTUAL tributaries (T1=4.572m,")
-w("*      T2=5.098m, T3=7.121m) -- 6.32t trusses. The envelope variant")
-w("*      (4.572/5.600/7.372m, 6.62t if invoked) is NOT built into this file;")
-w("*      it is a documented spare-parts/interchangeability option only.")
-w("*")
-w("*  25mm midspan camber remains a FABRICATION note only, not built into")
-w("*  these joint coordinates (analysis uses the theoretical line).")
+wc("GENERATED FILE -- CLOSE-OUT PATCH SET (ROUND 3, line-wrapping fixed "
+   "in ROUND 5). See generate_staad.py docstring for the full ruling "
+   "history. Summary of whats built in below:")
+wc("D-1: column top node = bottom-chord end node (Y=7.752 / 7.339m), "
+   "K=1.0, no stub. The briefs separate ~8.75/8.34m figures are "
+   "superseded.")
+wc("D-2: DECK LATERAL-RESTRAINT CREDIT IS DECLARED for the top chord "
+   "(KL_op = 1.0 x panel = 1.474m). Without it the worst trusss top "
+   "chord does not close within the 40-200mm SHS catalog -- this "
+   "declaration is load-bearing. Drawing note (verbatim, "
+   "engineer-issued):")
+wc("NOTE: THE STRUCTURAL DECK SHALL BE MECHANICALLY FASTENED TO THE "
+   "TRUSS TOP CHORD AT EVERY CREST (SCREWS AT <= 300 mm CENTRES) "
+   "PRIOR TO IMPOSITION OF ANY SUPERIMPOSED LOAD. THIS FASTENING "
+   "CONSTITUTES THE LATERAL RESTRAINT SYSTEM TO THE TOP CHORD IN "
+   "COMPRESSION (KL = 1.474 m) AND FORMS PART OF THE ROOF DIAPHRAGM. "
+   "ADHESIVE-ONLY, CLIP-ONLY OR INTERMITTENT FASTENING SYSTEMS VOID "
+   "THE TOP-CHORD CAPACITY SHOWN ON THESE DRAWINGS AND SHALL NOT BE "
+   "SUBSTITUTED WITHOUT RECERTIFICATION BY THE STRUCTURAL ENGINEER. "
+   "DECK FASTENER PULL-OUT AND SHEAR CAPACITIES SHALL BE CERTIFIED BY "
+   "THE DECK SUPPLIER FOR BOTH GRAVITY AND NET UPLIFT (0.82 kN/m2) "
+   "CONDITIONS.")
+wc("D-3 FINAL: braced bays = {1,3,4,6,8} (5 of 8). Plan bracing at the "
+   "BOTTOM-chord level, PARTIAL coverage only -- a single zig-zag "
+   "chain through panel-points {3,5,7,9,11} (4 modules/bay x 5 bays = "
+   "20 diagonals), section 100x100x4 SHS, ~1.60t. Bottom-chord KL_op "
+   "is segment-wise: 2.947m within the braced field (panels 3-10), "
+   "4.421m at the two unbraced end stretches (panels 0-2, 11-13). "
+   "Verified against the real C4 (0.9DL+1.5WLup) bottom-chord axial "
+   "diagram (peaks 109.6kN at midspan, worst truss) -- max util "
+   "0.854, max KL/r 92.5, both within limits. ACCEPTANCE MET, scheme "
+   "ADOPTED.")
+wc("D-5: ring = 76x76x4 SHS. Plan bracing = 100x100x4 SHS (per D-3 "
+   "final).")
+wc("D-6 FINAL: PRIS stands for every SHS in this design, including "
+   "100x100x4 (the round-2 switch-to-TABLE flag on it is withdrawn -- "
+   "the engineers own hand Md references were the ones in error; "
+   "this engines Zp*fy/gamma_m0 values, capped at 1.2*Ze*fy/gamma_m0 "
+   "per Cl 8.2.1.2, are validated). PRIS carries "
+   "AX/AY/AZ/IX/IY/IZ/YD/ZD. PY/PZ were tried and CONFIRMED rejected "
+   "by a live STAAD.Pro session (PRISMATIC specification NOT valid on "
+   "all 33 PRIS lines) -- removed. Md itself is never passed to "
+   "STAAD; its used directly by is800.js/optimize.js for member "
+   "sizing, outside this file.")
+wc("DESIGN CASE: this file is TAILORED-AT-ACTUAL tributaries "
+   "(T1=4.572m, T2=5.098m, T3=7.121m) -- 6.32t trusses. The envelope "
+   "variant (4.572/5.600/7.372m, 6.62t if invoked) is NOT built into "
+   "this file; it is a documented spare-parts/interchangeability "
+   "option only.")
+wc("25mm midspan camber remains a FABRICATION note only, not built "
+   "into these joint coordinates (analysis uses the theoretical "
+   "line).")
 w("* ================================================================")
 w("UNIT METER KN")
 w("JOINT COORDINATES")
@@ -372,16 +402,21 @@ def ranges(ids):
     out.append((start, prev))
     return out
 
-w("* D-6 CONFIRMED (was flagged [Guessing] in round 3, now verified against a live STAAD")
-w("* session): PY/PZ are NOT valid PRISMATIC keywords -- STAAD.Pro rejected all 33 PRIS")
-w("* lines with 'PRISMATIC specification NOT valid' when they were present. Removed. AX/AY/")
-w("* AZ/IX/IY/IZ/YD/ZD are the accepted set and remain below.")
-w("* Line-length fix (confirmed against a live STAAD session, round 4): a section shared by")
-w("* many non-contiguous member ranges (e.g. 100x100x3, used across all 9 trusses) produced a")
-w("* single line long enough that STAAD's own auto-wrap split it BEFORE reaching the PRIS")
-w("* keyword -- 'ERROR - IN READING MEMBER PROPERTIES'. Fixed by chunking each section's")
-w("* member-range list into short groups (<=6 ranges), each issued as its own complete")
-w("* '<ranges> PRIS ...' statement -- no line ever needs auto-wrapping.")
+wc("D-6 CONFIRMED (was flagged Guessing in round 3, now verified "
+   "against a live STAAD session): PY/PZ are NOT valid PRISMATIC "
+   "keywords -- STAAD.Pro rejected all 33 PRIS lines with PRISMATIC "
+   "specification NOT valid when they were present. Removed. "
+   "AX/AY/AZ/IX/IY/IZ/YD/ZD are the accepted set and remain below. "
+   "Zp is used directly by is800.js/optimize.js for member capacity "
+   "and never passed to STAAD.")
+wc("Line-length fix (confirmed against a live STAAD session, round "
+   "4): a section shared by many non-contiguous member ranges (e.g. "
+   "100x100x3, used across all 9 trusses) produced a single line "
+   "long enough that STAADs own auto-wrap split it before reaching "
+   "the PRIS keyword -- ERROR IN READING MEMBER PROPERTIES. Fixed by "
+   "chunking each sections member-range list into short groups, each "
+   "issued as its own complete PRIS statement -- no line ever needs "
+   "auto-wrapping.")
 MAX_RANGES_PER_LINE = 4  # conservative -- exact per-line limit for this STAAD build is unconfirmed
 for sec_label, ids in by_section.items():
     p = SECTION_PROPS[sec_label]
@@ -393,8 +428,7 @@ for sec_label, ids in by_section.items():
     zd = p["B"] / 1000.0
     ay = az = 2 * p["t"] * (p["B"] - 2 * p["t"]) / 1e6  # m^2, two walls carry shear each direction
     id_ranges = ranges(ids)
-    w(f"* {sec_label}  (A={p['A']:.0f}mm2 I={p['I']:.0f}mm4 Zp={p['Zp']:.0f}mm3 -- sharp-corner formula;")
-    w(f"* Zp used directly by is800.js/optimize.js for capacity, not passed to STAAD -- see D-6)")
+    w(f"* {sec_label}  A={p['A']:.0f}mm2 I={p['I']:.0f}mm4 Zp={p['Zp']:.0f}mm3")
     for i in range(0, len(id_ranges), MAX_RANGES_PER_LINE):
         chunk = id_ranges[i:i + MAX_RANGES_PER_LINE]
         range_str = " ".join(f"{a} TO {b}" if a != b else f"{a}" for a, b in chunk)
@@ -418,9 +452,11 @@ w("CONSTANTS")
 w(f"MATERIAL STEEL MEMB 1 TO {member_id}")
 w("*")
 w("MEMBER RELEASE")
-w("* Webs/bracing: 99% moment release both ends (never 100% -- per brief). Chords: none")
-w("* (rigid/continuous, per brief). Syntax below (MP fraction-remaining-fixity) is written")
-w("* from documentation, NOT verified against a live STAAD session -- confirm before running.")
+wc("Webs/bracing: 99% moment release both ends (never 100% -- per "
+   "brief). Chords: none (rigid/continuous, per brief). Syntax below "
+   "(MP fraction-remaining-fixity) is written from documentation, "
+   "NOT verified against a live STAAD session -- confirm before "
+   "running.")
 web_and_brace_ids = VERT_MEMBERS + DIAG_MEMBERS + BRACE_MEMBERS
 for a, b in ranges(web_and_brace_ids):
     r = f"{a} TO {b}" if a != b else f"{a}"
@@ -491,10 +527,11 @@ w("*")
 w("*")
 w("PARAMETER 1")
 w("CODE IS800")
-w("* Effective lengths, member-specific -- NEVER a blanket value (see audit A4).")
-w("* LY/LZ mapping to in-plane vs out-of-plane depends on each member's local axis")
-w("* orientation as STAAD assigns it by default; VERIFY visually (View > Structure >")
-w("* Show Beta Angle / local axes) before trusting which is which -- not done here.")
+wc("Effective lengths, member-specific -- NEVER a blanket value (see "
+   "audit A4). LY/LZ mapping to in-plane vs out-of-plane depends on "
+   "each members local axis orientation as STAAD assigns it by "
+   "default; VERIFY visually (View, Structure, Show Beta Angle or "
+   "local axes) before trusting which is which -- not done here.")
 w("KY 1.0 ALL")
 w("KZ 1.0 ALL")
 
@@ -507,9 +544,11 @@ PANEL_L = SPAN / N_PANELS
 for a, b in ranges(TOP_MEMBERS):
     w(f"LY {1.474:.3f} MEMB {a} TO {b}" if a != b else f"LY {1.474:.3f} MEMB {a}")
     w(f"LZ {0.85 * PANEL_L:.3f} MEMB {a} TO {b}" if a != b else f"LZ {0.85 * PANEL_L:.3f} MEMB {a}")
-w(f"* Bottom chord: KL_op is segment-wise (D-3 final) -- {BRACED_KL_OP:.3f}m within the braced")
-w(f"* field (panels 3-10, where a bracing attachment lands every 2 panels), {UNBRACED_KL_OP:.3f}m")
-w(f"* at the two unbraced end stretches (panels 0-2 and 11-13, no bracing attachment there).")
+wc(f"Bottom chord: KL_op is segment-wise (D-3 final) -- "
+   f"{BRACED_KL_OP:.3f}m within the braced field (panels 3-10, where "
+   f"a bracing attachment lands every 2 panels), {UNBRACED_KL_OP:.3f}m "
+   f"at the two unbraced end stretches (panels 0-2 and 11-13, no "
+   f"bracing attachment there).")
 bottom_by_id = {m["id"]: m for m in members if m["kind"] == "bottom"}
 braced_bottom = [mid for mid in BOTTOM_MEMBERS if 3 <= bottom_by_id[mid]["panel"] <= 10]
 unbraced_bottom = [mid for mid in BOTTOM_MEMBERS if not (3 <= bottom_by_id[mid]["panel"] <= 10)]
@@ -529,17 +568,19 @@ for mid in COLUMN_MEMBERS:
     L = joint_dist(m["n1"], m["n2"])
     w(f"LY {L:.3f} MEMB {mid}")
     w(f"LZ {L:.3f} MEMB {mid}")
-w("* Ring + bracing: ASSUMPTION -- treated as fully laterally restrained by the deck/purlins")
-w("* they carry; no separate KL declared beyond the code default (span length, K=1.0).")
-w("*")
-w("* NOTE: no CHECK CODE issued -- member sizing/utilization in this project comes from")
-w("* the independent Node stiffness engine (structural/optimize.js), not from STAAD's")
-w("* own IS800 design module. This PARAMETER block documents the effective-length basis")
-w("* for a reviewer who DOES want to run STAAD's CHECK CODE as a second opinion.")
+wc("Ring + bracing: ASSUMPTION -- treated as fully laterally "
+   "restrained by the deck/purlins they carry; no separate KL "
+   "declared beyond the code default (span length, K=1.0).")
+wc("NOTE: no CHECK CODE issued -- member sizing/utilization in this "
+   "project comes from the independent Node stiffness engine "
+   "(structural/optimize.js), not from STAADs own IS800 design "
+   "module. This PARAMETER block documents the effective-length "
+   "basis for a reviewer who DOES want to run STAADs CHECK CODE as "
+   "a second opinion.")
 w("*")
 w("PERFORM ANALYSIS PRINT STATICS CHECK")
-w("* P-Delta requested per brief -- CONNECT Edition syntax below;")
-w("* NOT verified against an actual STAAD session (A9 -- confirm before running).")
+wc("P-Delta requested per brief -- syntax below not verified against "
+   "an actual STAAD session (A9 -- confirm before running).")
 w("PDELTA ANALYSIS")
 w("FINISH")
 

@@ -1,60 +1,65 @@
 STAAD SPACE
-* Engineer: Sharief Satyala | Job: CHRA-2502 Pickleball Roof - 3D Global Model
-* (job metadata as a plain comment -- two guesses at STAAD's JOB INFORMATION
-* ENGINEER/JOB NAME syntax were both rejected by a live session; not worth a third guess
-* for a purely cosmetic field with zero effect on the analysis.)
+* Engineer: Sharief Satyala | Job: CHRA-2502 Pickleball Roof - 3D Global
+* Model (job metadata as a plain comment -- two guesses at STAADs JOB
+* INFORMATION ENGINEER/JOB NAME syntax were both rejected by a live
+* session; not worth a third guess for a purely cosmetic field with zero
+* effect on the analysis.)
+*
 * ================================================================
-* GENERATED FILE -- CLOSE-OUT PATCH SET (ROUND 3). See generate_staad.py
-* docstring for the full ruling history. Summary of what's built in below:
+* GENERATED FILE -- CLOSE-OUT PATCH SET (ROUND 3, line-wrapping fixed in
+* ROUND 5). See generate_staad.py docstring for the full ruling history.
+* Summary of whats built in below:
 *
-*  D-1: column top node = bottom-chord end node (Y=7.752 / 7.339m), K=1.0,
-*      no stub. The brief's separate '~8.75/8.34m' figures are superseded.
+* D-1: column top node = bottom-chord end node (Y=7.752 / 7.339m),
+* K=1.0, no stub. The briefs separate ~8.75/8.34m figures are
+* superseded.
 *
-*  D-2: DECK LATERAL-RESTRAINT CREDIT IS DECLARED for the top chord
-*      (KL_op = 1.0 x panel = 1.474m). Without it the worst truss's top
-*      chord does not close within the 40-200mm SHS catalog -- this
-*      declaration is load-bearing. Drawing note (verbatim, engineer-issued):
+* D-2: DECK LATERAL-RESTRAINT CREDIT IS DECLARED for the top chord
+* (KL_op = 1.0 x panel = 1.474m). Without it the worst trusss top chord
+* does not close within the 40-200mm SHS catalog -- this declaration is
+* load-bearing. Drawing note (verbatim, engineer-issued):
 *
-*      NOTE: THE STRUCTURAL DECK SHALL BE MECHANICALLY FASTENED TO THE TRUSS
-*      TOP CHORD AT EVERY CREST (SCREWS AT <= 300 mm CENTRES) PRIOR TO
-*      IMPOSITION OF ANY SUPERIMPOSED LOAD. THIS FASTENING CONSTITUTES THE
-*      LATERAL RESTRAINT SYSTEM TO THE TOP CHORD IN COMPRESSION (KL = 1.474 m)
-*      AND FORMS PART OF THE ROOF DIAPHRAGM. ADHESIVE-ONLY, CLIP-ONLY OR
-*      INTERMITTENT FASTENING SYSTEMS VOID THE TOP-CHORD CAPACITY SHOWN ON
-*      THESE DRAWINGS AND SHALL NOT BE SUBSTITUTED WITHOUT RECERTIFICATION BY
-*      THE STRUCTURAL ENGINEER. DECK FASTENER PULL-OUT AND SHEAR CAPACITIES
-*      SHALL BE CERTIFIED BY THE DECK SUPPLIER FOR BOTH GRAVITY AND NET
-*      UPLIFT (0.82 kN/m2) CONDITIONS.
+* NOTE: THE STRUCTURAL DECK SHALL BE MECHANICALLY FASTENED TO THE TRUSS
+* TOP CHORD AT EVERY CREST (SCREWS AT <= 300 mm CENTRES) PRIOR TO
+* IMPOSITION OF ANY SUPERIMPOSED LOAD. THIS FASTENING CONSTITUTES THE
+* LATERAL RESTRAINT SYSTEM TO THE TOP CHORD IN COMPRESSION (KL = 1.474
+* m) AND FORMS PART OF THE ROOF DIAPHRAGM. ADHESIVE-ONLY, CLIP-ONLY OR
+* INTERMITTENT FASTENING SYSTEMS VOID THE TOP-CHORD CAPACITY SHOWN ON
+* THESE DRAWINGS AND SHALL NOT BE SUBSTITUTED WITHOUT RECERTIFICATION BY
+* THE STRUCTURAL ENGINEER. DECK FASTENER PULL-OUT AND SHEAR CAPACITIES
+* SHALL BE CERTIFIED BY THE DECK SUPPLIER FOR BOTH GRAVITY AND NET
+* UPLIFT (0.82 kN/m2) CONDITIONS.
 *
-*  D-3 FINAL: braced bays = {1,3,4,6,8} (5 of 8). Plan bracing at the
-*      BOTTOM-chord level, PARTIAL coverage only -- a single zig-zag chain
-*      through panel-points {3,5,7,9,11} (4 modules/bay x 5 bays = 20
-*      diagonals), section 100x100x4 SHS, ~1.60t. Bottom-chord KL_op is
-*      segment-wise: 2.947m within the braced field (panels 3-10), 4.421m
-*      at the two unbraced end stretches (panels 0-2, 11-13). Verified
-*      against the real C4 (0.9DL+1.5WLup) bottom-chord axial diagram
-*      (peaks 109.6kN at midspan, worst truss) -- max util 0.854, max
-*      KL/r 92.5, both within limits. ACCEPTANCE MET, scheme ADOPTED.
+* D-3 FINAL: braced bays = {1,3,4,6,8} (5 of 8). Plan bracing at the
+* BOTTOM-chord level, PARTIAL coverage only -- a single zig-zag chain
+* through panel-points {3,5,7,9,11} (4 modules/bay x 5 bays = 20
+* diagonals), section 100x100x4 SHS, ~1.60t. Bottom-chord KL_op is
+* segment-wise: 2.947m within the braced field (panels 3-10), 4.421m at
+* the two unbraced end stretches (panels 0-2, 11-13). Verified against
+* the real C4 (0.9DL+1.5WLup) bottom-chord axial diagram (peaks 109.6kN
+* at midspan, worst truss) -- max util 0.854, max KL/r 92.5, both within
+* limits. ACCEPTANCE MET, scheme ADOPTED.
 *
-*  D-5: ring = 76x76x4 SHS. Plan bracing = 100x100x4 SHS (per D-3 final).
+* D-5: ring = 76x76x4 SHS. Plan bracing = 100x100x4 SHS (per D-3 final).
 *
-*  D-6 FINAL: PRIS stands for every SHS in this design, including
-*      100x100x4 (the round-2 'switch to TABLE' flag on it is withdrawn --
-*      the engineer's own hand Md references were the ones in error; this
-*      engine's Zp*fy/gamma_m0 values, capped at 1.2*Ze*fy/gamma_m0 per
-*      Cl 8.2.1.2, are validated). PRIS carries AX/AY/AZ/IX/IY/IZ/YD/ZD.
-*      PY/PZ were tried and CONFIRMED rejected by a live STAAD.Pro session
-*      ('PRISMATIC specification NOT valid' on all 33 PRIS lines) --
-*      removed. Md itself is never passed to STAAD; it's used directly by
-*      is800.js/optimize.js for member sizing, outside this file.
+* D-6 FINAL: PRIS stands for every SHS in this design, including
+* 100x100x4 (the round-2 switch-to-TABLE flag on it is withdrawn -- the
+* engineers own hand Md references were the ones in error; this engines
+* Zp*fy/gamma_m0 values, capped at 1.2*Ze*fy/gamma_m0 per Cl 8.2.1.2,
+* are validated). PRIS carries AX/AY/AZ/IX/IY/IZ/YD/ZD. PY/PZ were tried
+* and CONFIRMED rejected by a live STAAD.Pro session (PRISMATIC
+* specification NOT valid on all 33 PRIS lines) -- removed. Md itself is
+* never passed to STAAD; its used directly by is800.js/optimize.js for
+* member sizing, outside this file.
 *
-*  DESIGN CASE: this file is TAILORED-AT-ACTUAL tributaries (T1=4.572m,
-*      T2=5.098m, T3=7.121m) -- 6.32t trusses. The envelope variant
-*      (4.572/5.600/7.372m, 6.62t if invoked) is NOT built into this file;
-*      it is a documented spare-parts/interchangeability option only.
+* DESIGN CASE: this file is TAILORED-AT-ACTUAL tributaries (T1=4.572m,
+* T2=5.098m, T3=7.121m) -- 6.32t trusses. The envelope variant
+* (4.572/5.600/7.372m, 6.62t if invoked) is NOT built into this file; it
+* is a documented spare-parts/interchangeability option only.
 *
-*  25mm midspan camber remains a FABRICATION note only, not built into
-*  these joint coordinates (analysis uses the theoretical line).
+* 25mm midspan camber remains a FABRICATION note only, not built into
+* these joint coordinates (analysis uses the theoretical line).
+*
 * ================================================================
 UNIT METER KN
 JOINT COORDINATES
@@ -808,43 +813,42 @@ ALPHA 1.2e-005
 END DEFINE MATERIAL
 *
 MEMBER PROPERTY
-* D-6 CONFIRMED (was flagged [Guessing] in round 3, now verified against a live STAAD
-* session): PY/PZ are NOT valid PRISMATIC keywords -- STAAD.Pro rejected all 33 PRIS
-* lines with 'PRISMATIC specification NOT valid' when they were present. Removed. AX/AY/
-* AZ/IX/IY/IZ/YD/ZD are the accepted set and remain below.
-* Line-length fix (confirmed against a live STAAD session, round 4): a section shared by
-* many non-contiguous member ranges (e.g. 100x100x3, used across all 9 trusses) produced a
-* single line long enough that STAAD's own auto-wrap split it BEFORE reaching the PRIS
-* keyword -- 'ERROR - IN READING MEMBER PROPERTIES'. Fixed by chunking each section's
-* member-range list into short groups (<=6 ranges), each issued as its own complete
-* '<ranges> PRIS ...' statement -- no line ever needs auto-wrapping.
-* 110x110x3 SHS  (A=1284mm2 I=2452012mm4 Zp=51534mm3 -- sharp-corner formula;
-* Zp used directly by is800.js/optimize.js for capacity, not passed to STAAD -- see D-6)
+* D-6 CONFIRMED (was flagged Guessing in round 3, now verified against a
+* live STAAD session): PY/PZ are NOT valid PRISMATIC keywords --
+* STAAD.Pro rejected all 33 PRIS lines with PRISMATIC specification NOT
+* valid when they were present. Removed. AX/AY/AZ/IX/IY/IZ/YD/ZD are the
+* accepted set and remain below. Zp is used directly by
+* is800.js/optimize.js for member capacity and never passed to STAAD.
+*
+* Line-length fix (confirmed against a live STAAD session, round 4): a
+* section shared by many non-contiguous member ranges (e.g. 100x100x3,
+* used across all 9 trusses) produced a single line long enough that
+* STAADs own auto-wrap split it before reaching the PRIS keyword --
+* ERROR IN READING MEMBER PROPERTIES. Fixed by chunking each sections
+* member-range list into short groups, each issued as its own complete
+* PRIS statement -- no line ever needs auto-wrapping.
+*
+* 110x110x3 SHS  A=1284mm2 I=2452012mm4 Zp=51534mm3
 1 3 TO 5 12 TO 14 369 PRIS AX 0.001284 AY 0.000624 AZ 0.000624 IX 0.00000490 IY 0.00000245 IZ 0.00000245 YD 0.1100 ZD 0.1100
 371 TO 373 380 TO 382 PRIS AX 0.001284 AY 0.000624 AZ 0.000624 IX 0.00000490 IY 0.00000245 IZ 0.00000245 YD 0.1100 ZD 0.1100
-* 150x150x3 SHS  (A=1764mm2 I=6355692mm4 Zp=97254mm3 -- sharp-corner formula;
-* Zp used directly by is800.js/optimize.js for capacity, not passed to STAAD -- see D-6)
+* 150x150x3 SHS  A=1764mm2 I=6355692mm4 Zp=97254mm3
 2 6 TO 11 47 49 TO 51 PRIS AX 0.001764 AY 0.000864 AZ 0.000864 IX 0.00001271 IY 0.00000636 IZ 0.00000636 YD 0.1500 ZD 0.1500
 58 TO 60 370 374 TO 379 PRIS AX 0.001764 AY 0.000864 AZ 0.000864 IX 0.00001271 IY 0.00000636 IZ 0.00000636 YD 0.1500 ZD 0.1500
-* 75x75x3.6 SHS  (A=1028mm2 I=875807mm4 Zp=27552mm3 -- sharp-corner formula;
-* Zp used directly by is800.js/optimize.js for capacity, not passed to STAAD -- see D-6)
+* 75x75x3.6 SHS  A=1028mm2 I=875807mm4 Zp=27552mm3
 15 TO 18 25 27 TO 28 383 TO 386 PRIS AX 0.001028 AY 0.000488 AZ 0.000488 IX 0.00000175 IY 0.00000088 IZ 0.00000088 YD 0.0750 ZD 0.0750
 393 395 TO 396 PRIS AX 0.001028 AY 0.000488 AZ 0.000488 IX 0.00000175 IY 0.00000088 IZ 0.00000088 YD 0.0750 ZD 0.0750
-* 100x100x3 SHS  (A=1164mm2 I=1827092mm4 Zp=42354mm3 -- sharp-corner formula;
-* Zp used directly by is800.js/optimize.js for capacity, not passed to STAAD -- see D-6)
+* 100x100x3 SHS  A=1164mm2 I=1827092mm4 Zp=42354mm3
 19 TO 24 26 107 TO 110 117 PRIS AX 0.001164 AY 0.000564 AZ 0.000564 IX 0.00000365 IY 0.00000183 IZ 0.00000183 YD 0.1000 ZD 0.1000
 119 TO 120 153 TO 156 163 165 TO 166 PRIS AX 0.001164 AY 0.000564 AZ 0.000564 IX 0.00000365 IY 0.00000183 IZ 0.00000183 YD 0.1000 ZD 0.1000
 199 TO 202 209 211 TO 212 245 TO 248 PRIS AX 0.001164 AY 0.000564 AZ 0.000564 IX 0.00000365 IY 0.00000183 IZ 0.00000183 YD 0.1000 ZD 0.1000
 255 257 TO 258 291 TO 294 301 PRIS AX 0.001164 AY 0.000564 AZ 0.000564 IX 0.00000365 IY 0.00000183 IZ 0.00000183 YD 0.1000 ZD 0.1000
 303 TO 304 337 TO 340 347 349 TO 350 PRIS AX 0.001164 AY 0.000564 AZ 0.000564 IX 0.00000365 IY 0.00000183 IZ 0.00000183 YD 0.1000 ZD 0.1000
 387 TO 392 394 PRIS AX 0.001164 AY 0.000564 AZ 0.000564 IX 0.00000365 IY 0.00000183 IZ 0.00000183 YD 0.1000 ZD 0.1000
-* 40x40x3.6 SHS  (A=524mm2 I=116881mm4 Zp=7178mm3 -- sharp-corner formula;
-* Zp used directly by is800.js/optimize.js for capacity, not passed to STAAD -- see D-6)
+* 40x40x3.6 SHS  A=524mm2 I=116881mm4 Zp=7178mm3
 29 TO 30 32 34 TO 35 40 TO 41 PRIS AX 0.000524 AY 0.000236 AZ 0.000236 IX 0.00000023 IY 0.00000012 IZ 0.00000012 YD 0.0400 ZD 0.0400
 43 397 TO 398 400 402 TO 403 PRIS AX 0.000524 AY 0.000236 AZ 0.000236 IX 0.00000023 IY 0.00000012 IZ 0.00000012 YD 0.0400 ZD 0.0400
 408 TO 409 411 PRIS AX 0.000524 AY 0.000236 AZ 0.000236 IX 0.00000023 IY 0.00000012 IZ 0.00000012 YD 0.0400 ZD 0.0400
-* 60x60x3 SHS  (A=684mm2 I=371412mm4 Zp=14634mm3 -- sharp-corner formula;
-* Zp used directly by is800.js/optimize.js for capacity, not passed to STAAD -- see D-6)
+* 60x60x3 SHS  A=684mm2 I=371412mm4 Zp=14634mm3
 31 33 36 TO 39 42 PRIS AX 0.000684 AY 0.000324 AZ 0.000324 IX 0.00000074 IY 0.00000037 IZ 0.00000037 YD 0.0600 ZD 0.0600
 44 123 125 128 TO 131 PRIS AX 0.000684 AY 0.000324 AZ 0.000324 IX 0.00000074 IY 0.00000037 IZ 0.00000037 YD 0.0600 ZD 0.0600
 134 136 169 171 PRIS AX 0.000684 AY 0.000324 AZ 0.000324 IX 0.00000074 IY 0.00000037 IZ 0.00000037 YD 0.0600 ZD 0.0600
@@ -855,27 +859,22 @@ MEMBER PROPERTY
 318 320 353 355 PRIS AX 0.000684 AY 0.000324 AZ 0.000324 IX 0.00000074 IY 0.00000037 IZ 0.00000037 YD 0.0600 ZD 0.0600
 358 TO 361 364 366 399 PRIS AX 0.000684 AY 0.000324 AZ 0.000324 IX 0.00000074 IY 0.00000037 IZ 0.00000037 YD 0.0600 ZD 0.0600
 401 404 TO 407 410 412 PRIS AX 0.000684 AY 0.000324 AZ 0.000324 IX 0.00000074 IY 0.00000037 IZ 0.00000037 YD 0.0600 ZD 0.0600
-* 150x150x4 SHS  (A=2336mm2 I=8305259mm4 Zp=127928mm3 -- sharp-corner formula;
-* Zp used directly by is800.js/optimize.js for capacity, not passed to STAAD -- see D-6)
+* 150x150x4 SHS  A=2336mm2 I=8305259mm4 Zp=127928mm3
 45 TO 46 91 TO 92 137 TO 138 183 TO 184 PRIS AX 0.002336 AY 0.001136 AZ 0.001136 IX 0.00001661 IY 0.00000831 IZ 0.00000831 YD 0.1500 ZD 0.1500
 229 TO 230 275 TO 276 321 TO 322 367 TO 368 PRIS AX 0.002336 AY 0.001136 AZ 0.001136 IX 0.00001661 IY 0.00000831 IZ 0.00000831 YD 0.1500 ZD 0.1500
 413 TO 414 PRIS AX 0.002336 AY 0.001136 AZ 0.001136 IX 0.00001661 IY 0.00000831 IZ 0.00000831 YD 0.1500 ZD 0.1500
-* 200x200x3 SHS  (A=2364mm2 I=15294292mm4 Zp=174654mm3 -- sharp-corner formula;
-* Zp used directly by is800.js/optimize.js for capacity, not passed to STAAD -- see D-6)
+* 200x200x3 SHS  A=2364mm2 I=15294292mm4 Zp=174654mm3
 48 52 TO 57 PRIS AX 0.002364 AY 0.001164 AZ 0.001164 IX 0.00003059 IY 0.00001529 IZ 0.00001529 YD 0.2000 ZD 0.2000
-* 120x120x3 SHS  (A=1404mm2 I=3205332mm4 Zp=61614mm3 -- sharp-corner formula;
-* Zp used directly by is800.js/optimize.js for capacity, not passed to STAAD -- see D-6)
+* 120x120x3 SHS  A=1404mm2 I=3205332mm4 Zp=61614mm3
 61 TO 64 71 73 TO 74 93 PRIS AX 0.001404 AY 0.000684 AZ 0.000684 IX 0.00000641 IY 0.00000321 IZ 0.00000321 YD 0.1200 ZD 0.1200
 95 TO 97 104 TO 106 139 141 TO 143 PRIS AX 0.001404 AY 0.000684 AZ 0.000684 IX 0.00000641 IY 0.00000321 IZ 0.00000321 YD 0.1200 ZD 0.1200
 150 TO 152 185 187 TO 189 196 TO 198 PRIS AX 0.001404 AY 0.000684 AZ 0.000684 IX 0.00000641 IY 0.00000321 IZ 0.00000321 YD 0.1200 ZD 0.1200
 231 233 TO 235 242 TO 244 277 PRIS AX 0.001404 AY 0.000684 AZ 0.000684 IX 0.00000641 IY 0.00000321 IZ 0.00000321 YD 0.1200 ZD 0.1200
 279 TO 281 288 TO 290 323 325 TO 327 PRIS AX 0.001404 AY 0.000684 AZ 0.000684 IX 0.00000641 IY 0.00000321 IZ 0.00000321 YD 0.1200 ZD 0.1200
 334 TO 336 PRIS AX 0.001404 AY 0.000684 AZ 0.000684 IX 0.00000641 IY 0.00000321 IZ 0.00000321 YD 0.1200 ZD 0.1200
-* 140x140x3 SHS  (A=1644mm2 I=5145172mm4 Zp=84474mm3 -- sharp-corner formula;
-* Zp used directly by is800.js/optimize.js for capacity, not passed to STAAD -- see D-6)
+* 140x140x3 SHS  A=1644mm2 I=5145172mm4 Zp=84474mm3
 65 TO 70 72 PRIS AX 0.001644 AY 0.000804 AZ 0.000804 IX 0.00001029 IY 0.00000515 IZ 0.00000515 YD 0.1400 ZD 0.1400
-* 50x50x3 SHS  (A=564mm2 I=208492mm4 Zp=9954mm3 -- sharp-corner formula;
-* Zp used directly by is800.js/optimize.js for capacity, not passed to STAAD -- see D-6)
+* 50x50x3 SHS  A=564mm2 I=208492mm4 Zp=9954mm3
 75 TO 76 78 80 TO 81 86 TO 87 PRIS AX 0.000564 AY 0.000264 AZ 0.000264 IX 0.00000042 IY 0.00000021 IZ 0.00000021 YD 0.0500 ZD 0.0500
 89 121 TO 122 124 126 TO 127 PRIS AX 0.000564 AY 0.000264 AZ 0.000264 IX 0.00000042 IY 0.00000021 IZ 0.00000021 YD 0.0500 ZD 0.0500
 132 TO 133 135 167 TO 168 170 PRIS AX 0.000564 AY 0.000264 AZ 0.000264 IX 0.00000042 IY 0.00000021 IZ 0.00000021 YD 0.0500 ZD 0.0500
@@ -885,34 +884,31 @@ MEMBER PROPERTY
 273 305 TO 306 308 310 TO 311 PRIS AX 0.000564 AY 0.000264 AZ 0.000264 IX 0.00000042 IY 0.00000021 IZ 0.00000021 YD 0.0500 ZD 0.0500
 316 TO 317 319 351 TO 352 354 PRIS AX 0.000564 AY 0.000264 AZ 0.000264 IX 0.00000042 IY 0.00000021 IZ 0.00000021 YD 0.0500 ZD 0.0500
 356 TO 357 362 TO 363 365 PRIS AX 0.000564 AY 0.000264 AZ 0.000264 IX 0.00000042 IY 0.00000021 IZ 0.00000021 YD 0.0500 ZD 0.0500
-* 75x75x3 SHS  (A=864mm2 I=747792mm4 Zp=23342mm3 -- sharp-corner formula;
-* Zp used directly by is800.js/optimize.js for capacity, not passed to STAAD -- see D-6)
+* 75x75x3 SHS  A=864mm2 I=747792mm4 Zp=23342mm3
 77 79 82 TO 85 88 PRIS AX 0.000864 AY 0.000414 AZ 0.000414 IX 0.00000150 IY 0.00000075 IZ 0.00000075 YD 0.0750 ZD 0.0750
 90 PRIS AX 0.000864 AY 0.000414 AZ 0.000414 IX 0.00000150 IY 0.00000075 IZ 0.00000075 YD 0.0750 ZD 0.0750
-* 160x160x3 SHS  (A=1884mm2 I=7742612mm4 Zp=110934mm3 -- sharp-corner formula;
-* Zp used directly by is800.js/optimize.js for capacity, not passed to STAAD -- see D-6)
+* 160x160x3 SHS  A=1884mm2 I=7742612mm4 Zp=110934mm3
 94 98 TO 103 140 144 TO 149 PRIS AX 0.001884 AY 0.000924 AZ 0.000924 IX 0.00001549 IY 0.00000774 IZ 0.00000774 YD 0.1600 ZD 0.1600
 186 190 TO 195 232 236 TO 241 PRIS AX 0.001884 AY 0.000924 AZ 0.000924 IX 0.00001549 IY 0.00000774 IZ 0.00000774 YD 0.1600 ZD 0.1600
 278 282 TO 287 324 328 TO 333 PRIS AX 0.001884 AY 0.000924 AZ 0.000924 IX 0.00001549 IY 0.00000774 IZ 0.00000774 YD 0.1600 ZD 0.1600
-* 90x90x3.6 SHS  (A=1244mm2 I=1550621mm4 Zp=40334mm3 -- sharp-corner formula;
-* Zp used directly by is800.js/optimize.js for capacity, not passed to STAAD -- see D-6)
+* 90x90x3.6 SHS  A=1244mm2 I=1550621mm4 Zp=40334mm3
 111 TO 116 118 157 TO 162 164 PRIS AX 0.001244 AY 0.000596 AZ 0.000596 IX 0.00000310 IY 0.00000155 IZ 0.00000155 YD 0.0900 ZD 0.0900
 203 TO 208 210 249 TO 254 256 PRIS AX 0.001244 AY 0.000596 AZ 0.000596 IX 0.00000310 IY 0.00000155 IZ 0.00000155 YD 0.0900 ZD 0.0900
 295 TO 300 302 341 TO 346 348 PRIS AX 0.001244 AY 0.000596 AZ 0.000596 IX 0.00000310 IY 0.00000155 IZ 0.00000155 YD 0.0900 ZD 0.0900
-* 76x76x4 SHS  (A=1152mm2 I=998400mm4 Zp=31136mm3 -- sharp-corner formula;
-* Zp used directly by is800.js/optimize.js for capacity, not passed to STAAD -- see D-6)
+* 76x76x4 SHS  A=1152mm2 I=998400mm4 Zp=31136mm3
 415 TO 430 PRIS AX 0.001152 AY 0.000544 AZ 0.000544 IX 0.00000200 IY 0.00000100 IZ 0.00000100 YD 0.0760 ZD 0.0760
-* 100x100x4 SHS  (A=1536mm2 I=2363392mm4 Zp=55328mm3 -- sharp-corner formula;
-* Zp used directly by is800.js/optimize.js for capacity, not passed to STAAD -- see D-6)
+* 100x100x4 SHS  A=1536mm2 I=2363392mm4 Zp=55328mm3
 431 TO 450 PRIS AX 0.001536 AY 0.000736 AZ 0.000736 IX 0.00000473 IY 0.00000236 IZ 0.00000236 YD 0.1000 ZD 0.1000
 *
 CONSTANTS
 MATERIAL STEEL MEMB 1 TO 450
 *
 MEMBER RELEASE
-* Webs/bracing: 99% moment release both ends (never 100% -- per brief). Chords: none
-* (rigid/continuous, per brief). Syntax below (MP fraction-remaining-fixity) is written
-* from documentation, NOT verified against a live STAAD session -- confirm before running.
+* Webs/bracing: 99% moment release both ends (never 100% -- per brief).
+* Chords: none (rigid/continuous, per brief). Syntax below (MP
+* fraction-remaining-fixity) is written from documentation, NOT verified
+* against a live STAAD session -- confirm before running.
+*
 29 TO 44 START MP 0.99
 29 TO 44 END MP 0.99
 75 TO 90 START MP 0.99
@@ -1369,10 +1365,12 @@ LOAD COMBINATION 105 C5: 1.5(DL+WLUP)
 *
 PARAMETER 1
 CODE IS800
-* Effective lengths, member-specific -- NEVER a blanket value (see audit A4).
-* LY/LZ mapping to in-plane vs out-of-plane depends on each member's local axis
-* orientation as STAAD assigns it by default; VERIFY visually (View > Structure >
-* Show Beta Angle / local axes) before trusting which is which -- not done here.
+* Effective lengths, member-specific -- NEVER a blanket value (see audit
+* A4). LY/LZ mapping to in-plane vs out-of-plane depends on each members
+* local axis orientation as STAAD assigns it by default; VERIFY visually
+* (View, Structure, Show Beta Angle or local axes) before trusting which
+* is which -- not done here.
+*
 KY 1.0 ALL
 KZ 1.0 ALL
 LY 1.474 MEMB 1 TO 14
@@ -1393,9 +1391,11 @@ LY 1.474 MEMB 323 TO 336
 LZ 1.253 MEMB 323 TO 336
 LY 1.474 MEMB 369 TO 382
 LZ 1.253 MEMB 369 TO 382
-* Bottom chord: KL_op is segment-wise (D-3 final) -- 2.947m within the braced
-* field (panels 3-10, where a bracing attachment lands every 2 panels), 4.421m
-* at the two unbraced end stretches (panels 0-2 and 11-13, no bracing attachment there).
+* Bottom chord: KL_op is segment-wise (D-3 final) -- 2.947m within the
+* braced field (panels 3-10, where a bracing attachment lands every 2
+* panels), 4.421m at the two unbraced end stretches (panels 0-2 and
+* 11-13, no bracing attachment there).
+*
 LY 2.947 MEMB 18 TO 25
 LZ 1.253 MEMB 18 TO 25
 LY 2.947 MEMB 64 TO 71
@@ -1774,16 +1774,20 @@ LY 7.752 MEMB 413
 LZ 7.752 MEMB 413
 LY 7.339 MEMB 414
 LZ 7.339 MEMB 414
-* Ring + bracing: ASSUMPTION -- treated as fully laterally restrained by the deck/purlins
-* they carry; no separate KL declared beyond the code default (span length, K=1.0).
+* Ring + bracing: ASSUMPTION -- treated as fully laterally restrained by
+* the deck/purlins they carry; no separate KL declared beyond the code
+* default (span length, K=1.0).
 *
-* NOTE: no CHECK CODE issued -- member sizing/utilization in this project comes from
-* the independent Node stiffness engine (structural/optimize.js), not from STAAD's
-* own IS800 design module. This PARAMETER block documents the effective-length basis
-* for a reviewer who DOES want to run STAAD's CHECK CODE as a second opinion.
+* NOTE: no CHECK CODE issued -- member sizing/utilization in this
+* project comes from the independent Node stiffness engine
+* (structural/optimize.js), not from STAADs own IS800 design module.
+* This PARAMETER block documents the effective-length basis for a
+* reviewer who DOES want to run STAADs CHECK CODE as a second opinion.
+*
 *
 PERFORM ANALYSIS PRINT STATICS CHECK
-* P-Delta requested per brief -- CONNECT Edition syntax below;
-* NOT verified against an actual STAAD session (A9 -- confirm before running).
+* P-Delta requested per brief -- syntax below not verified against an
+* actual STAAD session (A9 -- confirm before running).
+*
 PDELTA ANALYSIS
 FINISH
