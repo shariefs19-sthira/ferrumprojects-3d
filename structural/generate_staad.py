@@ -278,10 +278,10 @@ def w(s=""):
     lines.append(s)
 
 w("STAAD SPACE")
-w(f"START JOB INFORMATION")
-w(f"ENGINEER Sharief_Satyala")  # a live STAAD session rejected the multi-word value ("JOB
-w(f"JOB NAME CHRA-2502_Pickleball_Roof_3D_Global_Model")  # INFORMATION command ignored") -- underscored, cosmetic only
-w(f"END JOB INFORMATION")
+w(f"* Engineer: Sharief Satyala | Job: CHRA-2502 Pickleball Roof - 3D Global Model")
+w(f"* (job metadata as a plain comment -- two guesses at STAAD's JOB INFORMATION")
+w(f"* ENGINEER/JOB NAME syntax were both rejected by a live session; not worth a third guess")
+w(f"* for a purely cosmetic field with zero effect on the analysis.)")
 w("* ================================================================")
 w("* GENERATED FILE -- CLOSE-OUT PATCH SET (ROUND 3). See generate_staad.py")
 w("* docstring for the full ruling history. Summary of what's built in below:")
