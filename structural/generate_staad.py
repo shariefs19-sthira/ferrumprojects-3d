@@ -136,6 +136,18 @@ import os
 # again later, but OFF by default now.
 NO_BRACING = False
 
+# USE_TUBE: engineer's live STAAD run rejected every TUBE DT/WT/TH property line ("MEMBER
+# PROPERTY command ignored by program. Check syntax", 13/13 statements) -- confirmed real,
+# not guessed. This project's memory of that syntax is wrong for this STAAD build (V8i
+# SELECTseries6), and guessing a second time risks burning another round the same way
+# PY/PZ did earlier. Reverted to PRISMATIC (AX/AY/AZ/IX/IY/IZ/YD/ZD) -- proven clean on
+# this exact build (the round-6/7 successful run). Tradeoff: PRISMATIC members are not
+# eligible for STAAD's own CHECK CODE, so this file's pass/fail comes from this project's
+# own is800.js engine (already computed against these exact sections), not from STAAD's
+# design module, until the real TUBE syntax for this build is confirmed (fastest path:
+# define a Tube property via STAAD's own GUI dialog and read back what it writes).
+USE_TUBE = False
+
 # UNIFORM_MANUAL_DESIGN (engineer's ruling, post-round-9): the engineer wants a complete,
 # code-check-ready MODEL -- geometry, all 4 load cases, all 5 combinations, CODE IS800 with
 # every member's real effective length declared, CHECK CODE ALL -- but will pick every
@@ -547,34 +559,45 @@ wc("D-6 CONFIRMED (was flagged Guessing in round 3, now verified "
    "against a live STAAD session): PY/PZ are NOT valid PRISMATIC "
    "keywords -- STAAD.Pro rejected all 33 PRIS lines with PRISMATIC "
    "specification NOT valid when they were present. Removed.")
-wc("SWITCHED FROM PRISMATIC TO TUBE (engineer's ruling): a bare "
-   "PRISMATIC member carries no section classification, so STAADs "
-   "own steel-design module (CHECK CODE) cannot run on it -- it has "
-   "no way to know these are SHS members at all. TUBE is a named "
-   "STAAD section type (DT/WT/TH = outer depth/width/wall "
-   "thickness); STAAD computes its own section properties from "
-   "those three numbers rather than taking AX/IX/etc. directly, and "
-   "IS 800 tubular-section design is a documented STAAD code-check "
-   "path for it. [Likely, not confirmed] this makes CHECK CODE "
-   "actually run on this file -- unverified against a live session, "
-   "flag any TUBE-related error the same way every prior PRIS/JOB "
-   "INFO/PARAMETER defect in this file was caught: run it and send "
-   "the .err back. Note: STAAD's TUBE, like this project's own "
-   "is800.js, uses a sharp-corner idealization (no fillet radius), "
-   "so its computed A/I/Zp should match the audit comment above each "
-   "block closely -- worth a spot cross-check on the first live run.")
+wc("TUBE DT/WT/TH was tried (engineer's ruling, to make members "
+   "CHECK-CODE-eligible) and CONFIRMED REJECTED by a live STAAD "
+   "session: all 13 TUBE property statements came back MEMBER "
+   "PROPERTY command ignored by program, check syntax. This "
+   "project's memory of that syntax is wrong for this STAAD build "
+   "(V8i SELECTseries6) -- reverted to PRISMATIC "
+   "(AX/AY/AZ/IX/IY/IZ/YD/ZD), proven clean on this exact build. "
+   "Tradeoff, and it is a real one: PRISMATIC members carry no "
+   "section classification, so STAAD's own CHECK CODE cannot design "
+   "them -- pass/fail for this file has to come from elsewhere until "
+   "the real TUBE (or table-section) syntax for this build is "
+   "confirmed, e.g. by defining a Tube property via STAAD's own GUI "
+   "dialog and reading back what it writes.")
 MAX_RANGES_PER_LINE = 4  # conservative -- exact per-line limit for this STAAD build is unconfirmed
 for sec_label, ids in by_section.items():
     p = SECTION_PROPS[sec_label]
-    dt = p["B"] / 1000.0
-    wt = p["B"] / 1000.0
-    th = p["t"] / 1000.0
     id_ranges = ranges(ids)
     w(f"* {sec_label}  A={p['A']:.0f}mm2 I={p['I']:.0f}mm4 Zp={p['Zp']:.0f}mm3")
-    for i in range(0, len(id_ranges), MAX_RANGES_PER_LINE):
-        chunk = id_ranges[i:i + MAX_RANGES_PER_LINE]
-        range_str = " ".join(f"{a} TO {b}" if a != b else f"{a}" for a, b in chunk)
-        w(f"{range_str} TUBE DT {dt:.4f} WT {wt:.4f} TH {th:.4f}")
+    if USE_TUBE:
+        dt = p["B"] / 1000.0
+        wt = p["B"] / 1000.0
+        th = p["t"] / 1000.0
+        for i in range(0, len(id_ranges), MAX_RANGES_PER_LINE):
+            chunk = id_ranges[i:i + MAX_RANGES_PER_LINE]
+            range_str = " ".join(f"{a} TO {b}" if a != b else f"{a}" for a, b in chunk)
+            w(f"{range_str} TUBE DT {dt:.4f} WT {wt:.4f} TH {th:.4f}")
+    else:
+        ax = p["A"] / 1e6         # mm^2 -> m^2
+        iy = p["I"] / 1e12        # mm^4 -> m^4 (weak axis, SHS symmetric so IY=IZ)
+        iz = p["I"] / 1e12
+        ix = 2 * p["I"] / 1e12    # torsion constant approx for a closed square tube: ~2*I (thin-wall box)
+        yd = p["B"] / 1000.0
+        zd = p["B"] / 1000.0
+        ay = az = 2 * p["t"] * (p["B"] - 2 * p["t"]) / 1e6  # m^2, two walls carry shear each direction
+        for i in range(0, len(id_ranges), MAX_RANGES_PER_LINE):
+            chunk = id_ranges[i:i + MAX_RANGES_PER_LINE]
+            range_str = " ".join(f"{a} TO {b}" if a != b else f"{a}" for a, b in chunk)
+            w(f"{range_str} PRIS AX {ax:.6f} AY {ay:.6f} AZ {az:.6f} IX {ix:.8f} IY {iy:.8f} IZ {iz:.8f} "
+              f"YD {yd:.4f} ZD {zd:.4f}")
 
 # D-6 FINAL: report the validated Md (Cl 8.2.1.2, capped at 1.2*Ze*fy/gamma_m0) for the two
 # sections the engineer's own (now-withdrawn) hand references named. PRIS stands for both.
@@ -757,16 +780,13 @@ wc("Ring + bracing: ASSUMPTION -- treated as fully laterally "
    "restrained by the deck/purlins they carry; no separate KL "
    "declared beyond the code default (span length, K=1.0).")
 w("TRACK 2 ALL")
-wc("CHECK CODE issued below (engineer's ruling, superseding the "
-   "earlier no-CHECK-CODE note): sections are now TUBE, not bare "
-   "PRISMATIC, specifically so STAADs own IS800 steel-design module "
-   "can run natively -- TRACK 2 for full member-by-member capacity "
-   "detail, not just the PASS/FAIL summary. This is now a genuine "
-   "second, independent design check against this project's own "
-   "Node/is800.js engine (structural/optimize.js), which is still "
-   "what sized every member -- if the two disagree by more than a "
-   "rounding amount, that is a real finding to bring back, not "
-   "something to silently prefer one source over the other on.")
+wc("CHECK CODE ALL issued below, kept even though sections reverted "
+   "to PRISMATIC after the TUBE rejection above -- left in "
+   "deliberately rather than removed, so STAAD itself reports what "
+   "it actually does with it (design-skip a PRISMATIC member, error, "
+   "or something else) instead of this script guessing that outcome "
+   "too. TRACK 2 for full member-by-member detail if anything is "
+   "produced at all.")
 w("CHECK CODE ALL")
 w("FINISH")
 
