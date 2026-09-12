@@ -103,7 +103,7 @@ function effectiveLengths(truss, m, Lmm, opts) {
   // practice for an undeclared/unverified restraint. Default here is the conservative case.
   const topOpFactor = opts.deckLateralCredit ? 1.0 : 2.0;
   if (m.type === 'top') return { KL_ip: 0.85 * Lmm, KL_op: topOpFactor * Lmm };
-  if (m.type === 'bottom') return { KL_ip: 0.85 * Lmm, KL_op: RING_BRACE_OP };
+  if (m.type === 'bottom') return { KL_ip: 0.85 * Lmm, KL_op: opts.bottomChordKLop || RING_BRACE_OP };
   return { KL_ip: 0.85 * Lmm, KL_op: 1.0 * Lmm }; // vertical/diagonal webs
 }
 
