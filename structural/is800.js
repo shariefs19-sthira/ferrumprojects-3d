@@ -24,7 +24,9 @@ function memberUtilization(section, fy, demand) {
   const { N, M } = demand;
   const KLr = Math.max(demand.KL_ip / section.r, demand.KL_op / section.r);
   const Zp = section.Zp;
-  const Md = 1.0 * Zp * fy / GAMMA_M0; // betab=1 (plastic/compact SHS), no LTB reduction (closed section)
+  // Cl 8.2.1.2: Md = betab*Zp*fy/gamma_m0, capped at 1.2*Ze*fy/gamma_m0 (limits plasticity for
+  // plastic/compact sections). betab=1, no LTB reduction (closed section).
+  const Md = Math.min(1.0 * Zp * fy / GAMMA_M0, 1.2 * section.Ze * fy / GAMMA_M0);
   const Mratio = M ? M / Md : 0;
 
   if (N >= 0) {

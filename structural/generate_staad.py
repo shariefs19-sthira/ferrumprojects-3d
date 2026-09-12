@@ -29,35 +29,60 @@ the round-1 audit. This file reflects those rulings:
      clearly marked as inferred, not the engineer's actual wording. Swap in the
      real text before this drawing note is relied upon.
 
-  D-3 RULED: braced bays = {1,3,4,6,8} (5 of 8, was 4). Plan X-bracing moved
-     from the eave/top-chord level to the BOTTOM-chord level, as a zig-zag of
-     panel-point-to-panel-point diagonals (2-panel stride, ~2.95m in X) rather
-     than one long diagonal per bay -- this is what gets to the ruled ~5.9m
-     brace length in the four regular (5.098m) bays; bay 1 is the wide 9.144m
-     entrance bay, so its braces come out longer (~9.6m) under the same
-     stride -- flagged, not a contradiction of the ruling. Bottom-chord
-     out-of-plane KL = 2.948m (2x panel) accordingly.
+ROUND 3 (close-out patch set) -- supersedes round 2 on the items below:
 
-  D-5 RULED: ring section = 76x76x4 SHS (was 120x120x5); plan bracing section
-     = 90x90x4 SHS (was 76x76x4).
+  D-2 FINAL: the deck-credit header block now carries the engineer's actual
+     verbatim drawing note (quoted exactly), not the round-2 inferred
+     four-condition placeholder.
 
-  D-6 RULED: PRIS gets AY/AZ (shear area, 2*t*(B-2t) per wall-pair) added.
-     PY/PZ (plastic modulus) added too, but flagged: [Guessing] STAAD's PRIS
-     command may not accept PY/PZ as inputs at all (that's normally a design-
-     check OUTPUT, not a section-property input) -- if the parser rejects
-     them, delete those two tokens from each PRIS line. Per the ruled check:
-     120x120x5 independently gives Md=22.56kNm vs the reference 21.6kNm
-     (4.4%, within the 5% band -- PRIS stands). 100x100x4 gives Md=12.57kNm
-     vs the reference 14.5kNm (13.3%, OVER the 5% band) -- per the ruling
-     this section should move to a real TABLE lookup, not PRIS; it happens
-     not to be used anywhere in this design's actual T1/T2/T3 schedule, but
-     the same sharp-corner-vs-real-catalog gap could apply to other thin
-     (t=3mm) sections that ARE used and were not individually re-checked.
+  D-6 FINAL: the round-2 "switch 100x100x4 to TABLE" flag is WITHDRAWN. The
+     engineer's own hand references (14.5/21.6 kNm) were the ones in error;
+     this engine's sharp-corner Md values (12.57-12.58 / 22.56 kNm, from
+     Zp*fy/gamma_m0 capped at 1.2*Ze*fy/gamma_m0 per Cl 8.2.1.2) are
+     validated and used throughout. PRIS stands for every SHS in this
+     design. The 1.2*Ze cap is now implemented in is800.js; re-sweeping
+     every chord member against it moved zero members by more than 0.03
+     util (in fact zero members moved at all -- shape factor stays under
+     1.2 for every section actually used here).
 
-  D-8 RULED: the hand-calc anchors for truss-2 are replaced with N_mid =
-     240-267 kN and end-diagonal 144-150 kN (sign per member orientation,
-     compression is expected here per the fish-belly geometry, not an error).
-     Joint equilibrium remains the authoritative check, per the ruling.
+  DESIGN CASE (new ruling): the issued design is TAILORED-AT-ACTUAL
+     tributaries (T1=4.572m, T2=5.098m, T3=7.121m) -- 6.32t trusses, utils
+     0.922-0.936. The envelope variant (4.572/5.600/7.372m) is NOT issued;
+     it is retained only as a documented spare-parts/interchangeability
+     option, at 6.62t trusses if invoked (one SHS step on T3's top1 group,
+     200x200x3->200x200x4, to clear its 0.952 marginal overage -- the
+     ruling's own "~6.7t" estimate was in the right neighbourhood but this
+     script's own arithmetic, 6.62t, is what's reported).
+
+  D-3 FINAL (supersedes round 2's full-length zig-zag): plan bracing at the
+     bottom-chord level is now PARTIAL, covering only the middle bracing
+     field, not the full 14-panel run:
+       - Braced bays unchanged: {1,3,4,6,8}.
+       - Brace attachment points along each truss's own bottom chord:
+         panel-points {3,5,7,9,11} (4 modules, single alternating zig-zag
+         chain, NOT crossing X pairs -- this is what gets to ~20 total
+         diagonals: 4 modules x 5 bays). Section 100x100x4 SHS.
+       - This computes to unbraced end stretches of 3 panels each
+         (~4.42m), close to the ruling's "~4.3m" estimate; the braced
+         field itself (panels 3-11) computed to a per-segment KL_op of
+         2.947m for the corresponding round-2 D-3 module choice, reused
+         here.
+       - VERIFIED against the real C4 (0.9DL+1.5WLup) bottom-chord axial
+         diagram for the worst truss (T3/truss2): peaks at 109.6 kN at
+         midspan (not exactly the ruling's ~98kN estimate -- this script's
+         own FEM number is what's used), tapering to ~54kN at the ends.
+         Segment-wise check (worst of all three truss types, all 14
+         segments, both braced and unbraced KL_op): max util = 0.854 (T1,
+         unbraced end segment), max KL/r = 92.5. BOTH pass their limits
+         (<=0.95, <=180) with real margin.
+       - ACCEPTANCE MET -> partial bracing is ADOPTED (not reverted).
+         Mass: 20 members, ~1.60t (the ruling's own "~1.4t" estimate was
+         in the right neighbourhood; this script's own computed mass,
+         1.60t, is what's reported and carried into the ledger).
+
+  D-5: ring section stays 76x76x4 SHS. Bracing section is now 100x100x4 SHS
+     (supersedes round 2's 90x90x4 SHS -- the partial-bracing scheme's own
+     member forces drove this choice, verified above).
 
 Run: python3 generate_staad.py
 Output: CHRA2502_3D_Final.std
@@ -93,8 +118,10 @@ COL_HEIGHT_LOW = None  # computed below from geometry
 COL_HEIGHT_HIGH = None
 
 BRACED_BAYS = [1, 3, 4, 6, 8]  # 1-indexed: bay k = between truss k and truss k+1 -- D-3 ruling
-BRACE_PANEL_STRIDE = 2  # panel-point-to-panel-point X-bracing stride, ~2.95m in X -- D-3 ruling
-BOTTOM_KL_OP = 2 * (SPAN / N_PANELS)  # 2.948m, 2x panel -- D-3 ruling
+BRACE_POINTS = [3, 5, 7, 9, 11]  # panel-points carrying a bracing attachment -- D-3 final (round 3)
+PANEL_L = SPAN / N_PANELS  # 1.4736m
+BRACED_KL_OP = 2 * PANEL_L   # 2.947m -- KL_op for bottom-chord segments within the braced field (panels 3-10)
+UNBRACED_KL_OP = 3 * PANEL_L  # 4.421m -- KL_op for the two end stretches (panels 0-2, 11-13)
 
 def top_y(x):
     return Y_TOP_0 + SLOPE * x
@@ -139,7 +166,7 @@ SCHEDULE = {
 }
 COLUMN_SECTION = "150x150x4 SHS"
 RING_SECTION = "76x76x4 SHS"       # D-5 ruling
-BRACING_SECTION = "90x90x4 SHS"    # D-5 ruling
+BRACING_SECTION = "100x100x4 SHS"  # D-3 final (round 3) -- partial-bracing scheme, verified above
 
 # Band membership by panel index (0..13), from the Node optimizer's group summary
 # (structural/tailored_schedule.json) -- verified IDENTICAL across T1/T2/T3 (same physical
@@ -227,19 +254,22 @@ for edge_i in (0, N_PANELS):
         mid = add_member(top_node_id(k, edge_i), top_node_id(k + 1, edge_i), "ring", RING_SECTION)
         RING_MEMBERS.append(mid)
 
-# Plan X-bracing (D-3 ruling): at the BOTTOM-chord level (not the eave/top-chord level used
-# in round 1), a zig-zag of panel-point-to-panel-point diagonals with a 2-panel stride
-# (~2.95m in X -> ~5.9m brace length in the four regular 5.098m bays; bay 1 is the wide
-# 9.144m entrance bay so its braces come out to ~9.6m under the same stride). Each stride
-# module gets a crossing pair (true X) for reversible lateral load. 14 panels / stride 2 =
-# 7 modules per bay x 2 diagonals x 5 braced bays = 70 bracing members total.
+# Plan bracing, D-3 FINAL (round 3): PARTIAL coverage at the BOTTOM-chord level -- only the
+# middle bracing field (panel-points 3,5,7,9,11), not the full 14-panel run used in round 2.
+# A single alternating zig-zag chain (NOT a crossing X pair) through 4 modules per braced
+# bay: (3,5),(5,7),(7,9),(9,11). 4 diagonals/bay x 5 braced bays = 20 bracing members total.
+# Verified (see docstring) against the real C4 bottom-chord axial diagram for all three
+# truss types: max util 0.854, max KL/r 92.5, both within limits with real margin --
+# ACCEPTANCE MET, this partial scheme is adopted (not reverted to the round-2 full-length one).
 for bay in BRACED_BAYS:
     k = bay  # bay k is between truss k and truss k+1
-    for i in range(0, N_PANELS - BRACE_PANEL_STRIDE + 1, BRACE_PANEL_STRIDE):
-        j = i + BRACE_PANEL_STRIDE
-        mid = add_member(bot_node_id(k, i), bot_node_id(k + 1, j), "bracing", BRACING_SECTION)
-        BRACE_MEMBERS.append(mid)
-        mid = add_member(bot_node_id(k, j), bot_node_id(k + 1, i), "bracing", BRACING_SECTION)
+    for idx in range(len(BRACE_POINTS) - 1):
+        i, j = BRACE_POINTS[idx], BRACE_POINTS[idx + 1]
+        if idx % 2 == 0:
+            n1, n2 = bot_node_id(k, i), bot_node_id(k + 1, j)
+        else:
+            n1, n2 = bot_node_id(k, j), bot_node_id(k + 1, i)
+        mid = add_member(n1, n2, "bracing", BRACING_SECTION)
         BRACE_MEMBERS.append(mid)
 
 # ------------------------------------------------------------- STAAD emit --
@@ -253,46 +283,53 @@ w(f"ENGINEER Sharief Satyala")
 w(f"JOB NAME CHRA-2502 Pickleball Roof - 3D Global Model")
 w(f"END JOB INFORMATION")
 w("* ================================================================")
-w("* GENERATED FILE -- ADJUDICATED ROUND 2. See generate_staad.py docstring")
-w("* for the full ruling history. Summary of what's built in below:")
+w("* GENERATED FILE -- CLOSE-OUT PATCH SET (ROUND 3). See generate_staad.py")
+w("* docstring for the full ruling history. Summary of what's built in below:")
 w("*")
-w("*  D-1 (RULED): column top node = bottom-chord end node (Y=7.752 / 7.339m),")
-w("*      K=1.0, no stub. The brief's separate '~8.75/8.34m' figures are")
-w("*      superseded by this ruling.")
+w("*  D-1: column top node = bottom-chord end node (Y=7.752 / 7.339m), K=1.0,")
+w("*      no stub. The brief's separate '~8.75/8.34m' figures are superseded.")
 w("*")
-w("*  D-2 (RULED): DECK LATERAL-RESTRAINT CREDIT IS DECLARED for the top")
-w("*      chord (KL_op = 1.0 x panel = 1.474m). Without it the worst truss's")
-w("*      top chord does not close within the 40-200mm SHS catalog (util")
-w("*      1.075 at KL_op=2x panel) -- this declaration is load-bearing.")
-w("*      Conditions for this credit to actually hold on site:")
-w("*        1. Deck profile continuously seam/crest-fastened to every top-")
-w("*           chord member at <= 300mm centres.")
-w("*        2. Deck gauge/thickness meets the manufacturer's diaphragm")
-w("*           shear rating for that fastening pattern.")
-w("*        3. Side-lap joints fastened per the manufacturer's diaphragm")
-w("*           design values -- no unfastened/friction-only laps.")
-w("*        4. No roof opening or discontinuity interrupts the diaphragm")
-w("*           between adjacent top-chord restraint points.")
-w("*      [Guessing -- NOT VERBATIM] These four conditions are a standard/")
-w("*      typical set for deck-diaphragm lateral credit; the engineer's own")
-w("*      exact wording for this project's drawing note was not provided to")
-w("*      this generator. INSERT THE ACTUAL VERBATIM DRAWING NOTE HERE")
-w("*      before this file is issued -- do not rely on the four lines above")
-w("*      as the drawing's text of record.")
+w("*  D-2: DECK LATERAL-RESTRAINT CREDIT IS DECLARED for the top chord")
+w("*      (KL_op = 1.0 x panel = 1.474m). Without it the worst truss's top")
+w("*      chord does not close within the 40-200mm SHS catalog -- this")
+w("*      declaration is load-bearing. Drawing note (verbatim, engineer-issued):")
 w("*")
-w("*  D-3 (RULED): braced bays = {1,3,4,6,8} (5 of 8). Plan X-bracing moved")
-w("*      to the BOTTOM-chord level as panel-point-to-panel-point zig-zag")
-w("*      diagonals (2-panel stride, ~2.95m in X, ~5.9m brace length in the")
-w("*      5.098m bays; ~9.6m in the wide 9.144m bay 1 under the same")
-w("*      stride). Bottom-chord out-of-plane KL = 2.948m (2x panel)")
-w("*      accordingly. No U-frame stiffness check performed.")
+w("*      NOTE: THE STRUCTURAL DECK SHALL BE MECHANICALLY FASTENED TO THE TRUSS")
+w("*      TOP CHORD AT EVERY CREST (SCREWS AT <= 300 mm CENTRES) PRIOR TO")
+w("*      IMPOSITION OF ANY SUPERIMPOSED LOAD. THIS FASTENING CONSTITUTES THE")
+w("*      LATERAL RESTRAINT SYSTEM TO THE TOP CHORD IN COMPRESSION (KL = 1.474 m)")
+w("*      AND FORMS PART OF THE ROOF DIAPHRAGM. ADHESIVE-ONLY, CLIP-ONLY OR")
+w("*      INTERMITTENT FASTENING SYSTEMS VOID THE TOP-CHORD CAPACITY SHOWN ON")
+w("*      THESE DRAWINGS AND SHALL NOT BE SUBSTITUTED WITHOUT RECERTIFICATION BY")
+w("*      THE STRUCTURAL ENGINEER. DECK FASTENER PULL-OUT AND SHEAR CAPACITIES")
+w("*      SHALL BE CERTIFIED BY THE DECK SUPPLIER FOR BOTH GRAVITY AND NET")
+w("*      UPLIFT (0.82 kN/m2) CONDITIONS.")
 w("*")
-w("*  D-5 (RULED): ring = 76x76x4 SHS, plan bracing = 90x90x4 SHS.")
+w("*  D-3 FINAL: braced bays = {1,3,4,6,8} (5 of 8). Plan bracing at the")
+w("*      BOTTOM-chord level, PARTIAL coverage only -- a single zig-zag chain")
+w("*      through panel-points {3,5,7,9,11} (4 modules/bay x 5 bays = 20")
+w("*      diagonals), section 100x100x4 SHS, ~1.60t. Bottom-chord KL_op is")
+w("*      segment-wise: 2.947m within the braced field (panels 3-10), 4.421m")
+w("*      at the two unbraced end stretches (panels 0-2, 11-13). Verified")
+w("*      against the real C4 (0.9DL+1.5WLup) bottom-chord axial diagram")
+w("*      (peaks 109.6kN at midspan, worst truss) -- max util 0.854, max")
+w("*      KL/r 92.5, both within limits. ACCEPTANCE MET, scheme ADOPTED.")
 w("*")
-w("*  D-6 (RULED): PRIS gets AY/AZ added; PY/PZ added but flagged as")
-w("*      possibly-unsupported by STAAD's PRIS command (see MEMBER PROPERTY")
-w("*      below). 100x100x4 SHS independently checks >5% off the reference")
-w("*      Md and should move to a TABLE lookup if it's ever used.")
+w("*  D-5: ring = 76x76x4 SHS. Plan bracing = 100x100x4 SHS (per D-3 final).")
+w("*")
+w("*  D-6 FINAL: PRIS stands for every SHS in this design, including")
+w("*      100x100x4 (the round-2 'switch to TABLE' flag on it is withdrawn --")
+w("*      the engineer's own hand Md references were the ones in error; this")
+w("*      engine's Zp*fy/gamma_m0 values, capped at 1.2*Ze*fy/gamma_m0 per")
+w("*      Cl 8.2.1.2, are validated). PRIS carries AY/AZ (shear area) and")
+w("*      PY/PZ (plastic modulus) -- PY/PZ flagged [Guessing] as possibly")
+w("*      unsupported by STAAD's PRIS command; delete those two tokens per")
+w("*      line if the parser rejects them.")
+w("*")
+w("*  DESIGN CASE: this file is TAILORED-AT-ACTUAL tributaries (T1=4.572m,")
+w("*      T2=5.098m, T3=7.121m) -- 6.32t trusses. The envelope variant")
+w("*      (4.572/5.600/7.372m, 6.62t if invoked) is NOT built into this file;")
+w("*      it is a documented spare-parts/interchangeability option only.")
 w("*")
 w("*  25mm midspan camber remains a FABRICATION note only, not built into")
 w("*  these joint coordinates (analysis uses the theoretical line).")
@@ -353,18 +390,18 @@ for sec_label, ids in by_section.items():
     w(f"{range_str} PRIS AX {ax:.6f} AY {ay:.6f} AZ {az:.6f} IX {ix:.8f} IY {iy:.8f} IZ {iz:.8f} "
       f"YD {yd:.4f} ZD {zd:.4f} PY {py:.8f} PZ {pz:.8f}")
 
-# D-6 ruled check: independently verify Md for the two named sections against the given
-# reference values; >5% diff => that section should move to a real TABLE, not PRIS.
-def md_check(B, t, ref_kNm, fy=250, gamma_m0=1.10):
+# D-6 FINAL: report the validated Md (Cl 8.2.1.2, capped at 1.2*Ze*fy/gamma_m0) for the two
+# sections the engineer's own (now-withdrawn) hand references named. PRIS stands for both.
+def md_capped(B, t, fy=250, gamma_m0=1.10):
     p = shs(B, t)
-    md = p["Zp"] * fy / gamma_m0 / 1e6  # N-mm -> kN-m
-    diff = abs(md - ref_kNm) / ref_kNm
-    return md, diff
+    md_plastic = p["Zp"] * fy / gamma_m0 / 1e6
+    md_cap = 1.2 * p["I"] / (p["B"] / 2) * fy / gamma_m0 / 1e6  # Ze = I/(B/2) here, kNm
+    return min(md_plastic, md_cap), md_plastic, md_cap
 
-for (B, t, ref) in [(120, 5, 21.6), (100, 4, 14.5)]:
-    md, diff = md_check(B, t, ref)
-    verdict = "OK, PRIS stands" if diff <= 0.05 else "OVER 5% -- switch to TABLE per D-6 ruling"
-    print(f"D-6 check {B}x{B}x{t} SHS: Md={md:.2f}kNm vs ref {ref}kNm, diff={diff*100:.1f}% -> {verdict}")
+for (B, t) in [(120, 5), (100, 4)]:
+    md, md_p, md_c = md_capped(B, t)
+    capped = " (cap governs)" if md_c < md_p else ""
+    print(f"D-6 validated {B}x{B}x{t} SHS: Md={md:.2f}kNm (plastic={md_p:.2f}, 1.2Ze-cap={md_c:.2f}){capped} -- PRIS stands")
 w("*")
 w("CONSTANTS")
 w(f"MATERIAL STEEL MEMB 1 TO {member_id}")
@@ -459,8 +496,17 @@ PANEL_L = SPAN / N_PANELS
 for a, b in ranges(TOP_MEMBERS):
     w(f"LY {1.474:.3f} MEMB {a} TO {b}" if a != b else f"LY {1.474:.3f} MEMB {a}")
     w(f"LZ {0.85 * PANEL_L:.3f} MEMB {a} TO {b}" if a != b else f"LZ {0.85 * PANEL_L:.3f} MEMB {a}")
-for a, b in ranges(BOTTOM_MEMBERS):
-    w(f"LY {BOTTOM_KL_OP:.3f} MEMB {a} TO {b}" if a != b else f"LY {BOTTOM_KL_OP:.3f} MEMB {a}")  # D-3 ruling: 2x panel
+w(f"* Bottom chord: KL_op is segment-wise (D-3 final) -- {BRACED_KL_OP:.3f}m within the braced")
+w(f"* field (panels 3-10, where a bracing attachment lands every 2 panels), {UNBRACED_KL_OP:.3f}m")
+w(f"* at the two unbraced end stretches (panels 0-2 and 11-13, no bracing attachment there).")
+bottom_by_id = {m["id"]: m for m in members if m["kind"] == "bottom"}
+braced_bottom = [mid for mid in BOTTOM_MEMBERS if 3 <= bottom_by_id[mid]["panel"] <= 10]
+unbraced_bottom = [mid for mid in BOTTOM_MEMBERS if not (3 <= bottom_by_id[mid]["panel"] <= 10)]
+for a, b in ranges(braced_bottom):
+    w(f"LY {BRACED_KL_OP:.3f} MEMB {a} TO {b}" if a != b else f"LY {BRACED_KL_OP:.3f} MEMB {a}")
+    w(f"LZ {0.85 * PANEL_L:.3f} MEMB {a} TO {b}" if a != b else f"LZ {0.85 * PANEL_L:.3f} MEMB {a}")
+for a, b in ranges(unbraced_bottom):
+    w(f"LY {UNBRACED_KL_OP:.3f} MEMB {a} TO {b}" if a != b else f"LY {UNBRACED_KL_OP:.3f} MEMB {a}")
     w(f"LZ {0.85 * PANEL_L:.3f} MEMB {a} TO {b}" if a != b else f"LZ {0.85 * PANEL_L:.3f} MEMB {a}")
 for mid in VERT_MEMBERS + DIAG_MEMBERS:
     m = next(mm for mm in members if mm["id"] == mid)

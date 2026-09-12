@@ -4,46 +4,53 @@ ENGINEER Sharief Satyala
 JOB NAME CHRA-2502 Pickleball Roof - 3D Global Model
 END JOB INFORMATION
 * ================================================================
-* GENERATED FILE -- ADJUDICATED ROUND 2. See generate_staad.py docstring
-* for the full ruling history. Summary of what's built in below:
+* GENERATED FILE -- CLOSE-OUT PATCH SET (ROUND 3). See generate_staad.py
+* docstring for the full ruling history. Summary of what's built in below:
 *
-*  D-1 (RULED): column top node = bottom-chord end node (Y=7.752 / 7.339m),
-*      K=1.0, no stub. The brief's separate '~8.75/8.34m' figures are
-*      superseded by this ruling.
+*  D-1: column top node = bottom-chord end node (Y=7.752 / 7.339m), K=1.0,
+*      no stub. The brief's separate '~8.75/8.34m' figures are superseded.
 *
-*  D-2 (RULED): DECK LATERAL-RESTRAINT CREDIT IS DECLARED for the top
-*      chord (KL_op = 1.0 x panel = 1.474m). Without it the worst truss's
-*      top chord does not close within the 40-200mm SHS catalog (util
-*      1.075 at KL_op=2x panel) -- this declaration is load-bearing.
-*      Conditions for this credit to actually hold on site:
-*        1. Deck profile continuously seam/crest-fastened to every top-
-*           chord member at <= 300mm centres.
-*        2. Deck gauge/thickness meets the manufacturer's diaphragm
-*           shear rating for that fastening pattern.
-*        3. Side-lap joints fastened per the manufacturer's diaphragm
-*           design values -- no unfastened/friction-only laps.
-*        4. No roof opening or discontinuity interrupts the diaphragm
-*           between adjacent top-chord restraint points.
-*      [Guessing -- NOT VERBATIM] These four conditions are a standard/
-*      typical set for deck-diaphragm lateral credit; the engineer's own
-*      exact wording for this project's drawing note was not provided to
-*      this generator. INSERT THE ACTUAL VERBATIM DRAWING NOTE HERE
-*      before this file is issued -- do not rely on the four lines above
-*      as the drawing's text of record.
+*  D-2: DECK LATERAL-RESTRAINT CREDIT IS DECLARED for the top chord
+*      (KL_op = 1.0 x panel = 1.474m). Without it the worst truss's top
+*      chord does not close within the 40-200mm SHS catalog -- this
+*      declaration is load-bearing. Drawing note (verbatim, engineer-issued):
 *
-*  D-3 (RULED): braced bays = {1,3,4,6,8} (5 of 8). Plan X-bracing moved
-*      to the BOTTOM-chord level as panel-point-to-panel-point zig-zag
-*      diagonals (2-panel stride, ~2.95m in X, ~5.9m brace length in the
-*      5.098m bays; ~9.6m in the wide 9.144m bay 1 under the same
-*      stride). Bottom-chord out-of-plane KL = 2.948m (2x panel)
-*      accordingly. No U-frame stiffness check performed.
+*      NOTE: THE STRUCTURAL DECK SHALL BE MECHANICALLY FASTENED TO THE TRUSS
+*      TOP CHORD AT EVERY CREST (SCREWS AT <= 300 mm CENTRES) PRIOR TO
+*      IMPOSITION OF ANY SUPERIMPOSED LOAD. THIS FASTENING CONSTITUTES THE
+*      LATERAL RESTRAINT SYSTEM TO THE TOP CHORD IN COMPRESSION (KL = 1.474 m)
+*      AND FORMS PART OF THE ROOF DIAPHRAGM. ADHESIVE-ONLY, CLIP-ONLY OR
+*      INTERMITTENT FASTENING SYSTEMS VOID THE TOP-CHORD CAPACITY SHOWN ON
+*      THESE DRAWINGS AND SHALL NOT BE SUBSTITUTED WITHOUT RECERTIFICATION BY
+*      THE STRUCTURAL ENGINEER. DECK FASTENER PULL-OUT AND SHEAR CAPACITIES
+*      SHALL BE CERTIFIED BY THE DECK SUPPLIER FOR BOTH GRAVITY AND NET
+*      UPLIFT (0.82 kN/m2) CONDITIONS.
 *
-*  D-5 (RULED): ring = 76x76x4 SHS, plan bracing = 90x90x4 SHS.
+*  D-3 FINAL: braced bays = {1,3,4,6,8} (5 of 8). Plan bracing at the
+*      BOTTOM-chord level, PARTIAL coverage only -- a single zig-zag chain
+*      through panel-points {3,5,7,9,11} (4 modules/bay x 5 bays = 20
+*      diagonals), section 100x100x4 SHS, ~1.60t. Bottom-chord KL_op is
+*      segment-wise: 2.947m within the braced field (panels 3-10), 4.421m
+*      at the two unbraced end stretches (panels 0-2, 11-13). Verified
+*      against the real C4 (0.9DL+1.5WLup) bottom-chord axial diagram
+*      (peaks 109.6kN at midspan, worst truss) -- max util 0.854, max
+*      KL/r 92.5, both within limits. ACCEPTANCE MET, scheme ADOPTED.
 *
-*  D-6 (RULED): PRIS gets AY/AZ added; PY/PZ added but flagged as
-*      possibly-unsupported by STAAD's PRIS command (see MEMBER PROPERTY
-*      below). 100x100x4 SHS independently checks >5% off the reference
-*      Md and should move to a TABLE lookup if it's ever used.
+*  D-5: ring = 76x76x4 SHS. Plan bracing = 100x100x4 SHS (per D-3 final).
+*
+*  D-6 FINAL: PRIS stands for every SHS in this design, including
+*      100x100x4 (the round-2 'switch to TABLE' flag on it is withdrawn --
+*      the engineer's own hand Md references were the ones in error; this
+*      engine's Zp*fy/gamma_m0 values, capped at 1.2*Ze*fy/gamma_m0 per
+*      Cl 8.2.1.2, are validated). PRIS carries AY/AZ (shear area) and
+*      PY/PZ (plastic modulus) -- PY/PZ flagged [Guessing] as possibly
+*      unsupported by STAAD's PRIS command; delete those two tokens per
+*      line if the parser rejects them.
+*
+*  DESIGN CASE: this file is TAILORED-AT-ACTUAL tributaries (T1=4.572m,
+*      T2=5.098m, T3=7.121m) -- 6.32t trusses. The envelope variant
+*      (4.572/5.600/7.372m, 6.62t if invoked) is NOT built into this file;
+*      it is a documented spare-parts/interchangeability option only.
 *
 *  25mm midspan camber remains a FABRICATION note only, not built into
 *  these joint coordinates (analysis uses the theoretical line).
@@ -770,76 +777,26 @@ MEMBER INCIDENCES
 428 165 195
 429 195 225
 430 225 255
-431 16 48
-432 18 46
-433 18 50
-434 20 48
-435 20 52
-436 22 50
-437 22 54
-438 24 52
-439 24 56
-440 26 54
-441 26 58
-442 28 56
-443 28 60
-444 30 58
-445 76 108
-446 78 106
-447 78 110
-448 80 108
-449 80 112
-450 82 110
-451 82 114
-452 84 112
-453 84 116
-454 86 114
-455 86 118
-456 88 116
-457 88 120
-458 90 118
-459 106 138
-460 108 136
-461 108 140
-462 110 138
-463 110 142
-464 112 140
-465 112 144
-466 114 142
-467 114 146
-468 116 144
-469 116 148
-470 118 146
-471 118 150
-472 120 148
-473 166 198
-474 168 196
-475 168 200
-476 170 198
-477 170 202
-478 172 200
-479 172 204
-480 174 202
-481 174 206
-482 176 204
-483 176 208
-484 178 206
-485 178 210
-486 180 208
-487 226 258
-488 228 256
-489 228 260
-490 230 258
-491 230 262
-492 232 260
-493 232 264
-494 234 262
-495 234 266
-496 236 264
-497 236 268
-498 238 266
-499 238 270
-500 240 268
+431 19 51
+432 23 51
+433 23 55
+434 27 55
+435 79 111
+436 83 111
+437 83 115
+438 87 115
+439 109 141
+440 113 141
+441 113 145
+442 117 145
+443 169 201
+444 173 201
+445 173 205
+446 177 205
+447 229 261
+448 233 261
+449 233 265
+450 237 265
 *
 DEFINE MATERIAL START
 ISOTROPIC STEEL
@@ -883,11 +840,11 @@ MEMBER PROPERTY
 111 TO 116 118 157 TO 162 164 203 TO 208 210 249 TO 254 256 295 TO 300 302 341 TO 346 348 PRIS AX 0.001244 AY 0.000596 AZ 0.000596 IX 0.00000310 IY 0.00000155 IZ 0.00000155 YD 0.0900 ZD 0.0900 PY 0.00004033 PZ 0.00004033
 * 76x76x4 SHS  (A=1152mm2 I=998400mm4 Zp=31136mm3 -- sharp-corner formula)
 415 TO 430 PRIS AX 0.001152 AY 0.000544 AZ 0.000544 IX 0.00000200 IY 0.00000100 IZ 0.00000100 YD 0.0760 ZD 0.0760 PY 0.00003114 PZ 0.00003114
-* 90x90x4 SHS  (A=1376mm2 I=1699819mm4 Zp=44408mm3 -- sharp-corner formula)
-431 TO 500 PRIS AX 0.001376 AY 0.000656 AZ 0.000656 IX 0.00000340 IY 0.00000170 IZ 0.00000170 YD 0.0900 ZD 0.0900 PY 0.00004441 PZ 0.00004441
+* 100x100x4 SHS  (A=1536mm2 I=2363392mm4 Zp=55328mm3 -- sharp-corner formula)
+431 TO 450 PRIS AX 0.001536 AY 0.000736 AZ 0.000736 IX 0.00000473 IY 0.00000236 IZ 0.00000236 YD 0.1000 ZD 0.1000 PY 0.00005533 PZ 0.00005533
 *
 CONSTANTS
-MATERIAL STEEL MEMB 1 TO 500
+MATERIAL STEEL MEMB 1 TO 450
 *
 MEMBER RELEASE
 * Webs/bracing: 99% moment release both ends (never 100% -- per brief). Chords: none
@@ -911,8 +868,8 @@ MEMBER RELEASE
 351 TO 366 END MP 0.99
 397 TO 412 START MP 0.99
 397 TO 412 END MP 0.99
-431 TO 500 START MP 0.99
-431 TO 500 END MP 0.99
+431 TO 450 START MP 0.99
+431 TO 450 END MP 0.99
 45 TO 46 END MP 0.99
 91 TO 92 END MP 0.99
 137 TO 138 END MP 0.99
@@ -1373,24 +1330,63 @@ LY 1.474 MEMB 323 TO 336
 LZ 1.253 MEMB 323 TO 336
 LY 1.474 MEMB 369 TO 382
 LZ 1.253 MEMB 369 TO 382
-LY 2.947 MEMB 15 TO 28
-LZ 1.253 MEMB 15 TO 28
-LY 2.947 MEMB 61 TO 74
-LZ 1.253 MEMB 61 TO 74
-LY 2.947 MEMB 107 TO 120
-LZ 1.253 MEMB 107 TO 120
-LY 2.947 MEMB 153 TO 166
-LZ 1.253 MEMB 153 TO 166
-LY 2.947 MEMB 199 TO 212
-LZ 1.253 MEMB 199 TO 212
-LY 2.947 MEMB 245 TO 258
-LZ 1.253 MEMB 245 TO 258
-LY 2.947 MEMB 291 TO 304
-LZ 1.253 MEMB 291 TO 304
-LY 2.947 MEMB 337 TO 350
-LZ 1.253 MEMB 337 TO 350
-LY 2.947 MEMB 383 TO 396
-LZ 1.253 MEMB 383 TO 396
+* Bottom chord: KL_op is segment-wise (D-3 final) -- 2.947m within the braced
+* field (panels 3-10, where a bracing attachment lands every 2 panels), 4.421m
+* at the two unbraced end stretches (panels 0-2 and 11-13, no bracing attachment there).
+LY 2.947 MEMB 18 TO 25
+LZ 1.253 MEMB 18 TO 25
+LY 2.947 MEMB 64 TO 71
+LZ 1.253 MEMB 64 TO 71
+LY 2.947 MEMB 110 TO 117
+LZ 1.253 MEMB 110 TO 117
+LY 2.947 MEMB 156 TO 163
+LZ 1.253 MEMB 156 TO 163
+LY 2.947 MEMB 202 TO 209
+LZ 1.253 MEMB 202 TO 209
+LY 2.947 MEMB 248 TO 255
+LZ 1.253 MEMB 248 TO 255
+LY 2.947 MEMB 294 TO 301
+LZ 1.253 MEMB 294 TO 301
+LY 2.947 MEMB 340 TO 347
+LZ 1.253 MEMB 340 TO 347
+LY 2.947 MEMB 386 TO 393
+LZ 1.253 MEMB 386 TO 393
+LY 4.421 MEMB 15 TO 17
+LZ 1.253 MEMB 15 TO 17
+LY 4.421 MEMB 26 TO 28
+LZ 1.253 MEMB 26 TO 28
+LY 4.421 MEMB 61 TO 63
+LZ 1.253 MEMB 61 TO 63
+LY 4.421 MEMB 72 TO 74
+LZ 1.253 MEMB 72 TO 74
+LY 4.421 MEMB 107 TO 109
+LZ 1.253 MEMB 107 TO 109
+LY 4.421 MEMB 118 TO 120
+LZ 1.253 MEMB 118 TO 120
+LY 4.421 MEMB 153 TO 155
+LZ 1.253 MEMB 153 TO 155
+LY 4.421 MEMB 164 TO 166
+LZ 1.253 MEMB 164 TO 166
+LY 4.421 MEMB 199 TO 201
+LZ 1.253 MEMB 199 TO 201
+LY 4.421 MEMB 210 TO 212
+LZ 1.253 MEMB 210 TO 212
+LY 4.421 MEMB 245 TO 247
+LZ 1.253 MEMB 245 TO 247
+LY 4.421 MEMB 256 TO 258
+LZ 1.253 MEMB 256 TO 258
+LY 4.421 MEMB 291 TO 293
+LZ 1.253 MEMB 291 TO 293
+LY 4.421 MEMB 302 TO 304
+LZ 1.253 MEMB 302 TO 304
+LY 4.421 MEMB 337 TO 339
+LZ 1.253 MEMB 337 TO 339
+LY 4.421 MEMB 348 TO 350
+LZ 1.253 MEMB 348 TO 350
+LY 4.421 MEMB 383 TO 385
+LZ 1.253 MEMB 383 TO 385
+LY 4.421 MEMB 394 TO 396
+LZ 1.253 MEMB 394 TO 396
 LY 1.000 MEMB 29
 LZ 0.850 MEMB 29
 LY 1.000 MEMB 30

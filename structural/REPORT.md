@@ -28,6 +28,29 @@ Treat §3 and §4's *numbers* as superseded by the audit's schedule; the *method
 1–5 still hold. [Certain] on the bug and the fix; [Certain] the corrected numbers are lower,
 not higher, so nothing here understates risk — but re-verify before citing a tonnage figure.
 
+**ERRATA 2 (close-out patch set, 3D STAAD audit round 3):**
+
+- **Md reference correction — engineer's hand values withdrawn.** The engineer's own hand
+  plastic-moduli references (100×100×4 → 14.5 kNm, 120×120×5 → 21.6 kNm) were miscomputed;
+  they are withdrawn. This engine's sharp-corner values (`Md = min(Zp·fy/γm0, 1.2·Ze·fy/γm0)`,
+  Cl 8.2.1.2 — the 1.2×Ze cap is now implemented in `is800.js` and was not present in the
+  numbers reported earlier in this document) are validated: 100×100×4 → 12.57 kNm,
+  120×120×5 → 22.56 kNm; the cap does not bind for either (shape factor < 1.2). PRIS stands
+  for every SHS in this design, 100×100×4 included. Re-sweeping every Cl 8.2/9.3-governed
+  chord member in the tailored T1/T2/T3 schedule against the capped Md moved **zero members
+  by more than 0.03 util — in fact zero members moved at all** (no section in this schedule
+  has a shape factor over 1.2, so the cap is a non-event here, not just a small effect).
+- **Plan-bracing steel is its own ledger line, outside the trusses-only 6.32t figure.** The
+  bottom-chord plan bracing (partial scheme, 20×100×100×4 SHS diagonals, verified against the
+  real C4 bottom-chord axial diagram — max util 0.854, max KL/r 92.5, both within limits) adds
+  **1.60t**, and the eave ring (16×76×76×4 SHS) adds **0.81t**. Neither was ever part of the
+  6.32t trusses-only number; keep them as separate ledger lines, not folded into "trusses."
+- **Envelope-variant ruling.** The design as issued is TAILORED-AT-ACTUAL tributaries (T1
+  4.572m / T2 5.098m / T3 7.121m): 6.32t trusses, utils 0.922–0.936. The envelope variant
+  (4.572/5.600/7.372m) is **not issued** — retained solely as a documented spare-parts/
+  interchangeability option, at **6.62t** trusses if ever invoked (one SHS step, 200×200×3→
+  200×200×4, on T3's top1 group to clear its 0.952 marginal overage under that variant).
+
 ---
 
 ## 0. Input Echo (as modeled)
