@@ -377,3 +377,30 @@ node structural/sweep.js          # full 64-config sweep, writes sweep_results.j
 `fem.js` includes an inline validated unit test (`test_fem.js`) against the textbook
 simply-supported UDL beam case (M=wL²/8, V=wL/2, deflection=5wL⁴/384EI) — all four match
 theory to the number of decimal places printed.
+
+## 9. `CHRA2502_3D_ManualDesign.std` — hand-iteration variant (NOT the issued design)
+
+Generated on request for manual sizing in STAAD (`UNIFORM_MANUAL_DESIGN = True` in
+`generate_staad.py`). Same geometry, loads, combinations, and `CODE IS800` / `CHECK CODE
+ALL` setup as `CHRA2502_3D_Final.std`, but every member of a given structural role shares
+**one** section across the whole building instead of being tailored per truss type:
+
+| Role | Section (starting point only) |
+|---|---|
+| Top chord (all 126) | 180×180×4 SHS |
+| Bottom chord (all 126) | 100×100×5 SHS |
+| Web — vertical + diagonal (all 144) | 72×72×3.2 SHS |
+| Column (all 18) | 150×150×5 SHS |
+| Ring (all 16) | 100×100×4 SHS |
+| Bracing (all 20) | 100×100×4 SHS |
+
+All six are real IS 4923:2017 Table 1 designations (T3's own verified sections seeded the
+top/bottom/web starting values — T3 carries this design's largest tributary, 7.121m, so
+starting there is conservative, not a guarantee every truss is adequate at these sizes
+without re-checking). Effective-length declarations (`LY`/`LZ`/`KY`/`KZ`, the segment-wise
+bottom-chord bracing KL_op, per-member web/column lengths) are unchanged from the issued
+design — they depend on geometry and the bracing layout, not on which section is assigned,
+so they remain valid for whatever sizes are chosen during manual iteration.
+**Do not treat this file's masses or utils as the project's numbers** — it exists purely as
+a correctly-set-up starting point for hand/iterative sizing; `CHRA2502_3D_Final.std` remains
+the issued, optimizer-verified design.

@@ -109,13 +109,56 @@ ROUND 8 (engineer's ruling): "no CHECK CODE issued" is WITHDRAWN. The
    project's Node/is800.js engine -- if the two disagree by more than
    rounding, that is a finding, not a discrepancy to paper over.
 
+ROUND 9 (engineer's ruling): every SCHEDULE section is now a real IS 4923:2017 Table 1
+   designation (not the prior idealized continuous B x t grid -- see
+   is4923_2017_table1.json and the SCHEDULE comment below for the full finding: most
+   sizes previously used, including 200x200, do not exist as real products). Separately,
+   the engineer wants a MODEL to hand-iterate in STAAD, not this project's optimizer
+   output taken as final: UNIFORM_MANUAL_DESIGN collapses every structural role (top
+   chord, bottom chord, web) to ONE section across the whole building rather than
+   per-truss-type, so the engineer can change one group and have it apply everywhere.
+   Bracing (previously dropped in a short-lived NO_BRACING diagnostic mode, now off by
+   default) is restored as its own single-named group. LY/LZ/KY/KZ effective-length
+   declarations are UNCHANGED by any of this -- they follow geometry and the bracing
+   layout, not section choice, and remain correct for whatever size the engineer
+   ultimately settles on.
+
 Run: python3 generate_staad.py
 Output: CHRA2502_3D_Final.std
 """
 import math
 import os
 
-OUT_PATH = "CHRA2502_3D_Final.std"
+# NO_BRACING: generate a variant with the bottom-chord plan bracing entirely removed, so
+# the engineer can watch STAAD's own CHECK CODE fail the bottom chord under its TRUE
+# unbraced condition. Superseded by UNIFORM_MANUAL_DESIGN below (which wants bracing back,
+# as its own single-named group) -- kept as a flag in case the diagnostic file is wanted
+# again later, but OFF by default now.
+NO_BRACING = False
+
+# UNIFORM_MANUAL_DESIGN (engineer's ruling, post-round-9): the engineer wants a complete,
+# code-check-ready MODEL -- geometry, all 4 load cases, all 5 combinations, CODE IS800 with
+# every member's real effective length declared, CHECK CODE ALL -- but will pick every
+# member's actual size manually in STAAD (iterate/trial), not take this project's optimizer
+# output as final. To make manual iteration tractable, every member of a given STRUCTURAL
+# ROLE shares ONE property name across the WHOLE building (all 126 top-chord members
+# everywhere, not per truss type; all 126 bottom-chord members; one web section for the
+# 144 vertical+diagonal members; one column section; one ring section; one bracing
+# section) -- so changing one group's size in STAAD changes it everywhere at once. This
+# REPLACES the per-truss-type (T1/T2/T3) tailored SCHEDULE below with a single fixed
+# section per role. The values below are STARTING POINTS ONLY (T3's own verified real
+# sections -- T3 carries this design's largest tributary, 7.121m, so starting every group
+# there is a safe, conservative seed, not an endorsement that one size fits every truss
+# without the engineer's own re-check). LY/LZ/KY/KZ effective-length declarations are
+# UNCHANGED -- they come from geometry and the bracing layout, not from section choice, so
+# they stay correct regardless of what the engineer ultimately picks.
+UNIFORM_MANUAL_DESIGN = True
+UNIFORM_TOP_SECTION = "180x180x4 SHS"
+UNIFORM_BOTTOM_SECTION = "100x100x5 SHS"
+UNIFORM_WEB_SECTION = "72x72x3.2 SHS"  # T3's heavier web band -- conservative single starting size for every vertical/diagonal
+
+OUT_PATH = "CHRA2502_3D_NoBracing.std" if NO_BRACING else (
+    "CHRA2502_3D_ManualDesign.std" if UNIFORM_MANUAL_DESIGN else "CHRA2502_3D_Final.std")
 
 # ---------------------------------------------------------------- geometry --
 SPAN = 20.630
@@ -161,6 +204,20 @@ def bot_y(x):
 PANEL_X = [i * SPAN / N_PANELS for i in range(N_PANELS + 1)]
 COL_HEIGHT_LOW = bot_y(0.0)      # 7.752 m -- column at the X=0 (high) end of every truss
 COL_HEIGHT_HIGH = bot_y(SPAN)    # 7.339 m -- column at the X=20.630 (low) end
+
+def bottom_chord_total_length():
+    """Sum of every bottom-chord panel's true (sloped) length -- the TRUE unbraced
+    length of the whole bottom chord between the two column bases if NO intermediate
+    lateral restraint exists (no plan bracing at all). Only the columns themselves
+    restrain it at the two ends."""
+    total = 0.0
+    for i in range(N_PANELS):
+        dx = PANEL_X[i + 1] - PANEL_X[i]
+        dy = bot_y(PANEL_X[i + 1]) - bot_y(PANEL_X[i])
+        total += math.sqrt(dx * dx + dy * dy)
+    return total
+
+FULL_BOTTOM_UNBRACED_LEN = bottom_chord_total_length()  # ~20.63m -- see NO_BRACING note below
 
 # --------------------------------------------------------- section catalog --
 # REAL IS 4923:2017 Table 1 data (engineer's ruling, post-round-8: "choose sections
@@ -236,6 +293,17 @@ SCHEDULE = {
            "bottom_small": "100x100x5 SHS", "bottom_large": "100x100x5 SHS",
            "web_small": "45x45x3.2 SHS", "web_large": "72x72x3.2 SHS"},
 }
+if UNIFORM_MANUAL_DESIGN:
+    # Collapse to ONE section per role across the whole building -- see the
+    # UNIFORM_MANUAL_DESIGN note above. top_small/top_large (and the bottom/web
+    # equivalents) are set equal on purpose: the panel-band split (TOP_SMALL_PANELS
+    # etc.) still runs below, it just now always picks the same section either way.
+    _uniform_sched = {
+        "top_small": UNIFORM_TOP_SECTION, "top_large": UNIFORM_TOP_SECTION,
+        "bottom_small": UNIFORM_BOTTOM_SECTION, "bottom_large": UNIFORM_BOTTOM_SECTION,
+        "web_small": UNIFORM_WEB_SECTION, "web_large": UNIFORM_WEB_SECTION,
+    }
+    SCHEDULE = {"T1": _uniform_sched, "T2": _uniform_sched, "T3": _uniform_sched}
 COLUMN_SECTION = "150x150x5 SHS"  # 150x150x4 is NOT a real IS 4923 designation (150mm row starts at t=5); upgraded, safe (A/I/Zp all higher than the old idealized 150x150x4)
 RING_SECTION = "100x100x4 SHS"    # 76x76x4 is NOT a real IS 4923 designation; upgraded to a real section that dominates the old idealized 76x76x4 on every property (A, I, Zp, r), and reuses the bracing section (one fewer distinct SKU to stock)
 BRACING_SECTION = "100x100x4 SHS"  # D-3 final (round 3) -- already a real IS 4923 designation, unchanged
@@ -333,16 +401,17 @@ for edge_i in (0, N_PANELS):
 # Verified (see docstring) against the real C4 bottom-chord axial diagram for all three
 # truss types: max util 0.854, max KL/r 92.5, both within limits with real margin --
 # ACCEPTANCE MET, this partial scheme is adopted (not reverted to the round-2 full-length one).
-for bay in BRACED_BAYS:
-    k = bay  # bay k is between truss k and truss k+1
-    for idx in range(len(BRACE_POINTS) - 1):
-        i, j = BRACE_POINTS[idx], BRACE_POINTS[idx + 1]
-        if idx % 2 == 0:
-            n1, n2 = bot_node_id(k, i), bot_node_id(k + 1, j)
-        else:
-            n1, n2 = bot_node_id(k, j), bot_node_id(k + 1, i)
-        mid = add_member(n1, n2, "bracing", BRACING_SECTION)
-        BRACE_MEMBERS.append(mid)
+if not NO_BRACING:
+    for bay in BRACED_BAYS:
+        k = bay  # bay k is between truss k and truss k+1
+        for idx in range(len(BRACE_POINTS) - 1):
+            i, j = BRACE_POINTS[idx], BRACE_POINTS[idx + 1]
+            if idx % 2 == 0:
+                n1, n2 = bot_node_id(k, i), bot_node_id(k + 1, j)
+            else:
+                n1, n2 = bot_node_id(k, j), bot_node_id(k + 1, i)
+            mid = add_member(n1, n2, "bracing", BRACING_SECTION)
+            BRACE_MEMBERS.append(mid)
 
 # ------------------------------------------------------------- STAAD emit --
 lines = []
@@ -634,20 +703,40 @@ PANEL_L = SPAN / N_PANELS
 for a, b in ranges(TOP_MEMBERS):
     w(f"LY {1.474:.3f} MEMB {a} TO {b}" if a != b else f"LY {1.474:.3f} MEMB {a}")
     w(f"LZ {0.85 * PANEL_L:.3f} MEMB {a} TO {b}" if a != b else f"LZ {0.85 * PANEL_L:.3f} MEMB {a}")
-wc(f"Bottom chord: KL_op is segment-wise (D-3 final) -- "
-   f"{BRACED_KL_OP:.3f}m within the braced field (panels 3-10, where "
-   f"a bracing attachment lands every 2 panels), {UNBRACED_KL_OP:.3f}m "
-   f"at the two unbraced end stretches (panels 0-2 and 11-13, no "
-   f"bracing attachment there).")
-bottom_by_id = {m["id"]: m for m in members if m["kind"] == "bottom"}
-braced_bottom = [mid for mid in BOTTOM_MEMBERS if 3 <= bottom_by_id[mid]["panel"] <= 10]
-unbraced_bottom = [mid for mid in BOTTOM_MEMBERS if not (3 <= bottom_by_id[mid]["panel"] <= 10)]
-for a, b in ranges(braced_bottom):
-    w(f"LY {BRACED_KL_OP:.3f} MEMB {a} TO {b}" if a != b else f"LY {BRACED_KL_OP:.3f} MEMB {a}")
-    w(f"LZ {0.85 * PANEL_L:.3f} MEMB {a} TO {b}" if a != b else f"LZ {0.85 * PANEL_L:.3f} MEMB {a}")
-for a, b in ranges(unbraced_bottom):
-    w(f"LY {UNBRACED_KL_OP:.3f} MEMB {a} TO {b}" if a != b else f"LY {UNBRACED_KL_OP:.3f} MEMB {a}")
-    w(f"LZ {0.85 * PANEL_L:.3f} MEMB {a} TO {b}" if a != b else f"LZ {0.85 * PANEL_L:.3f} MEMB {a}")
+if NO_BRACING:
+    wc(f"Bottom chord: NO_BRACING diagnostic variant -- plan bracing removed "
+       f"entirely. With ZERO intermediate lateral restraint, the WHOLE bottom "
+       f"chord buckles out-of-plane as one continuous {FULL_BOTTOM_UNBRACED_LEN:.3f}m "
+       f"unbraced length between the two column bases (the only remaining "
+       f"restraint points) -- not the panel length, not the D-3 braced-field "
+       f"value. This LY is applied identically to EVERY bottom-chord member so "
+       f"STAADs own CHECK CODE evaluates the TRUE (bracing-free) condition, not "
+       f"a falsely-optimistic one left over from the braced design. Sections are "
+       f"UNCHANGED from the braced design (88.9x88.9x3.6 / 91.5x91.5x3.6 / "
+       f"100x100x5) -- this is deliberately NOT re-sized, so the FAIL this "
+       f"produces is the honest cost of removing bracing, not hidden by a "
+       f"bigger section chosen to make it pass. Quantified before generating "
+       f"this file: KL/r for these sections at this length is in the "
+       f"550-600 range against an IS 800 Cl 3.7 limit of 180 -- expect a hard, "
+       f"large-margin FAIL from CHECK CODE, by design.")
+    for a, b in ranges(BOTTOM_MEMBERS):
+        w(f"LY {FULL_BOTTOM_UNBRACED_LEN:.3f} MEMB {a} TO {b}" if a != b else f"LY {FULL_BOTTOM_UNBRACED_LEN:.3f} MEMB {a}")
+        w(f"LZ {0.85 * PANEL_L:.3f} MEMB {a} TO {b}" if a != b else f"LZ {0.85 * PANEL_L:.3f} MEMB {a}")
+else:
+    wc(f"Bottom chord: KL_op is segment-wise (D-3 final) -- "
+       f"{BRACED_KL_OP:.3f}m within the braced field (panels 3-10, where "
+       f"a bracing attachment lands every 2 panels), {UNBRACED_KL_OP:.3f}m "
+       f"at the two unbraced end stretches (panels 0-2 and 11-13, no "
+       f"bracing attachment there).")
+    bottom_by_id = {m["id"]: m for m in members if m["kind"] == "bottom"}
+    braced_bottom = [mid for mid in BOTTOM_MEMBERS if 3 <= bottom_by_id[mid]["panel"] <= 10]
+    unbraced_bottom = [mid for mid in BOTTOM_MEMBERS if not (3 <= bottom_by_id[mid]["panel"] <= 10)]
+    for a, b in ranges(braced_bottom):
+        w(f"LY {BRACED_KL_OP:.3f} MEMB {a} TO {b}" if a != b else f"LY {BRACED_KL_OP:.3f} MEMB {a}")
+        w(f"LZ {0.85 * PANEL_L:.3f} MEMB {a} TO {b}" if a != b else f"LZ {0.85 * PANEL_L:.3f} MEMB {a}")
+    for a, b in ranges(unbraced_bottom):
+        w(f"LY {UNBRACED_KL_OP:.3f} MEMB {a} TO {b}" if a != b else f"LY {UNBRACED_KL_OP:.3f} MEMB {a}")
+        w(f"LZ {0.85 * PANEL_L:.3f} MEMB {a} TO {b}" if a != b else f"LZ {0.85 * PANEL_L:.3f} MEMB {a}")
 
 def joint_dist(n1, n2):
     x1, y1, z1 = joints[n1]
