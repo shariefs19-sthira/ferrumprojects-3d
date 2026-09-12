@@ -113,6 +113,7 @@ Run: python3 generate_staad.py
 Output: CHRA2502_3D_Final.std
 """
 import math
+import os
 
 OUT_PATH = "CHRA2502_3D_Final.std"
 
@@ -162,50 +163,82 @@ COL_HEIGHT_LOW = bot_y(0.0)      # 7.752 m -- column at the X=0 (high) end of ev
 COL_HEIGHT_HIGH = bot_y(SPAN)    # 7.339 m -- column at the X=20.630 (low) end
 
 # --------------------------------------------------------- section catalog --
+# REAL IS 4923:2017 Table 1 data (engineer's ruling, post-round-8: "choose sections
+# only from the table sections"). Loaded from is4923_2017_table1.json, which was
+# extracted programmatically (pdftotext -layout + regex parse) from the actual
+# embedded text layer of the official BIS document -- not eyeballed off a screenshot.
+# Confirms there is NO 200x200 SHS in either the 1997 or 2017 edition (the table
+# jumps 180x180 -> 220x220 directly).
+import json as _json
+with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "is4923_2017_table1.json")) as _f:
+    _TABLE1 = {(row["B"], row["t"]): row for row in _json.load(_f)}
+
 def shs(B, t):
-    """Sharp-corner SHS properties. Returns dict with A(mm^2), I(mm^4), Zp(mm^3), r(mm)."""
+    """Real IS 4923:2017 SHS properties if this exact (B,t) is a real designation;
+    falls back to the sharp-corner idealization ONLY if it isn't (which should never
+    happen for anything actually used in SCHEDULE/COLUMN/RING/BRACING below -- if it
+    does, that's a defect to fix, not a silently-accepted approximation)."""
+    key = (B, t)
+    if key in _TABLE1:
+        row = _TABLE1[key]
+        A, I, Zp = row["A_cm2"] * 100, row["I_cm4"] * 1e4, row["Zp_cm3"] * 1e3
+        r = row["r_cm"] * 10
+        return {"B": B, "t": t, "A": A, "I": I, "Zp": Zp, "r": r, "label": f"{B}x{B}x{t} SHS",
+                "source": "IS4923:2017 Table 1"}
+    print(f"WARNING: {B}x{B}x{t} SHS is NOT a real IS 4923:2017 designation -- "
+          f"using idealized sharp-corner formula as a fallback. This should not "
+          f"happen for anything in SCHEDULE/COLUMN_SECTION/RING_SECTION/BRACING_SECTION.")
     h = B - 2 * t
     A = 4 * t * (B - t)
     I = (B**4 - h**4) / 12
     Zp = (B**3 - h**3) / 4
     r = math.sqrt(I / A)
-    return {"B": B, "t": t, "A": A, "I": I, "Zp": Zp, "r": r, "label": f"{B}x{B}x{t} SHS"}
+    return {"B": B, "t": t, "A": A, "I": I, "Zp": Zp, "r": r, "label": f"{B}x{B}x{t} SHS",
+            "source": "IDEALIZED (not a real section)"}
 
 def parse_label(lbl):
-    # "150x150x3 SHS" -> (150, 3)
+    # "150x150x3 SHS" -> (150, 3); "88.9x88.9x3.6 SHS" -> (88.9, 3.6) -- real IS 4923
+    # designations include non-integer B (88.9, 91.5, 113.5, 49.5, 63.5), so B is a
+    # float, not int, here.
     dims = lbl.split(" ")[0].split("x")
-    return int(dims[0]), float(dims[2])
+    return float(dims[0]), float(dims[2])
 
 # Grouped sections per truss type, from structural/optimize.js (Node engine),
 # deck-lateral-credit-declared case -- see tailored_schedule.json.
-# UNIFORM-CHORD RULING (engineer's ruling, post-round-7): fabricator will not splice two SHS
-# sizes along one continuous chord run, so top chord and bottom chord each use ONE section for
-# their full length within a given truss type. Verified through optimize.js's groupMembers with
-# a single top band and single bottom band (uniformChords option), on the SAME full 44-member
-# topology this generator builds (no pruning -- pruning is a 2D-optimizer-only artifact that
-# never reached this 3D model; confirmed the un-pruned engine reproduces the prior per-band
-# numbers bit-for-bit, so this is a clean like-for-like re-check). Result: in every one of
-# T1/T2/T3 the governing member for the whole chord is the SAME one that drove the old
-# "_large" band, so the uniform section equals the old large-panel section run the full
-# length -- top_small/bottom_small are simply set equal to top_large/bottom_large below.
-# Web sections are unaffected (unchanged from the original tailored schedule).
-# Net effect: truss steel (bare, no allowance) up 5.856t -> 6.298t (+0.442t, ~+7.5%),
-# with 8% allowance 6.324t -> 6.802t. All utils remain <=0.930 (T1 0.894, T2 0.930, T3
-# 0.884), no slenderness or capacity failures introduced.
+#
+# REAL-TABLE-SECTIONS RULING (engineer's ruling, post-round-8): "choose sections only
+# from the table sections" -- every SHS below is a real IS 4923:2017 Table 1
+# designation (verified via is4923_2017_table1.json, extracted from the actual BIS
+# document text, not idealized/interpolated). This replaced an idealized continuous
+# B x t grid that did not correspond to any real, orderable product for most sizes
+# used (confirmed: only 40, 75, 100, 150 mm happened to coincide with real sizes;
+# 50, 60, 65, 90, 110, 120, 130, 140, 160, 200mm do not exist as real SHS at all).
+# Re-run through optimize.js's groupMembers/converge constrained to ONLY the real
+# catalog (sections_is4923.js PRACTICAL_CATALOG, t>=3.0mm -- a corrosion-allowance/
+# handling floor, an engineering judgment call, not an IS 4923 requirement, since the
+# standard itself permits walls as thin as 2.0mm), still with uniform top/bottom
+# chords per the prior round's ruling. CONFIRMED: no real 200x200 SHS exists in
+# either the 1997 or 2017 edition (Table 1 jumps 180x180 -> 220x220 directly) -- T3's
+# top chord, previously specified as the non-existent 200x200x3, fits comfortably in
+# real 180x180x4 (util 0.794, well within the 0.95 gate).
+# Net effect: truss steel (bare) up 5.856t (idealized) -> 6.871t (real), +8% allowance
+# -> 7.420t. All utils <=0.943 (T1 0.883, T2 0.943, T3 0.900), no slenderness or
+# capacity failures. Every section below is independently verifiable as a real,
+# stockable IS 4923:2017 product -- not interpolated, not idealized.
 SCHEDULE = {
-    "T1": {"top_small": "150x150x3 SHS", "top_large": "150x150x3 SHS",
-           "bottom_small": "100x100x3 SHS", "bottom_large": "100x100x3 SHS",
-           "web_small": "40x40x3.6 SHS", "web_large": "60x60x3 SHS"},
-    "T2": {"top_small": "160x160x3 SHS", "top_large": "160x160x3 SHS",
-           "bottom_small": "90x90x3.6 SHS", "bottom_large": "90x90x3.6 SHS",
-           "web_small": "50x50x3 SHS", "web_large": "60x60x3 SHS"},
-    "T3": {"top_small": "200x200x3 SHS", "top_large": "200x200x3 SHS",
-           "bottom_small": "140x140x3 SHS", "bottom_large": "140x140x3 SHS",
-           "web_small": "50x50x3 SHS", "web_large": "75x75x3 SHS"},
+    "T1": {"top_small": "125x125x4.5 SHS", "top_large": "125x125x4.5 SHS",
+           "bottom_small": "88.9x88.9x3.6 SHS", "bottom_large": "88.9x88.9x3.6 SHS",
+           "web_small": "45x45x3.2 SHS", "web_large": "63.5x63.5x3.2 SHS"},
+    "T2": {"top_small": "132x132x4.5 SHS", "top_large": "132x132x4.5 SHS",
+           "bottom_small": "91.5x91.5x3.6 SHS", "bottom_large": "91.5x91.5x3.6 SHS",
+           "web_small": "45x45x3.2 SHS", "web_large": "63.5x63.5x3.2 SHS"},
+    "T3": {"top_small": "180x180x4 SHS", "top_large": "180x180x4 SHS",
+           "bottom_small": "100x100x5 SHS", "bottom_large": "100x100x5 SHS",
+           "web_small": "45x45x3.2 SHS", "web_large": "72x72x3.2 SHS"},
 }
-COLUMN_SECTION = "150x150x4 SHS"
-RING_SECTION = "76x76x4 SHS"       # D-5 ruling
-BRACING_SECTION = "100x100x4 SHS"  # D-3 final (round 3) -- partial-bracing scheme, verified above
+COLUMN_SECTION = "150x150x5 SHS"  # 150x150x4 is NOT a real IS 4923 designation (150mm row starts at t=5); upgraded, safe (A/I/Zp all higher than the old idealized 150x150x4)
+RING_SECTION = "100x100x4 SHS"    # 76x76x4 is NOT a real IS 4923 designation; upgraded to a real section that dominates the old idealized 76x76x4 on every property (A, I, Zp, r), and reuses the bracing section (one fewer distinct SKU to stock)
+BRACING_SECTION = "100x100x4 SHS"  # D-3 final (round 3) -- already a real IS 4923 designation, unchanged
 
 # Band membership by panel index (0..13), from the Node optimizer's group summary
 # (structural/tailored_schedule.json) -- verified IDENTICAL across T1/T2/T3 (same physical

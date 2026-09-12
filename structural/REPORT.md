@@ -115,6 +115,59 @@ a false positive caused by including the optimizer's pruning step, which the 3D 
 uses; retracted once isolated. No Md-cap regression exists; the pre-existing tailored numbers
 were correct all along.)
 
+**ERRATA 6 (real-table-sections ruling, engineer's ruling):** every section size used up to
+this point — in the idealized engine and in the STAAD file — came from a continuous
+40/50/60/65/70/75/80/90/100/110/120/125/130/140/150/160/180/200mm × 3/3.6/4/4.5/5/6/7/8mm
+sweep grid, computed with a sharp-corner formula. That grid does **not correspond to real,
+orderable IS 4923 SHS products** for most of the sizes actually used — confirmed against
+the real standard (both the 1997 edition + all 6 amendments, and the current **IS 4923:2017
+Third Revision**, obtained as the official BIS/BSB Edge free-distribution PDF and parsed
+programmatically from its embedded text layer, not read off a screenshot — see
+`is4923_2017_table1.json`, 83 rows, zero transcription risk). Only 40, 75, 100, and 150mm
+happened to coincide with real sizes; **50, 60, 65, 90, 110, 120, 130, 140, 160, and 200mm
+do not exist as real SHS designations at all**, in either edition. In particular: **there
+is no 200×200 SHS** — Table 1 goes 150×150 → 180×180 → 220×220, with no size in between,
+confirmed identically in both the 1997 and 2017 tables. T3's top chord (previously specified
+as 200×200×3, which cannot be procured) fits comfortably in real 180×180×4mm instead (util
+0.794 — ample margin once the size floor moved down and the thickness moved up).
+
+Re-ran the full sizing optimization (`converge` + `groupMembers`, uniform top/bottom chords
+per Errata 5, full 44-member topology, no pruning) constrained to `sections_is4923.js`'s
+`PRACTICAL_CATALOG` — the real IS 4923:2017 Table 1 designations with a **t≥3.0mm practical
+floor** (an engineering judgment call for an outdoor structure's corrosion allowance and weld
+quality, not an IS 4923 requirement — the standard itself permits walls as thin as 2.0mm,
+which the unconstrained real catalog happily selected — 1.8–2.2mm webs and bottom chord —
+and which this report declines to issue for a canopy with a multi-decade service life):
+
+| Truss | Top chord | Bottom chord | Web (light/heavy) | Mass (idealized → real) | Max util |
+|---|---|---|---|---|---|
+| T1 | **125×125×4.5** | **88.9×88.9×3.6** | 45×45×3.2 / 63.5×63.5×3.2 | 651.1 → 720.4 kg | 0.883 |
+| T2 | **132×132×4.5** | **91.5×91.5×3.6** | 45×45×3.2 / 63.5×63.5×3.2 | 689.4 → 746.9 kg | 0.943 |
+| T3 | **180×180×4** | **100×100×5** | 45×45×3.2 / 72×72×3.2 | 859.3 → 948.6 kg | 0.900 |
+
+Every one of these is independently verifiable against Table 1 — not interpolated, not
+idealized. Project truss total (T1×2, T2×6, T3×1), bare: **5.856t → 6.871t (+1.015t,
++17.3% vs. the original idealized-grid design)**; with the 8% allowance: **6.324t →
+7.420t**. All utils stay ≤0.943 — no failures.
+
+Two other sections in this design were also never real: **150×150×4** (columns — the real
+150mm row starts at t=5) and **76×76×4** (eave ring — 76mm isn't a real SHS size at all).
+Both are upgraded to real sections that dominate the old idealized ones on every property
+(A, I, Zp, and — for the column — r): columns → **150×150×5** (2 490.6 kg → 3 023.7 kg,
++533.1 kg for all 18), ring → **100×100×4** (810 kg → 1 051.2 kg, +241.2 kg for all 16 —
+this also happens to be the same section already used for the plan bracing, one fewer
+distinct SKU to stock). The plan bracing (100×100×4) was already a real designation;
+unchanged. These two deltas are bare masses on top of whatever total these line items were
+already carried at in §6 — they have not been re-folded into a fresh Section 6 total here,
+since that would require re-validating splices/masts/etc. against the same real-sections
+standard, which is outside this pass's scope.
+
+`generate_staad.py`'s `shs()` now looks up real Table 1 properties directly (with a
+loud console warning if anything ever falls through to the idealized formula — confirmed
+firing only for the historical D-6 hand-check comparison point, 120×120×5, which was never
+part of the actual design). `tailored_schedule.json` and `CHRA2502_3D_Final.std` are both
+regenerated against the real catalog.
+
 ---
 
 ## 0. Input Echo (as modeled)
