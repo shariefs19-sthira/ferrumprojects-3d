@@ -7,10 +7,6 @@ const RHO = 7850e-9; // kg/mm^3
 const G = 9.80665; // m/s^2
 const RING_BRACE_OP = 2580; // mm, bottom chord out-of-plane bracing spacing (fixed per brief)
 
-function selfWeightUDL(section) { // N/mm, downward
-  return -(section.A * RHO * G); // kg/mm*g = N/mm ; negative = local "down" convention (matches gravity tests)
-}
-
 // key for a truss node group id
 function nodeKey(g, i) { return g + i; }
 
@@ -39,13 +35,14 @@ function buildComboModel(truss, sizing, Lt, combo) {
   truss.members.forEach((m, ti) => {
     const n1 = idx[nodeKey(m.a[0], m.a[1])];
     const n2 = idx[nodeKey(m.b[0], m.b[1])];
-    const { section, fy } = sizing[ti];
+    const { section, fy, swA } = sizing[ti];
     const kind = (m.type === 'top' || m.type === 'bottom') ? 'frame' : 'truss';
     const Lmm = memberLenM(truss, m) * 1000;
+    const selfWeightArea = swA || section.A; // damped estimate breaks the sizing<->self-weight oscillation (see converge())
 
     let udl = 0;
     if (kind === 'frame') {
-      const sw = selfWeightUDL(section) * combo.fDL; // self-weight always "DL" factor
+      const sw = -(selfWeightArea * RHO * G) * combo.fDL; // self-weight always "DL" factor
       let ext = 0;
       if (m.type === 'top') {
         const get = (g, i) => (g === 'T' ? truss.topNodes[i] : truss.botNodes[i]);
@@ -65,7 +62,7 @@ function buildComboModel(truss, sizing, Lt, combo) {
 
     if (kind === 'truss') {
       // lump self-weight to end nodes
-      const wPerLen = -(section.A * RHO * G) * combo.fDL; // N/mm downward
+      const wPerLen = -(selfWeightArea * RHO * G) * combo.fDL; // N/mm downward
       const wTotal = wPerLen * Lmm;
       model.addNodalLoad(n1, 0, wTotal / 2, 0);
       model.addNodalLoad(n2, 0, wTotal / 2, 0);
@@ -99,14 +96,19 @@ const COMBOS = [
 ];
 const SERVICE_COMBO = { name: 'service_DL+LL', fDL: 1.0, fLL: 1.0, fWL: 0 };
 
-function effectiveLengths(truss, m, Lmm) {
-  if (m.type === 'top') return { KL_ip: 0.85 * Lmm, KL_op: Lmm };
+function effectiveLengths(truss, m, Lmm, opts) {
+  opts = opts || {};
+  // Top-chord out-of-plane: 1.0x panel spacing ONLY if deck lateral-restraint credit is
+  // declared (deck fastened to top chord at every node); otherwise 2.0x panel per IS 800
+  // practice for an undeclared/unverified restraint. Default here is the conservative case.
+  const topOpFactor = opts.deckLateralCredit ? 1.0 : 2.0;
+  if (m.type === 'top') return { KL_ip: 0.85 * Lmm, KL_op: topOpFactor * Lmm };
   if (m.type === 'bottom') return { KL_ip: 0.85 * Lmm, KL_op: RING_BRACE_OP };
   return { KL_ip: 0.85 * Lmm, KL_op: 1.0 * Lmm }; // vertical/diagonal webs
 }
 
 // One pass: given current sizing, run 4 combos, collect demands per member, re-size.
-function sizingPass(truss, sizing, Lt, defaultFy) {
+function sizingPass(truss, sizing, Lt, defaultFy, opts) {
   const demandsByMember = truss.members.map(() => []);
   const reactionCheck = [];
 
@@ -130,7 +132,7 @@ function sizingPass(truss, sizing, Lt, defaultFy) {
       const ti = femToTruss[fi];
       const m = truss.members[ti];
       const Lmm = memberLenM(truss, m) * 1000;
-      const { KL_ip, KL_op } = effectiveLengths(truss, m, Lmm);
+      const { KL_ip, KL_op } = effectiveLengths(truss, m, Lmm, opts);
       if (r.kind === 'frame') {
         const Mmax = maxMomentAlong(r.M1, r.M2, r.V1, model.members[fi].udl, r.L);
         const Naxial = (r.N1 + r.N2) / 2; // N1==N2 for axial-only; average is robust either way. Tension = +.
@@ -168,5 +170,5 @@ function initialSizing(truss, fy) {
 
 module.exports = {
   buildComboModel, sizingPass, initialSizing, COMBOS, SERVICE_COMBO, effectiveLengths,
-  memberLenM, maxMomentAlong, selfWeightUDL,
+  memberLenM, maxMomentAlong,
 };

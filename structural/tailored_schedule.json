@@ -1,0 +1,4021 @@
+{
+ "topology": {
+  "n": 14,
+  "dMid": 2.449,
+  "webPattern": "warren",
+  "L": 20.63,
+  "totalMembers": 44
+ },
+ "actual": {
+  "T1": {
+   "Lt": 4.572,
+   "mass": 600.9515883485708,
+   "maxUtil": 0.9361108432789684,
+   "defl": 19.6597641326877,
+   "groupSummary": [
+    {
+     "cat": "top",
+     "band": 0,
+     "section": "110x110x3 SHS",
+     "count": 7,
+     "util": 0.9477937444357116
+    },
+    {
+     "cat": "top",
+     "band": 1,
+     "section": "150x150x3 SHS",
+     "count": 7,
+     "util": 0.9034624843863408
+    },
+    {
+     "cat": "bottom",
+     "band": 0,
+     "section": "75x75x3.6 SHS",
+     "count": 7,
+     "util": 0.925890108896215
+    },
+    {
+     "cat": "bottom",
+     "band": 1,
+     "section": "100x100x3 SHS",
+     "count": 7,
+     "util": 0.8702967165599093
+    },
+    {
+     "cat": "web",
+     "band": 0,
+     "section": "40x40x3.6 SHS",
+     "count": 8,
+     "util": 0.8744603175981035
+    },
+    {
+     "cat": "web",
+     "band": 1,
+     "section": "60x60x3 SHS",
+     "count": 8,
+     "util": 0.8008933140977049
+    }
+   ],
+   "memberSections": [
+    {
+     "i": 0,
+     "type": "top",
+     "a": [
+      "T",
+      0
+     ],
+     "b": [
+      "T",
+      1
+     ],
+     "section": "110x110x3 SHS",
+     "area": 1284
+    },
+    {
+     "i": 1,
+     "type": "top",
+     "a": [
+      "T",
+      1
+     ],
+     "b": [
+      "T",
+      2
+     ],
+     "section": "150x150x3 SHS",
+     "area": 1764
+    },
+    {
+     "i": 2,
+     "type": "top",
+     "a": [
+      "T",
+      2
+     ],
+     "b": [
+      "T",
+      3
+     ],
+     "section": "110x110x3 SHS",
+     "area": 1284
+    },
+    {
+     "i": 3,
+     "type": "top",
+     "a": [
+      "T",
+      3
+     ],
+     "b": [
+      "T",
+      4
+     ],
+     "section": "110x110x3 SHS",
+     "area": 1284
+    },
+    {
+     "i": 4,
+     "type": "top",
+     "a": [
+      "T",
+      4
+     ],
+     "b": [
+      "T",
+      5
+     ],
+     "section": "110x110x3 SHS",
+     "area": 1284
+    },
+    {
+     "i": 5,
+     "type": "top",
+     "a": [
+      "T",
+      5
+     ],
+     "b": [
+      "T",
+      6
+     ],
+     "section": "150x150x3 SHS",
+     "area": 1764
+    },
+    {
+     "i": 6,
+     "type": "top",
+     "a": [
+      "T",
+      6
+     ],
+     "b": [
+      "T",
+      7
+     ],
+     "section": "150x150x3 SHS",
+     "area": 1764
+    },
+    {
+     "i": 7,
+     "type": "top",
+     "a": [
+      "T",
+      7
+     ],
+     "b": [
+      "T",
+      8
+     ],
+     "section": "150x150x3 SHS",
+     "area": 1764
+    },
+    {
+     "i": 8,
+     "type": "top",
+     "a": [
+      "T",
+      8
+     ],
+     "b": [
+      "T",
+      9
+     ],
+     "section": "150x150x3 SHS",
+     "area": 1764
+    },
+    {
+     "i": 9,
+     "type": "top",
+     "a": [
+      "T",
+      9
+     ],
+     "b": [
+      "T",
+      10
+     ],
+     "section": "150x150x3 SHS",
+     "area": 1764
+    },
+    {
+     "i": 10,
+     "type": "top",
+     "a": [
+      "T",
+      10
+     ],
+     "b": [
+      "T",
+      11
+     ],
+     "section": "150x150x3 SHS",
+     "area": 1764
+    },
+    {
+     "i": 11,
+     "type": "top",
+     "a": [
+      "T",
+      11
+     ],
+     "b": [
+      "T",
+      12
+     ],
+     "section": "110x110x3 SHS",
+     "area": 1284
+    },
+    {
+     "i": 12,
+     "type": "top",
+     "a": [
+      "T",
+      12
+     ],
+     "b": [
+      "T",
+      13
+     ],
+     "section": "110x110x3 SHS",
+     "area": 1284
+    },
+    {
+     "i": 13,
+     "type": "top",
+     "a": [
+      "T",
+      13
+     ],
+     "b": [
+      "T",
+      14
+     ],
+     "section": "110x110x3 SHS",
+     "area": 1284
+    },
+    {
+     "i": 14,
+     "type": "bottom",
+     "a": [
+      "B",
+      0
+     ],
+     "b": [
+      "B",
+      1
+     ],
+     "section": "75x75x3.6 SHS",
+     "area": 1028.16
+    },
+    {
+     "i": 15,
+     "type": "bottom",
+     "a": [
+      "B",
+      1
+     ],
+     "b": [
+      "B",
+      2
+     ],
+     "section": "75x75x3.6 SHS",
+     "area": 1028.16
+    },
+    {
+     "i": 16,
+     "type": "bottom",
+     "a": [
+      "B",
+      2
+     ],
+     "b": [
+      "B",
+      3
+     ],
+     "section": "75x75x3.6 SHS",
+     "area": 1028.16
+    },
+    {
+     "i": 17,
+     "type": "bottom",
+     "a": [
+      "B",
+      3
+     ],
+     "b": [
+      "B",
+      4
+     ],
+     "section": "75x75x3.6 SHS",
+     "area": 1028.16
+    },
+    {
+     "i": 18,
+     "type": "bottom",
+     "a": [
+      "B",
+      4
+     ],
+     "b": [
+      "B",
+      5
+     ],
+     "section": "100x100x3 SHS",
+     "area": 1164
+    },
+    {
+     "i": 19,
+     "type": "bottom",
+     "a": [
+      "B",
+      5
+     ],
+     "b": [
+      "B",
+      6
+     ],
+     "section": "100x100x3 SHS",
+     "area": 1164
+    },
+    {
+     "i": 20,
+     "type": "bottom",
+     "a": [
+      "B",
+      6
+     ],
+     "b": [
+      "B",
+      7
+     ],
+     "section": "100x100x3 SHS",
+     "area": 1164
+    },
+    {
+     "i": 21,
+     "type": "bottom",
+     "a": [
+      "B",
+      7
+     ],
+     "b": [
+      "B",
+      8
+     ],
+     "section": "100x100x3 SHS",
+     "area": 1164
+    },
+    {
+     "i": 22,
+     "type": "bottom",
+     "a": [
+      "B",
+      8
+     ],
+     "b": [
+      "B",
+      9
+     ],
+     "section": "100x100x3 SHS",
+     "area": 1164
+    },
+    {
+     "i": 23,
+     "type": "bottom",
+     "a": [
+      "B",
+      9
+     ],
+     "b": [
+      "B",
+      10
+     ],
+     "section": "100x100x3 SHS",
+     "area": 1164
+    },
+    {
+     "i": 24,
+     "type": "bottom",
+     "a": [
+      "B",
+      10
+     ],
+     "b": [
+      "B",
+      11
+     ],
+     "section": "75x75x3.6 SHS",
+     "area": 1028.16
+    },
+    {
+     "i": 25,
+     "type": "bottom",
+     "a": [
+      "B",
+      11
+     ],
+     "b": [
+      "B",
+      12
+     ],
+     "section": "100x100x3 SHS",
+     "area": 1164
+    },
+    {
+     "i": 26,
+     "type": "bottom",
+     "a": [
+      "B",
+      12
+     ],
+     "b": [
+      "B",
+      13
+     ],
+     "section": "75x75x3.6 SHS",
+     "area": 1028.16
+    },
+    {
+     "i": 27,
+     "type": "bottom",
+     "a": [
+      "B",
+      13
+     ],
+     "b": [
+      "B",
+      14
+     ],
+     "section": "75x75x3.6 SHS",
+     "area": 1028.16
+    },
+    {
+     "i": 28,
+     "type": "vertical",
+     "a": [
+      "T",
+      0
+     ],
+     "b": [
+      "B",
+      0
+     ],
+     "section": "40x40x3.6 SHS",
+     "area": 524.16
+    },
+    {
+     "i": 29,
+     "type": "vertical",
+     "a": [
+      "T",
+      14
+     ],
+     "b": [
+      "B",
+      14
+     ],
+     "section": "40x40x3.6 SHS",
+     "area": 524.16
+    },
+    {
+     "i": 30,
+     "type": "diagonal",
+     "a": [
+      "B",
+      0
+     ],
+     "b": [
+      "T",
+      1
+     ],
+     "section": "60x60x3 SHS",
+     "area": 684
+    },
+    {
+     "i": 31,
+     "type": "diagonal",
+     "a": [
+      "T",
+      1
+     ],
+     "b": [
+      "B",
+      2
+     ],
+     "section": "40x40x3.6 SHS",
+     "area": 524.16
+    },
+    {
+     "i": 32,
+     "type": "diagonal",
+     "a": [
+      "B",
+      2
+     ],
+     "b": [
+      "T",
+      3
+     ],
+     "section": "60x60x3 SHS",
+     "area": 684
+    },
+    {
+     "i": 33,
+     "type": "diagonal",
+     "a": [
+      "T",
+      3
+     ],
+     "b": [
+      "B",
+      4
+     ],
+     "section": "40x40x3.6 SHS",
+     "area": 524.16
+    },
+    {
+     "i": 34,
+     "type": "diagonal",
+     "a": [
+      "B",
+      4
+     ],
+     "b": [
+      "T",
+      5
+     ],
+     "section": "40x40x3.6 SHS",
+     "area": 524.16
+    },
+    {
+     "i": 35,
+     "type": "diagonal",
+     "a": [
+      "T",
+      5
+     ],
+     "b": [
+      "B",
+      6
+     ],
+     "section": "60x60x3 SHS",
+     "area": 684
+    },
+    {
+     "i": 36,
+     "type": "diagonal",
+     "a": [
+      "B",
+      6
+     ],
+     "b": [
+      "T",
+      7
+     ],
+     "section": "60x60x3 SHS",
+     "area": 684
+    },
+    {
+     "i": 37,
+     "type": "diagonal",
+     "a": [
+      "T",
+      7
+     ],
+     "b": [
+      "B",
+      8
+     ],
+     "section": "60x60x3 SHS",
+     "area": 684
+    },
+    {
+     "i": 38,
+     "type": "diagonal",
+     "a": [
+      "B",
+      8
+     ],
+     "b": [
+      "T",
+      9
+     ],
+     "section": "60x60x3 SHS",
+     "area": 684
+    },
+    {
+     "i": 39,
+     "type": "diagonal",
+     "a": [
+      "T",
+      9
+     ],
+     "b": [
+      "B",
+      10
+     ],
+     "section": "40x40x3.6 SHS",
+     "area": 524.16
+    },
+    {
+     "i": 40,
+     "type": "diagonal",
+     "a": [
+      "B",
+      10
+     ],
+     "b": [
+      "T",
+      11
+     ],
+     "section": "40x40x3.6 SHS",
+     "area": 524.16
+    },
+    {
+     "i": 41,
+     "type": "diagonal",
+     "a": [
+      "T",
+      11
+     ],
+     "b": [
+      "B",
+      12
+     ],
+     "section": "60x60x3 SHS",
+     "area": 684
+    },
+    {
+     "i": 42,
+     "type": "diagonal",
+     "a": [
+      "B",
+      12
+     ],
+     "b": [
+      "T",
+      13
+     ],
+     "section": "40x40x3.6 SHS",
+     "area": 524.16
+    },
+    {
+     "i": 43,
+     "type": "diagonal",
+     "a": [
+      "T",
+      13
+     ],
+     "b": [
+      "B",
+      14
+     ],
+     "section": "60x60x3 SHS",
+     "area": 684
+    }
+   ]
+  },
+  "T2": {
+   "Lt": 5.098,
+   "mass": 643.8755440615863,
+   "maxUtil": 0.9290904091141279,
+   "defl": 19.76589488696322,
+   "groupSummary": [
+    {
+     "cat": "top",
+     "band": 0,
+     "section": "120x120x3 SHS",
+     "count": 7,
+     "util": 0.9104177180707795
+    },
+    {
+     "cat": "top",
+     "band": 1,
+     "section": "160x160x3 SHS",
+     "count": 7,
+     "util": 0.903879329648173
+    },
+    {
+     "cat": "bottom",
+     "band": 0,
+     "section": "100x100x3 SHS",
+     "count": 7,
+     "util": 0.8464545047525571
+    },
+    {
+     "cat": "bottom",
+     "band": 1,
+     "section": "90x90x3.6 SHS",
+     "count": 7,
+     "util": 0.9243836701503892
+    },
+    {
+     "cat": "web",
+     "band": 0,
+     "section": "50x50x3 SHS",
+     "count": 8,
+     "util": 0.7952900842184426
+    },
+    {
+     "cat": "web",
+     "band": 1,
+     "section": "60x60x3 SHS",
+     "count": 8,
+     "util": 0.890598541189725
+    }
+   ],
+   "memberSections": [
+    {
+     "i": 0,
+     "type": "top",
+     "a": [
+      "T",
+      0
+     ],
+     "b": [
+      "T",
+      1
+     ],
+     "section": "120x120x3 SHS",
+     "area": 1404
+    },
+    {
+     "i": 1,
+     "type": "top",
+     "a": [
+      "T",
+      1
+     ],
+     "b": [
+      "T",
+      2
+     ],
+     "section": "160x160x3 SHS",
+     "area": 1884
+    },
+    {
+     "i": 2,
+     "type": "top",
+     "a": [
+      "T",
+      2
+     ],
+     "b": [
+      "T",
+      3
+     ],
+     "section": "120x120x3 SHS",
+     "area": 1404
+    },
+    {
+     "i": 3,
+     "type": "top",
+     "a": [
+      "T",
+      3
+     ],
+     "b": [
+      "T",
+      4
+     ],
+     "section": "120x120x3 SHS",
+     "area": 1404
+    },
+    {
+     "i": 4,
+     "type": "top",
+     "a": [
+      "T",
+      4
+     ],
+     "b": [
+      "T",
+      5
+     ],
+     "section": "120x120x3 SHS",
+     "area": 1404
+    },
+    {
+     "i": 5,
+     "type": "top",
+     "a": [
+      "T",
+      5
+     ],
+     "b": [
+      "T",
+      6
+     ],
+     "section": "160x160x3 SHS",
+     "area": 1884
+    },
+    {
+     "i": 6,
+     "type": "top",
+     "a": [
+      "T",
+      6
+     ],
+     "b": [
+      "T",
+      7
+     ],
+     "section": "160x160x3 SHS",
+     "area": 1884
+    },
+    {
+     "i": 7,
+     "type": "top",
+     "a": [
+      "T",
+      7
+     ],
+     "b": [
+      "T",
+      8
+     ],
+     "section": "160x160x3 SHS",
+     "area": 1884
+    },
+    {
+     "i": 8,
+     "type": "top",
+     "a": [
+      "T",
+      8
+     ],
+     "b": [
+      "T",
+      9
+     ],
+     "section": "160x160x3 SHS",
+     "area": 1884
+    },
+    {
+     "i": 9,
+     "type": "top",
+     "a": [
+      "T",
+      9
+     ],
+     "b": [
+      "T",
+      10
+     ],
+     "section": "160x160x3 SHS",
+     "area": 1884
+    },
+    {
+     "i": 10,
+     "type": "top",
+     "a": [
+      "T",
+      10
+     ],
+     "b": [
+      "T",
+      11
+     ],
+     "section": "160x160x3 SHS",
+     "area": 1884
+    },
+    {
+     "i": 11,
+     "type": "top",
+     "a": [
+      "T",
+      11
+     ],
+     "b": [
+      "T",
+      12
+     ],
+     "section": "120x120x3 SHS",
+     "area": 1404
+    },
+    {
+     "i": 12,
+     "type": "top",
+     "a": [
+      "T",
+      12
+     ],
+     "b": [
+      "T",
+      13
+     ],
+     "section": "120x120x3 SHS",
+     "area": 1404
+    },
+    {
+     "i": 13,
+     "type": "top",
+     "a": [
+      "T",
+      13
+     ],
+     "b": [
+      "T",
+      14
+     ],
+     "section": "120x120x3 SHS",
+     "area": 1404
+    },
+    {
+     "i": 14,
+     "type": "bottom",
+     "a": [
+      "B",
+      0
+     ],
+     "b": [
+      "B",
+      1
+     ],
+     "section": "100x100x3 SHS",
+     "area": 1164
+    },
+    {
+     "i": 15,
+     "type": "bottom",
+     "a": [
+      "B",
+      1
+     ],
+     "b": [
+      "B",
+      2
+     ],
+     "section": "100x100x3 SHS",
+     "area": 1164
+    },
+    {
+     "i": 16,
+     "type": "bottom",
+     "a": [
+      "B",
+      2
+     ],
+     "b": [
+      "B",
+      3
+     ],
+     "section": "100x100x3 SHS",
+     "area": 1164
+    },
+    {
+     "i": 17,
+     "type": "bottom",
+     "a": [
+      "B",
+      3
+     ],
+     "b": [
+      "B",
+      4
+     ],
+     "section": "100x100x3 SHS",
+     "area": 1164
+    },
+    {
+     "i": 18,
+     "type": "bottom",
+     "a": [
+      "B",
+      4
+     ],
+     "b": [
+      "B",
+      5
+     ],
+     "section": "90x90x3.6 SHS",
+     "area": 1244.16
+    },
+    {
+     "i": 19,
+     "type": "bottom",
+     "a": [
+      "B",
+      5
+     ],
+     "b": [
+      "B",
+      6
+     ],
+     "section": "90x90x3.6 SHS",
+     "area": 1244.16
+    },
+    {
+     "i": 20,
+     "type": "bottom",
+     "a": [
+      "B",
+      6
+     ],
+     "b": [
+      "B",
+      7
+     ],
+     "section": "90x90x3.6 SHS",
+     "area": 1244.16
+    },
+    {
+     "i": 21,
+     "type": "bottom",
+     "a": [
+      "B",
+      7
+     ],
+     "b": [
+      "B",
+      8
+     ],
+     "section": "90x90x3.6 SHS",
+     "area": 1244.16
+    },
+    {
+     "i": 22,
+     "type": "bottom",
+     "a": [
+      "B",
+      8
+     ],
+     "b": [
+      "B",
+      9
+     ],
+     "section": "90x90x3.6 SHS",
+     "area": 1244.16
+    },
+    {
+     "i": 23,
+     "type": "bottom",
+     "a": [
+      "B",
+      9
+     ],
+     "b": [
+      "B",
+      10
+     ],
+     "section": "90x90x3.6 SHS",
+     "area": 1244.16
+    },
+    {
+     "i": 24,
+     "type": "bottom",
+     "a": [
+      "B",
+      10
+     ],
+     "b": [
+      "B",
+      11
+     ],
+     "section": "90x90x3.6 SHS",
+     "area": 1244.16
+    },
+    {
+     "i": 25,
+     "type": "bottom",
+     "a": [
+      "B",
+      11
+     ],
+     "b": [
+      "B",
+      12
+     ],
+     "section": "100x100x3 SHS",
+     "area": 1164
+    },
+    {
+     "i": 26,
+     "type": "bottom",
+     "a": [
+      "B",
+      12
+     ],
+     "b": [
+      "B",
+      13
+     ],
+     "section": "100x100x3 SHS",
+     "area": 1164
+    },
+    {
+     "i": 27,
+     "type": "bottom",
+     "a": [
+      "B",
+      13
+     ],
+     "b": [
+      "B",
+      14
+     ],
+     "section": "100x100x3 SHS",
+     "area": 1164
+    },
+    {
+     "i": 28,
+     "type": "vertical",
+     "a": [
+      "T",
+      0
+     ],
+     "b": [
+      "B",
+      0
+     ],
+     "section": "50x50x3 SHS",
+     "area": 564
+    },
+    {
+     "i": 29,
+     "type": "vertical",
+     "a": [
+      "T",
+      14
+     ],
+     "b": [
+      "B",
+      14
+     ],
+     "section": "50x50x3 SHS",
+     "area": 564
+    },
+    {
+     "i": 30,
+     "type": "diagonal",
+     "a": [
+      "B",
+      0
+     ],
+     "b": [
+      "T",
+      1
+     ],
+     "section": "60x60x3 SHS",
+     "area": 684
+    },
+    {
+     "i": 31,
+     "type": "diagonal",
+     "a": [
+      "T",
+      1
+     ],
+     "b": [
+      "B",
+      2
+     ],
+     "section": "50x50x3 SHS",
+     "area": 564
+    },
+    {
+     "i": 32,
+     "type": "diagonal",
+     "a": [
+      "B",
+      2
+     ],
+     "b": [
+      "T",
+      3
+     ],
+     "section": "50x50x3 SHS",
+     "area": 564
+    },
+    {
+     "i": 33,
+     "type": "diagonal",
+     "a": [
+      "T",
+      3
+     ],
+     "b": [
+      "B",
+      4
+     ],
+     "section": "50x50x3 SHS",
+     "area": 564
+    },
+    {
+     "i": 34,
+     "type": "diagonal",
+     "a": [
+      "B",
+      4
+     ],
+     "b": [
+      "T",
+      5
+     ],
+     "section": "50x50x3 SHS",
+     "area": 564
+    },
+    {
+     "i": 35,
+     "type": "diagonal",
+     "a": [
+      "T",
+      5
+     ],
+     "b": [
+      "B",
+      6
+     ],
+     "section": "60x60x3 SHS",
+     "area": 684
+    },
+    {
+     "i": 36,
+     "type": "diagonal",
+     "a": [
+      "B",
+      6
+     ],
+     "b": [
+      "T",
+      7
+     ],
+     "section": "60x60x3 SHS",
+     "area": 684
+    },
+    {
+     "i": 37,
+     "type": "diagonal",
+     "a": [
+      "T",
+      7
+     ],
+     "b": [
+      "B",
+      8
+     ],
+     "section": "60x60x3 SHS",
+     "area": 684
+    },
+    {
+     "i": 38,
+     "type": "diagonal",
+     "a": [
+      "B",
+      8
+     ],
+     "b": [
+      "T",
+      9
+     ],
+     "section": "60x60x3 SHS",
+     "area": 684
+    },
+    {
+     "i": 39,
+     "type": "diagonal",
+     "a": [
+      "T",
+      9
+     ],
+     "b": [
+      "B",
+      10
+     ],
+     "section": "60x60x3 SHS",
+     "area": 684
+    },
+    {
+     "i": 40,
+     "type": "diagonal",
+     "a": [
+      "B",
+      10
+     ],
+     "b": [
+      "T",
+      11
+     ],
+     "section": "50x50x3 SHS",
+     "area": 564
+    },
+    {
+     "i": 41,
+     "type": "diagonal",
+     "a": [
+      "T",
+      11
+     ],
+     "b": [
+      "B",
+      12
+     ],
+     "section": "60x60x3 SHS",
+     "area": 684
+    },
+    {
+     "i": 42,
+     "type": "diagonal",
+     "a": [
+      "B",
+      12
+     ],
+     "b": [
+      "T",
+      13
+     ],
+     "section": "50x50x3 SHS",
+     "area": 564
+    },
+    {
+     "i": 43,
+     "type": "diagonal",
+     "a": [
+      "T",
+      13
+     ],
+     "b": [
+      "B",
+      14
+     ],
+     "section": "60x60x3 SHS",
+     "area": 684
+    }
+   ]
+  },
+  "T3": {
+   "Lt": 7.121,
+   "mass": 790.8217939098713,
+   "maxUtil": 0.9223725903969882,
+   "defl": 22.770104671289033,
+   "groupSummary": [
+    {
+     "cat": "top",
+     "band": 0,
+     "section": "150x150x3 SHS",
+     "count": 7,
+     "util": 0.8900722835365635
+    },
+    {
+     "cat": "top",
+     "band": 1,
+     "section": "200x200x3 SHS",
+     "count": 7,
+     "util": 0.8611080348328459
+    },
+    {
+     "cat": "bottom",
+     "band": 0,
+     "section": "120x120x3 SHS",
+     "count": 7,
+     "util": 0.9284005643191153
+    },
+    {
+     "cat": "bottom",
+     "band": 1,
+     "section": "140x140x3 SHS",
+     "count": 7,
+     "util": 0.875112655420351
+    },
+    {
+     "cat": "web",
+     "band": 0,
+     "section": "50x50x3 SHS",
+     "count": 8,
+     "util": 0.771443310506358
+    },
+    {
+     "cat": "web",
+     "band": 1,
+     "section": "75x75x3 SHS",
+     "count": 8,
+     "util": 0.8625730288037536
+    }
+   ],
+   "memberSections": [
+    {
+     "i": 0,
+     "type": "top",
+     "a": [
+      "T",
+      0
+     ],
+     "b": [
+      "T",
+      1
+     ],
+     "section": "150x150x3 SHS",
+     "area": 1764
+    },
+    {
+     "i": 1,
+     "type": "top",
+     "a": [
+      "T",
+      1
+     ],
+     "b": [
+      "T",
+      2
+     ],
+     "section": "200x200x3 SHS",
+     "area": 2364
+    },
+    {
+     "i": 2,
+     "type": "top",
+     "a": [
+      "T",
+      2
+     ],
+     "b": [
+      "T",
+      3
+     ],
+     "section": "150x150x3 SHS",
+     "area": 1764
+    },
+    {
+     "i": 3,
+     "type": "top",
+     "a": [
+      "T",
+      3
+     ],
+     "b": [
+      "T",
+      4
+     ],
+     "section": "150x150x3 SHS",
+     "area": 1764
+    },
+    {
+     "i": 4,
+     "type": "top",
+     "a": [
+      "T",
+      4
+     ],
+     "b": [
+      "T",
+      5
+     ],
+     "section": "150x150x3 SHS",
+     "area": 1764
+    },
+    {
+     "i": 5,
+     "type": "top",
+     "a": [
+      "T",
+      5
+     ],
+     "b": [
+      "T",
+      6
+     ],
+     "section": "200x200x3 SHS",
+     "area": 2364
+    },
+    {
+     "i": 6,
+     "type": "top",
+     "a": [
+      "T",
+      6
+     ],
+     "b": [
+      "T",
+      7
+     ],
+     "section": "200x200x3 SHS",
+     "area": 2364
+    },
+    {
+     "i": 7,
+     "type": "top",
+     "a": [
+      "T",
+      7
+     ],
+     "b": [
+      "T",
+      8
+     ],
+     "section": "200x200x3 SHS",
+     "area": 2364
+    },
+    {
+     "i": 8,
+     "type": "top",
+     "a": [
+      "T",
+      8
+     ],
+     "b": [
+      "T",
+      9
+     ],
+     "section": "200x200x3 SHS",
+     "area": 2364
+    },
+    {
+     "i": 9,
+     "type": "top",
+     "a": [
+      "T",
+      9
+     ],
+     "b": [
+      "T",
+      10
+     ],
+     "section": "200x200x3 SHS",
+     "area": 2364
+    },
+    {
+     "i": 10,
+     "type": "top",
+     "a": [
+      "T",
+      10
+     ],
+     "b": [
+      "T",
+      11
+     ],
+     "section": "200x200x3 SHS",
+     "area": 2364
+    },
+    {
+     "i": 11,
+     "type": "top",
+     "a": [
+      "T",
+      11
+     ],
+     "b": [
+      "T",
+      12
+     ],
+     "section": "150x150x3 SHS",
+     "area": 1764
+    },
+    {
+     "i": 12,
+     "type": "top",
+     "a": [
+      "T",
+      12
+     ],
+     "b": [
+      "T",
+      13
+     ],
+     "section": "150x150x3 SHS",
+     "area": 1764
+    },
+    {
+     "i": 13,
+     "type": "top",
+     "a": [
+      "T",
+      13
+     ],
+     "b": [
+      "T",
+      14
+     ],
+     "section": "150x150x3 SHS",
+     "area": 1764
+    },
+    {
+     "i": 14,
+     "type": "bottom",
+     "a": [
+      "B",
+      0
+     ],
+     "b": [
+      "B",
+      1
+     ],
+     "section": "120x120x3 SHS",
+     "area": 1404
+    },
+    {
+     "i": 15,
+     "type": "bottom",
+     "a": [
+      "B",
+      1
+     ],
+     "b": [
+      "B",
+      2
+     ],
+     "section": "120x120x3 SHS",
+     "area": 1404
+    },
+    {
+     "i": 16,
+     "type": "bottom",
+     "a": [
+      "B",
+      2
+     ],
+     "b": [
+      "B",
+      3
+     ],
+     "section": "120x120x3 SHS",
+     "area": 1404
+    },
+    {
+     "i": 17,
+     "type": "bottom",
+     "a": [
+      "B",
+      3
+     ],
+     "b": [
+      "B",
+      4
+     ],
+     "section": "120x120x3 SHS",
+     "area": 1404
+    },
+    {
+     "i": 18,
+     "type": "bottom",
+     "a": [
+      "B",
+      4
+     ],
+     "b": [
+      "B",
+      5
+     ],
+     "section": "140x140x3 SHS",
+     "area": 1644
+    },
+    {
+     "i": 19,
+     "type": "bottom",
+     "a": [
+      "B",
+      5
+     ],
+     "b": [
+      "B",
+      6
+     ],
+     "section": "140x140x3 SHS",
+     "area": 1644
+    },
+    {
+     "i": 20,
+     "type": "bottom",
+     "a": [
+      "B",
+      6
+     ],
+     "b": [
+      "B",
+      7
+     ],
+     "section": "140x140x3 SHS",
+     "area": 1644
+    },
+    {
+     "i": 21,
+     "type": "bottom",
+     "a": [
+      "B",
+      7
+     ],
+     "b": [
+      "B",
+      8
+     ],
+     "section": "140x140x3 SHS",
+     "area": 1644
+    },
+    {
+     "i": 22,
+     "type": "bottom",
+     "a": [
+      "B",
+      8
+     ],
+     "b": [
+      "B",
+      9
+     ],
+     "section": "140x140x3 SHS",
+     "area": 1644
+    },
+    {
+     "i": 23,
+     "type": "bottom",
+     "a": [
+      "B",
+      9
+     ],
+     "b": [
+      "B",
+      10
+     ],
+     "section": "140x140x3 SHS",
+     "area": 1644
+    },
+    {
+     "i": 24,
+     "type": "bottom",
+     "a": [
+      "B",
+      10
+     ],
+     "b": [
+      "B",
+      11
+     ],
+     "section": "140x140x3 SHS",
+     "area": 1644
+    },
+    {
+     "i": 25,
+     "type": "bottom",
+     "a": [
+      "B",
+      11
+     ],
+     "b": [
+      "B",
+      12
+     ],
+     "section": "120x120x3 SHS",
+     "area": 1404
+    },
+    {
+     "i": 26,
+     "type": "bottom",
+     "a": [
+      "B",
+      12
+     ],
+     "b": [
+      "B",
+      13
+     ],
+     "section": "120x120x3 SHS",
+     "area": 1404
+    },
+    {
+     "i": 27,
+     "type": "bottom",
+     "a": [
+      "B",
+      13
+     ],
+     "b": [
+      "B",
+      14
+     ],
+     "section": "120x120x3 SHS",
+     "area": 1404
+    },
+    {
+     "i": 28,
+     "type": "vertical",
+     "a": [
+      "T",
+      0
+     ],
+     "b": [
+      "B",
+      0
+     ],
+     "section": "50x50x3 SHS",
+     "area": 564
+    },
+    {
+     "i": 29,
+     "type": "vertical",
+     "a": [
+      "T",
+      14
+     ],
+     "b": [
+      "B",
+      14
+     ],
+     "section": "50x50x3 SHS",
+     "area": 564
+    },
+    {
+     "i": 30,
+     "type": "diagonal",
+     "a": [
+      "B",
+      0
+     ],
+     "b": [
+      "T",
+      1
+     ],
+     "section": "75x75x3 SHS",
+     "area": 864
+    },
+    {
+     "i": 31,
+     "type": "diagonal",
+     "a": [
+      "T",
+      1
+     ],
+     "b": [
+      "B",
+      2
+     ],
+     "section": "50x50x3 SHS",
+     "area": 564
+    },
+    {
+     "i": 32,
+     "type": "diagonal",
+     "a": [
+      "B",
+      2
+     ],
+     "b": [
+      "T",
+      3
+     ],
+     "section": "75x75x3 SHS",
+     "area": 864
+    },
+    {
+     "i": 33,
+     "type": "diagonal",
+     "a": [
+      "T",
+      3
+     ],
+     "b": [
+      "B",
+      4
+     ],
+     "section": "50x50x3 SHS",
+     "area": 564
+    },
+    {
+     "i": 34,
+     "type": "diagonal",
+     "a": [
+      "B",
+      4
+     ],
+     "b": [
+      "T",
+      5
+     ],
+     "section": "50x50x3 SHS",
+     "area": 564
+    },
+    {
+     "i": 35,
+     "type": "diagonal",
+     "a": [
+      "T",
+      5
+     ],
+     "b": [
+      "B",
+      6
+     ],
+     "section": "50x50x3 SHS",
+     "area": 564
+    },
+    {
+     "i": 36,
+     "type": "diagonal",
+     "a": [
+      "B",
+      6
+     ],
+     "b": [
+      "T",
+      7
+     ],
+     "section": "75x75x3 SHS",
+     "area": 864
+    },
+    {
+     "i": 37,
+     "type": "diagonal",
+     "a": [
+      "T",
+      7
+     ],
+     "b": [
+      "B",
+      8
+     ],
+     "section": "75x75x3 SHS",
+     "area": 864
+    },
+    {
+     "i": 38,
+     "type": "diagonal",
+     "a": [
+      "B",
+      8
+     ],
+     "b": [
+      "T",
+      9
+     ],
+     "section": "75x75x3 SHS",
+     "area": 864
+    },
+    {
+     "i": 39,
+     "type": "diagonal",
+     "a": [
+      "T",
+      9
+     ],
+     "b": [
+      "B",
+      10
+     ],
+     "section": "75x75x3 SHS",
+     "area": 864
+    },
+    {
+     "i": 40,
+     "type": "diagonal",
+     "a": [
+      "B",
+      10
+     ],
+     "b": [
+      "T",
+      11
+     ],
+     "section": "50x50x3 SHS",
+     "area": 564
+    },
+    {
+     "i": 41,
+     "type": "diagonal",
+     "a": [
+      "T",
+      11
+     ],
+     "b": [
+      "B",
+      12
+     ],
+     "section": "75x75x3 SHS",
+     "area": 864
+    },
+    {
+     "i": 42,
+     "type": "diagonal",
+     "a": [
+      "B",
+      12
+     ],
+     "b": [
+      "T",
+      13
+     ],
+     "section": "50x50x3 SHS",
+     "area": 564
+    },
+    {
+     "i": 43,
+     "type": "diagonal",
+     "a": [
+      "T",
+      13
+     ],
+     "b": [
+      "B",
+      14
+     ],
+     "section": "75x75x3 SHS",
+     "area": 864
+    }
+   ]
+  }
+ },
+ "fabricationEnvelope": {
+  "T1": {
+   "Lt": 4.572,
+   "mass": 600.9515883485708,
+   "maxUtil": 0.9361108432789684,
+   "defl": 19.6597641326877,
+   "groupSummary": [
+    {
+     "cat": "top",
+     "band": 0,
+     "section": "110x110x3 SHS",
+     "count": 7,
+     "util": 0.9477937444357116
+    },
+    {
+     "cat": "top",
+     "band": 1,
+     "section": "150x150x3 SHS",
+     "count": 7,
+     "util": 0.9034624843863408
+    },
+    {
+     "cat": "bottom",
+     "band": 0,
+     "section": "75x75x3.6 SHS",
+     "count": 7,
+     "util": 0.925890108896215
+    },
+    {
+     "cat": "bottom",
+     "band": 1,
+     "section": "100x100x3 SHS",
+     "count": 7,
+     "util": 0.8702967165599093
+    },
+    {
+     "cat": "web",
+     "band": 0,
+     "section": "40x40x3.6 SHS",
+     "count": 8,
+     "util": 0.8744603175981035
+    },
+    {
+     "cat": "web",
+     "band": 1,
+     "section": "60x60x3 SHS",
+     "count": 8,
+     "util": 0.8008933140977049
+    }
+   ],
+   "memberSections": [
+    {
+     "i": 0,
+     "type": "top",
+     "a": [
+      "T",
+      0
+     ],
+     "b": [
+      "T",
+      1
+     ],
+     "section": "110x110x3 SHS",
+     "area": 1284
+    },
+    {
+     "i": 1,
+     "type": "top",
+     "a": [
+      "T",
+      1
+     ],
+     "b": [
+      "T",
+      2
+     ],
+     "section": "150x150x3 SHS",
+     "area": 1764
+    },
+    {
+     "i": 2,
+     "type": "top",
+     "a": [
+      "T",
+      2
+     ],
+     "b": [
+      "T",
+      3
+     ],
+     "section": "110x110x3 SHS",
+     "area": 1284
+    },
+    {
+     "i": 3,
+     "type": "top",
+     "a": [
+      "T",
+      3
+     ],
+     "b": [
+      "T",
+      4
+     ],
+     "section": "110x110x3 SHS",
+     "area": 1284
+    },
+    {
+     "i": 4,
+     "type": "top",
+     "a": [
+      "T",
+      4
+     ],
+     "b": [
+      "T",
+      5
+     ],
+     "section": "110x110x3 SHS",
+     "area": 1284
+    },
+    {
+     "i": 5,
+     "type": "top",
+     "a": [
+      "T",
+      5
+     ],
+     "b": [
+      "T",
+      6
+     ],
+     "section": "150x150x3 SHS",
+     "area": 1764
+    },
+    {
+     "i": 6,
+     "type": "top",
+     "a": [
+      "T",
+      6
+     ],
+     "b": [
+      "T",
+      7
+     ],
+     "section": "150x150x3 SHS",
+     "area": 1764
+    },
+    {
+     "i": 7,
+     "type": "top",
+     "a": [
+      "T",
+      7
+     ],
+     "b": [
+      "T",
+      8
+     ],
+     "section": "150x150x3 SHS",
+     "area": 1764
+    },
+    {
+     "i": 8,
+     "type": "top",
+     "a": [
+      "T",
+      8
+     ],
+     "b": [
+      "T",
+      9
+     ],
+     "section": "150x150x3 SHS",
+     "area": 1764
+    },
+    {
+     "i": 9,
+     "type": "top",
+     "a": [
+      "T",
+      9
+     ],
+     "b": [
+      "T",
+      10
+     ],
+     "section": "150x150x3 SHS",
+     "area": 1764
+    },
+    {
+     "i": 10,
+     "type": "top",
+     "a": [
+      "T",
+      10
+     ],
+     "b": [
+      "T",
+      11
+     ],
+     "section": "150x150x3 SHS",
+     "area": 1764
+    },
+    {
+     "i": 11,
+     "type": "top",
+     "a": [
+      "T",
+      11
+     ],
+     "b": [
+      "T",
+      12
+     ],
+     "section": "110x110x3 SHS",
+     "area": 1284
+    },
+    {
+     "i": 12,
+     "type": "top",
+     "a": [
+      "T",
+      12
+     ],
+     "b": [
+      "T",
+      13
+     ],
+     "section": "110x110x3 SHS",
+     "area": 1284
+    },
+    {
+     "i": 13,
+     "type": "top",
+     "a": [
+      "T",
+      13
+     ],
+     "b": [
+      "T",
+      14
+     ],
+     "section": "110x110x3 SHS",
+     "area": 1284
+    },
+    {
+     "i": 14,
+     "type": "bottom",
+     "a": [
+      "B",
+      0
+     ],
+     "b": [
+      "B",
+      1
+     ],
+     "section": "75x75x3.6 SHS",
+     "area": 1028.16
+    },
+    {
+     "i": 15,
+     "type": "bottom",
+     "a": [
+      "B",
+      1
+     ],
+     "b": [
+      "B",
+      2
+     ],
+     "section": "75x75x3.6 SHS",
+     "area": 1028.16
+    },
+    {
+     "i": 16,
+     "type": "bottom",
+     "a": [
+      "B",
+      2
+     ],
+     "b": [
+      "B",
+      3
+     ],
+     "section": "75x75x3.6 SHS",
+     "area": 1028.16
+    },
+    {
+     "i": 17,
+     "type": "bottom",
+     "a": [
+      "B",
+      3
+     ],
+     "b": [
+      "B",
+      4
+     ],
+     "section": "75x75x3.6 SHS",
+     "area": 1028.16
+    },
+    {
+     "i": 18,
+     "type": "bottom",
+     "a": [
+      "B",
+      4
+     ],
+     "b": [
+      "B",
+      5
+     ],
+     "section": "100x100x3 SHS",
+     "area": 1164
+    },
+    {
+     "i": 19,
+     "type": "bottom",
+     "a": [
+      "B",
+      5
+     ],
+     "b": [
+      "B",
+      6
+     ],
+     "section": "100x100x3 SHS",
+     "area": 1164
+    },
+    {
+     "i": 20,
+     "type": "bottom",
+     "a": [
+      "B",
+      6
+     ],
+     "b": [
+      "B",
+      7
+     ],
+     "section": "100x100x3 SHS",
+     "area": 1164
+    },
+    {
+     "i": 21,
+     "type": "bottom",
+     "a": [
+      "B",
+      7
+     ],
+     "b": [
+      "B",
+      8
+     ],
+     "section": "100x100x3 SHS",
+     "area": 1164
+    },
+    {
+     "i": 22,
+     "type": "bottom",
+     "a": [
+      "B",
+      8
+     ],
+     "b": [
+      "B",
+      9
+     ],
+     "section": "100x100x3 SHS",
+     "area": 1164
+    },
+    {
+     "i": 23,
+     "type": "bottom",
+     "a": [
+      "B",
+      9
+     ],
+     "b": [
+      "B",
+      10
+     ],
+     "section": "100x100x3 SHS",
+     "area": 1164
+    },
+    {
+     "i": 24,
+     "type": "bottom",
+     "a": [
+      "B",
+      10
+     ],
+     "b": [
+      "B",
+      11
+     ],
+     "section": "75x75x3.6 SHS",
+     "area": 1028.16
+    },
+    {
+     "i": 25,
+     "type": "bottom",
+     "a": [
+      "B",
+      11
+     ],
+     "b": [
+      "B",
+      12
+     ],
+     "section": "100x100x3 SHS",
+     "area": 1164
+    },
+    {
+     "i": 26,
+     "type": "bottom",
+     "a": [
+      "B",
+      12
+     ],
+     "b": [
+      "B",
+      13
+     ],
+     "section": "75x75x3.6 SHS",
+     "area": 1028.16
+    },
+    {
+     "i": 27,
+     "type": "bottom",
+     "a": [
+      "B",
+      13
+     ],
+     "b": [
+      "B",
+      14
+     ],
+     "section": "75x75x3.6 SHS",
+     "area": 1028.16
+    },
+    {
+     "i": 28,
+     "type": "vertical",
+     "a": [
+      "T",
+      0
+     ],
+     "b": [
+      "B",
+      0
+     ],
+     "section": "40x40x3.6 SHS",
+     "area": 524.16
+    },
+    {
+     "i": 29,
+     "type": "vertical",
+     "a": [
+      "T",
+      14
+     ],
+     "b": [
+      "B",
+      14
+     ],
+     "section": "40x40x3.6 SHS",
+     "area": 524.16
+    },
+    {
+     "i": 30,
+     "type": "diagonal",
+     "a": [
+      "B",
+      0
+     ],
+     "b": [
+      "T",
+      1
+     ],
+     "section": "60x60x3 SHS",
+     "area": 684
+    },
+    {
+     "i": 31,
+     "type": "diagonal",
+     "a": [
+      "T",
+      1
+     ],
+     "b": [
+      "B",
+      2
+     ],
+     "section": "40x40x3.6 SHS",
+     "area": 524.16
+    },
+    {
+     "i": 32,
+     "type": "diagonal",
+     "a": [
+      "B",
+      2
+     ],
+     "b": [
+      "T",
+      3
+     ],
+     "section": "60x60x3 SHS",
+     "area": 684
+    },
+    {
+     "i": 33,
+     "type": "diagonal",
+     "a": [
+      "T",
+      3
+     ],
+     "b": [
+      "B",
+      4
+     ],
+     "section": "40x40x3.6 SHS",
+     "area": 524.16
+    },
+    {
+     "i": 34,
+     "type": "diagonal",
+     "a": [
+      "B",
+      4
+     ],
+     "b": [
+      "T",
+      5
+     ],
+     "section": "40x40x3.6 SHS",
+     "area": 524.16
+    },
+    {
+     "i": 35,
+     "type": "diagonal",
+     "a": [
+      "T",
+      5
+     ],
+     "b": [
+      "B",
+      6
+     ],
+     "section": "60x60x3 SHS",
+     "area": 684
+    },
+    {
+     "i": 36,
+     "type": "diagonal",
+     "a": [
+      "B",
+      6
+     ],
+     "b": [
+      "T",
+      7
+     ],
+     "section": "60x60x3 SHS",
+     "area": 684
+    },
+    {
+     "i": 37,
+     "type": "diagonal",
+     "a": [
+      "T",
+      7
+     ],
+     "b": [
+      "B",
+      8
+     ],
+     "section": "60x60x3 SHS",
+     "area": 684
+    },
+    {
+     "i": 38,
+     "type": "diagonal",
+     "a": [
+      "B",
+      8
+     ],
+     "b": [
+      "T",
+      9
+     ],
+     "section": "60x60x3 SHS",
+     "area": 684
+    },
+    {
+     "i": 39,
+     "type": "diagonal",
+     "a": [
+      "T",
+      9
+     ],
+     "b": [
+      "B",
+      10
+     ],
+     "section": "40x40x3.6 SHS",
+     "area": 524.16
+    },
+    {
+     "i": 40,
+     "type": "diagonal",
+     "a": [
+      "B",
+      10
+     ],
+     "b": [
+      "T",
+      11
+     ],
+     "section": "40x40x3.6 SHS",
+     "area": 524.16
+    },
+    {
+     "i": 41,
+     "type": "diagonal",
+     "a": [
+      "T",
+      11
+     ],
+     "b": [
+      "B",
+      12
+     ],
+     "section": "60x60x3 SHS",
+     "area": 684
+    },
+    {
+     "i": 42,
+     "type": "diagonal",
+     "a": [
+      "B",
+      12
+     ],
+     "b": [
+      "T",
+      13
+     ],
+     "section": "40x40x3.6 SHS",
+     "area": 524.16
+    },
+    {
+     "i": 43,
+     "type": "diagonal",
+     "a": [
+      "T",
+      13
+     ],
+     "b": [
+      "B",
+      14
+     ],
+     "section": "60x60x3 SHS",
+     "area": 684
+    }
+   ]
+  },
+  "T2": {
+   "Lt": 5.6,
+   "mass": 679.4739908995667,
+   "maxUtil": 0.9358009950971675,
+   "defl": 21.245133503610365,
+   "groupSummary": [
+    {
+     "cat": "top",
+     "band": 0,
+     "section": "125x125x3 SHS",
+     "count": 7,
+     "util": 0.930104394360197
+    },
+    {
+     "cat": "top",
+     "band": 1,
+     "section": "150x150x3.6 SHS",
+     "count": 7,
+     "util": 0.9274456803622059
+    },
+    {
+     "cat": "bottom",
+     "band": 0,
+     "section": "100x100x3 SHS",
+     "count": 7,
+     "util": 0.9190041614355375
+    },
+    {
+     "cat": "bottom",
+     "band": 1,
+     "section": "110x110x3 SHS",
+     "count": 7,
+     "util": 0.9315176357646902
+    },
+    {
+     "cat": "web",
+     "band": 0,
+     "section": "50x50x3 SHS",
+     "count": 8,
+     "util": 0.8740868480366372
+    },
+    {
+     "cat": "web",
+     "band": 1,
+     "section": "65x65x3 SHS",
+     "count": 8,
+     "util": 0.8481109783502399
+    }
+   ],
+   "memberSections": [
+    {
+     "i": 0,
+     "type": "top",
+     "a": [
+      "T",
+      0
+     ],
+     "b": [
+      "T",
+      1
+     ],
+     "section": "125x125x3 SHS",
+     "area": 1464
+    },
+    {
+     "i": 1,
+     "type": "top",
+     "a": [
+      "T",
+      1
+     ],
+     "b": [
+      "T",
+      2
+     ],
+     "section": "150x150x3.6 SHS",
+     "area": 2108.1600000000003
+    },
+    {
+     "i": 2,
+     "type": "top",
+     "a": [
+      "T",
+      2
+     ],
+     "b": [
+      "T",
+      3
+     ],
+     "section": "125x125x3 SHS",
+     "area": 1464
+    },
+    {
+     "i": 3,
+     "type": "top",
+     "a": [
+      "T",
+      3
+     ],
+     "b": [
+      "T",
+      4
+     ],
+     "section": "125x125x3 SHS",
+     "area": 1464
+    },
+    {
+     "i": 4,
+     "type": "top",
+     "a": [
+      "T",
+      4
+     ],
+     "b": [
+      "T",
+      5
+     ],
+     "section": "125x125x3 SHS",
+     "area": 1464
+    },
+    {
+     "i": 5,
+     "type": "top",
+     "a": [
+      "T",
+      5
+     ],
+     "b": [
+      "T",
+      6
+     ],
+     "section": "150x150x3.6 SHS",
+     "area": 2108.1600000000003
+    },
+    {
+     "i": 6,
+     "type": "top",
+     "a": [
+      "T",
+      6
+     ],
+     "b": [
+      "T",
+      7
+     ],
+     "section": "150x150x3.6 SHS",
+     "area": 2108.1600000000003
+    },
+    {
+     "i": 7,
+     "type": "top",
+     "a": [
+      "T",
+      7
+     ],
+     "b": [
+      "T",
+      8
+     ],
+     "section": "150x150x3.6 SHS",
+     "area": 2108.1600000000003
+    },
+    {
+     "i": 8,
+     "type": "top",
+     "a": [
+      "T",
+      8
+     ],
+     "b": [
+      "T",
+      9
+     ],
+     "section": "150x150x3.6 SHS",
+     "area": 2108.1600000000003
+    },
+    {
+     "i": 9,
+     "type": "top",
+     "a": [
+      "T",
+      9
+     ],
+     "b": [
+      "T",
+      10
+     ],
+     "section": "150x150x3.6 SHS",
+     "area": 2108.1600000000003
+    },
+    {
+     "i": 10,
+     "type": "top",
+     "a": [
+      "T",
+      10
+     ],
+     "b": [
+      "T",
+      11
+     ],
+     "section": "150x150x3.6 SHS",
+     "area": 2108.1600000000003
+    },
+    {
+     "i": 11,
+     "type": "top",
+     "a": [
+      "T",
+      11
+     ],
+     "b": [
+      "T",
+      12
+     ],
+     "section": "125x125x3 SHS",
+     "area": 1464
+    },
+    {
+     "i": 12,
+     "type": "top",
+     "a": [
+      "T",
+      12
+     ],
+     "b": [
+      "T",
+      13
+     ],
+     "section": "125x125x3 SHS",
+     "area": 1464
+    },
+    {
+     "i": 13,
+     "type": "top",
+     "a": [
+      "T",
+      13
+     ],
+     "b": [
+      "T",
+      14
+     ],
+     "section": "125x125x3 SHS",
+     "area": 1464
+    },
+    {
+     "i": 14,
+     "type": "bottom",
+     "a": [
+      "B",
+      0
+     ],
+     "b": [
+      "B",
+      1
+     ],
+     "section": "100x100x3 SHS",
+     "area": 1164
+    },
+    {
+     "i": 15,
+     "type": "bottom",
+     "a": [
+      "B",
+      1
+     ],
+     "b": [
+      "B",
+      2
+     ],
+     "section": "100x100x3 SHS",
+     "area": 1164
+    },
+    {
+     "i": 16,
+     "type": "bottom",
+     "a": [
+      "B",
+      2
+     ],
+     "b": [
+      "B",
+      3
+     ],
+     "section": "100x100x3 SHS",
+     "area": 1164
+    },
+    {
+     "i": 17,
+     "type": "bottom",
+     "a": [
+      "B",
+      3
+     ],
+     "b": [
+      "B",
+      4
+     ],
+     "section": "100x100x3 SHS",
+     "area": 1164
+    },
+    {
+     "i": 18,
+     "type": "bottom",
+     "a": [
+      "B",
+      4
+     ],
+     "b": [
+      "B",
+      5
+     ],
+     "section": "110x110x3 SHS",
+     "area": 1284
+    },
+    {
+     "i": 19,
+     "type": "bottom",
+     "a": [
+      "B",
+      5
+     ],
+     "b": [
+      "B",
+      6
+     ],
+     "section": "110x110x3 SHS",
+     "area": 1284
+    },
+    {
+     "i": 20,
+     "type": "bottom",
+     "a": [
+      "B",
+      6
+     ],
+     "b": [
+      "B",
+      7
+     ],
+     "section": "110x110x3 SHS",
+     "area": 1284
+    },
+    {
+     "i": 21,
+     "type": "bottom",
+     "a": [
+      "B",
+      7
+     ],
+     "b": [
+      "B",
+      8
+     ],
+     "section": "110x110x3 SHS",
+     "area": 1284
+    },
+    {
+     "i": 22,
+     "type": "bottom",
+     "a": [
+      "B",
+      8
+     ],
+     "b": [
+      "B",
+      9
+     ],
+     "section": "110x110x3 SHS",
+     "area": 1284
+    },
+    {
+     "i": 23,
+     "type": "bottom",
+     "a": [
+      "B",
+      9
+     ],
+     "b": [
+      "B",
+      10
+     ],
+     "section": "110x110x3 SHS",
+     "area": 1284
+    },
+    {
+     "i": 24,
+     "type": "bottom",
+     "a": [
+      "B",
+      10
+     ],
+     "b": [
+      "B",
+      11
+     ],
+     "section": "100x100x3 SHS",
+     "area": 1164
+    },
+    {
+     "i": 25,
+     "type": "bottom",
+     "a": [
+      "B",
+      11
+     ],
+     "b": [
+      "B",
+      12
+     ],
+     "section": "110x110x3 SHS",
+     "area": 1284
+    },
+    {
+     "i": 26,
+     "type": "bottom",
+     "a": [
+      "B",
+      12
+     ],
+     "b": [
+      "B",
+      13
+     ],
+     "section": "100x100x3 SHS",
+     "area": 1164
+    },
+    {
+     "i": 27,
+     "type": "bottom",
+     "a": [
+      "B",
+      13
+     ],
+     "b": [
+      "B",
+      14
+     ],
+     "section": "100x100x3 SHS",
+     "area": 1164
+    },
+    {
+     "i": 28,
+     "type": "vertical",
+     "a": [
+      "T",
+      0
+     ],
+     "b": [
+      "B",
+      0
+     ],
+     "section": "50x50x3 SHS",
+     "area": 564
+    },
+    {
+     "i": 29,
+     "type": "vertical",
+     "a": [
+      "T",
+      14
+     ],
+     "b": [
+      "B",
+      14
+     ],
+     "section": "50x50x3 SHS",
+     "area": 564
+    },
+    {
+     "i": 30,
+     "type": "diagonal",
+     "a": [
+      "B",
+      0
+     ],
+     "b": [
+      "T",
+      1
+     ],
+     "section": "65x65x3 SHS",
+     "area": 744
+    },
+    {
+     "i": 31,
+     "type": "diagonal",
+     "a": [
+      "T",
+      1
+     ],
+     "b": [
+      "B",
+      2
+     ],
+     "section": "50x50x3 SHS",
+     "area": 564
+    },
+    {
+     "i": 32,
+     "type": "diagonal",
+     "a": [
+      "B",
+      2
+     ],
+     "b": [
+      "T",
+      3
+     ],
+     "section": "50x50x3 SHS",
+     "area": 564
+    },
+    {
+     "i": 33,
+     "type": "diagonal",
+     "a": [
+      "T",
+      3
+     ],
+     "b": [
+      "B",
+      4
+     ],
+     "section": "50x50x3 SHS",
+     "area": 564
+    },
+    {
+     "i": 34,
+     "type": "diagonal",
+     "a": [
+      "B",
+      4
+     ],
+     "b": [
+      "T",
+      5
+     ],
+     "section": "50x50x3 SHS",
+     "area": 564
+    },
+    {
+     "i": 35,
+     "type": "diagonal",
+     "a": [
+      "T",
+      5
+     ],
+     "b": [
+      "B",
+      6
+     ],
+     "section": "65x65x3 SHS",
+     "area": 744
+    },
+    {
+     "i": 36,
+     "type": "diagonal",
+     "a": [
+      "B",
+      6
+     ],
+     "b": [
+      "T",
+      7
+     ],
+     "section": "65x65x3 SHS",
+     "area": 744
+    },
+    {
+     "i": 37,
+     "type": "diagonal",
+     "a": [
+      "T",
+      7
+     ],
+     "b": [
+      "B",
+      8
+     ],
+     "section": "65x65x3 SHS",
+     "area": 744
+    },
+    {
+     "i": 38,
+     "type": "diagonal",
+     "a": [
+      "B",
+      8
+     ],
+     "b": [
+      "T",
+      9
+     ],
+     "section": "65x65x3 SHS",
+     "area": 744
+    },
+    {
+     "i": 39,
+     "type": "diagonal",
+     "a": [
+      "T",
+      9
+     ],
+     "b": [
+      "B",
+      10
+     ],
+     "section": "65x65x3 SHS",
+     "area": 744
+    },
+    {
+     "i": 40,
+     "type": "diagonal",
+     "a": [
+      "B",
+      10
+     ],
+     "b": [
+      "T",
+      11
+     ],
+     "section": "50x50x3 SHS",
+     "area": 564
+    },
+    {
+     "i": 41,
+     "type": "diagonal",
+     "a": [
+      "T",
+      11
+     ],
+     "b": [
+      "B",
+      12
+     ],
+     "section": "65x65x3 SHS",
+     "area": 744
+    },
+    {
+     "i": 42,
+     "type": "diagonal",
+     "a": [
+      "B",
+      12
+     ],
+     "b": [
+      "T",
+      13
+     ],
+     "section": "50x50x3 SHS",
+     "area": 564
+    },
+    {
+     "i": 43,
+     "type": "diagonal",
+     "a": [
+      "T",
+      13
+     ],
+     "b": [
+      "B",
+      14
+     ],
+     "section": "65x65x3 SHS",
+     "area": 744
+    }
+   ]
+  },
+  "T3": {
+   "Lt": 7.372,
+   "mass": 790.8372537536044,
+   "maxUtil": 0.9515008967741655,
+   "defl": 23.52878786540546,
+   "groupSummary": [
+    {
+     "cat": "top",
+     "band": 0,
+     "section": "150x150x3 SHS",
+     "count": 7,
+     "util": 0.9164281007030406
+    },
+    {
+     "cat": "top",
+     "band": 1,
+     "section": "200x200x3 SHS",
+     "count": 7,
+     "util": 0.8933511412070755
+    },
+    {
+     "cat": "bottom",
+     "band": 0,
+     "section": "120x120x3 SHS",
+     "count": 7,
+     "util": 0.9398078175423176
+    },
+    {
+     "cat": "bottom",
+     "band": 1,
+     "section": "140x140x3 SHS",
+     "count": 7,
+     "util": 0.9156038993336156
+    },
+    {
+     "cat": "web",
+     "band": 0,
+     "section": "50x50x3 SHS",
+     "count": 8,
+     "util": 0.7995610618392899
+    },
+    {
+     "cat": "web",
+     "band": 1,
+     "section": "75x75x3 SHS",
+     "count": 8,
+     "util": 0.8904731892953976
+    }
+   ],
+   "memberSections": [
+    {
+     "i": 0,
+     "type": "top",
+     "a": [
+      "T",
+      0
+     ],
+     "b": [
+      "T",
+      1
+     ],
+     "section": "150x150x3 SHS",
+     "area": 1764
+    },
+    {
+     "i": 1,
+     "type": "top",
+     "a": [
+      "T",
+      1
+     ],
+     "b": [
+      "T",
+      2
+     ],
+     "section": "200x200x3 SHS",
+     "area": 2364
+    },
+    {
+     "i": 2,
+     "type": "top",
+     "a": [
+      "T",
+      2
+     ],
+     "b": [
+      "T",
+      3
+     ],
+     "section": "150x150x3 SHS",
+     "area": 1764
+    },
+    {
+     "i": 3,
+     "type": "top",
+     "a": [
+      "T",
+      3
+     ],
+     "b": [
+      "T",
+      4
+     ],
+     "section": "150x150x3 SHS",
+     "area": 1764
+    },
+    {
+     "i": 4,
+     "type": "top",
+     "a": [
+      "T",
+      4
+     ],
+     "b": [
+      "T",
+      5
+     ],
+     "section": "150x150x3 SHS",
+     "area": 1764
+    },
+    {
+     "i": 5,
+     "type": "top",
+     "a": [
+      "T",
+      5
+     ],
+     "b": [
+      "T",
+      6
+     ],
+     "section": "200x200x3 SHS",
+     "area": 2364
+    },
+    {
+     "i": 6,
+     "type": "top",
+     "a": [
+      "T",
+      6
+     ],
+     "b": [
+      "T",
+      7
+     ],
+     "section": "200x200x3 SHS",
+     "area": 2364
+    },
+    {
+     "i": 7,
+     "type": "top",
+     "a": [
+      "T",
+      7
+     ],
+     "b": [
+      "T",
+      8
+     ],
+     "section": "200x200x3 SHS",
+     "area": 2364
+    },
+    {
+     "i": 8,
+     "type": "top",
+     "a": [
+      "T",
+      8
+     ],
+     "b": [
+      "T",
+      9
+     ],
+     "section": "200x200x3 SHS",
+     "area": 2364
+    },
+    {
+     "i": 9,
+     "type": "top",
+     "a": [
+      "T",
+      9
+     ],
+     "b": [
+      "T",
+      10
+     ],
+     "section": "200x200x3 SHS",
+     "area": 2364
+    },
+    {
+     "i": 10,
+     "type": "top",
+     "a": [
+      "T",
+      10
+     ],
+     "b": [
+      "T",
+      11
+     ],
+     "section": "200x200x3 SHS",
+     "area": 2364
+    },
+    {
+     "i": 11,
+     "type": "top",
+     "a": [
+      "T",
+      11
+     ],
+     "b": [
+      "T",
+      12
+     ],
+     "section": "150x150x3 SHS",
+     "area": 1764
+    },
+    {
+     "i": 12,
+     "type": "top",
+     "a": [
+      "T",
+      12
+     ],
+     "b": [
+      "T",
+      13
+     ],
+     "section": "150x150x3 SHS",
+     "area": 1764
+    },
+    {
+     "i": 13,
+     "type": "top",
+     "a": [
+      "T",
+      13
+     ],
+     "b": [
+      "T",
+      14
+     ],
+     "section": "150x150x3 SHS",
+     "area": 1764
+    },
+    {
+     "i": 14,
+     "type": "bottom",
+     "a": [
+      "B",
+      0
+     ],
+     "b": [
+      "B",
+      1
+     ],
+     "section": "120x120x3 SHS",
+     "area": 1404
+    },
+    {
+     "i": 15,
+     "type": "bottom",
+     "a": [
+      "B",
+      1
+     ],
+     "b": [
+      "B",
+      2
+     ],
+     "section": "120x120x3 SHS",
+     "area": 1404
+    },
+    {
+     "i": 16,
+     "type": "bottom",
+     "a": [
+      "B",
+      2
+     ],
+     "b": [
+      "B",
+      3
+     ],
+     "section": "120x120x3 SHS",
+     "area": 1404
+    },
+    {
+     "i": 17,
+     "type": "bottom",
+     "a": [
+      "B",
+      3
+     ],
+     "b": [
+      "B",
+      4
+     ],
+     "section": "140x140x3 SHS",
+     "area": 1644
+    },
+    {
+     "i": 18,
+     "type": "bottom",
+     "a": [
+      "B",
+      4
+     ],
+     "b": [
+      "B",
+      5
+     ],
+     "section": "140x140x3 SHS",
+     "area": 1644
+    },
+    {
+     "i": 19,
+     "type": "bottom",
+     "a": [
+      "B",
+      5
+     ],
+     "b": [
+      "B",
+      6
+     ],
+     "section": "140x140x3 SHS",
+     "area": 1644
+    },
+    {
+     "i": 20,
+     "type": "bottom",
+     "a": [
+      "B",
+      6
+     ],
+     "b": [
+      "B",
+      7
+     ],
+     "section": "140x140x3 SHS",
+     "area": 1644
+    },
+    {
+     "i": 21,
+     "type": "bottom",
+     "a": [
+      "B",
+      7
+     ],
+     "b": [
+      "B",
+      8
+     ],
+     "section": "140x140x3 SHS",
+     "area": 1644
+    },
+    {
+     "i": 22,
+     "type": "bottom",
+     "a": [
+      "B",
+      8
+     ],
+     "b": [
+      "B",
+      9
+     ],
+     "section": "140x140x3 SHS",
+     "area": 1644
+    },
+    {
+     "i": 23,
+     "type": "bottom",
+     "a": [
+      "B",
+      9
+     ],
+     "b": [
+      "B",
+      10
+     ],
+     "section": "140x140x3 SHS",
+     "area": 1644
+    },
+    {
+     "i": 24,
+     "type": "bottom",
+     "a": [
+      "B",
+      10
+     ],
+     "b": [
+      "B",
+      11
+     ],
+     "section": "120x120x3 SHS",
+     "area": 1404
+    },
+    {
+     "i": 25,
+     "type": "bottom",
+     "a": [
+      "B",
+      11
+     ],
+     "b": [
+      "B",
+      12
+     ],
+     "section": "120x120x3 SHS",
+     "area": 1404
+    },
+    {
+     "i": 26,
+     "type": "bottom",
+     "a": [
+      "B",
+      12
+     ],
+     "b": [
+      "B",
+      13
+     ],
+     "section": "120x120x3 SHS",
+     "area": 1404
+    },
+    {
+     "i": 27,
+     "type": "bottom",
+     "a": [
+      "B",
+      13
+     ],
+     "b": [
+      "B",
+      14
+     ],
+     "section": "120x120x3 SHS",
+     "area": 1404
+    },
+    {
+     "i": 28,
+     "type": "vertical",
+     "a": [
+      "T",
+      0
+     ],
+     "b": [
+      "B",
+      0
+     ],
+     "section": "50x50x3 SHS",
+     "area": 564
+    },
+    {
+     "i": 29,
+     "type": "vertical",
+     "a": [
+      "T",
+      14
+     ],
+     "b": [
+      "B",
+      14
+     ],
+     "section": "50x50x3 SHS",
+     "area": 564
+    },
+    {
+     "i": 30,
+     "type": "diagonal",
+     "a": [
+      "B",
+      0
+     ],
+     "b": [
+      "T",
+      1
+     ],
+     "section": "75x75x3 SHS",
+     "area": 864
+    },
+    {
+     "i": 31,
+     "type": "diagonal",
+     "a": [
+      "T",
+      1
+     ],
+     "b": [
+      "B",
+      2
+     ],
+     "section": "50x50x3 SHS",
+     "area": 564
+    },
+    {
+     "i": 32,
+     "type": "diagonal",
+     "a": [
+      "B",
+      2
+     ],
+     "b": [
+      "T",
+      3
+     ],
+     "section": "75x75x3 SHS",
+     "area": 864
+    },
+    {
+     "i": 33,
+     "type": "diagonal",
+     "a": [
+      "T",
+      3
+     ],
+     "b": [
+      "B",
+      4
+     ],
+     "section": "50x50x3 SHS",
+     "area": 564
+    },
+    {
+     "i": 34,
+     "type": "diagonal",
+     "a": [
+      "B",
+      4
+     ],
+     "b": [
+      "T",
+      5
+     ],
+     "section": "50x50x3 SHS",
+     "area": 564
+    },
+    {
+     "i": 35,
+     "type": "diagonal",
+     "a": [
+      "T",
+      5
+     ],
+     "b": [
+      "B",
+      6
+     ],
+     "section": "50x50x3 SHS",
+     "area": 564
+    },
+    {
+     "i": 36,
+     "type": "diagonal",
+     "a": [
+      "B",
+      6
+     ],
+     "b": [
+      "T",
+      7
+     ],
+     "section": "75x75x3 SHS",
+     "area": 864
+    },
+    {
+     "i": 37,
+     "type": "diagonal",
+     "a": [
+      "T",
+      7
+     ],
+     "b": [
+      "B",
+      8
+     ],
+     "section": "75x75x3 SHS",
+     "area": 864
+    },
+    {
+     "i": 38,
+     "type": "diagonal",
+     "a": [
+      "B",
+      8
+     ],
+     "b": [
+      "T",
+      9
+     ],
+     "section": "75x75x3 SHS",
+     "area": 864
+    },
+    {
+     "i": 39,
+     "type": "diagonal",
+     "a": [
+      "T",
+      9
+     ],
+     "b": [
+      "B",
+      10
+     ],
+     "section": "75x75x3 SHS",
+     "area": 864
+    },
+    {
+     "i": 40,
+     "type": "diagonal",
+     "a": [
+      "B",
+      10
+     ],
+     "b": [
+      "T",
+      11
+     ],
+     "section": "50x50x3 SHS",
+     "area": 564
+    },
+    {
+     "i": 41,
+     "type": "diagonal",
+     "a": [
+      "T",
+      11
+     ],
+     "b": [
+      "B",
+      12
+     ],
+     "section": "75x75x3 SHS",
+     "area": 864
+    },
+    {
+     "i": 42,
+     "type": "diagonal",
+     "a": [
+      "B",
+      12
+     ],
+     "b": [
+      "T",
+      13
+     ],
+     "section": "50x50x3 SHS",
+     "area": 564
+    },
+    {
+     "i": 43,
+     "type": "diagonal",
+     "a": [
+      "T",
+      13
+     ],
+     "b": [
+      "B",
+      14
+     ],
+     "section": "75x75x3 SHS",
+     "area": 864
+    }
+   ]
+  }
+ }
+}

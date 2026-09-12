@@ -7,16 +7,40 @@ const { CATALOG } = require('./sections');
 const RHO = 7850e-9; // kg/mm^3
 const GAMMA_M0 = 1.10;
 
-function converge(truss, Lt, fy, maxIter) {
-  let sizing = initialSizing(truss, fy);
+// Self-weight depends on the section chosen for capacity, and capacity choice depends
+// (slightly) on self-weight -- a member sitting right at a catalog boundary can enter a
+// stable 2-cycle (flipping between two adjacent SHS sizes forever) that plain damping does
+// not reliably kill within a bounded iteration count (verified: 50% damping still cycled at
+// ~10% amplitude after 25 iterations for a real case in this model). So: run the damped
+// iteration for a fixed budget, then break any remaining 2-cycle deterministically by taking
+// the LARGER (heavier, conservative -- guaranteed a previously-valid, util<=0.95 candidate)
+// of the final two iterations' sections for every member, and re-evaluate (no further
+// resizing) to get the report that matches what's actually returned.
+function converge(truss, Lt, fy, maxIter, opts) {
+  maxIter = maxIter || 40;
+  let sizing = initialSizing(truss, fy).map(s => ({ ...s, swA: s.section.A }));
+  let prevSizing = sizing;
   let pass;
   for (let i = 0; i < maxIter; i++) {
-    pass = sizingPass(truss, sizing, Lt, fy);
-    const changed = pass.newSizing.some((s, idx) => s.section.label !== sizing[idx].section.label);
-    sizing = pass.newSizing;
-    if (!changed) break;
+    pass = sizingPass(truss, sizing, Lt, fy, opts);
+    let maxRelChange = 0;
+    const nextSizing = pass.newSizing.map((s, idx) => {
+      const oldSwA = sizing[idx].swA;
+      const swA = 0.5 * oldSwA + 0.5 * s.section.A; // damped relaxation
+      maxRelChange = Math.max(maxRelChange, Math.abs(swA - oldSwA) / oldSwA);
+      return { ...s, swA };
+    });
+    prevSizing = sizing;
+    sizing = nextSizing;
+    if (maxRelChange < 0.005) { prevSizing = sizing; break; }
   }
-  return { sizing, pass };
+  // Tie-break any still-oscillating member toward the heavier of the last two states.
+  const finalSizing = sizing.map((s, idx) => {
+    const prev = prevSizing[idx];
+    return (prev.section.A > s.section.A) ? { ...prev, swA: prev.section.A } : { ...s, swA: s.section.A };
+  });
+  const finalPass = sizingPassNoResize(truss, finalSizing, Lt, fy, opts);
+  return { sizing: finalSizing, pass: finalPass };
 }
 
 function pruneLowUtil(truss, sizing, pass, threshold) {
@@ -60,8 +84,11 @@ function groupMembers(truss, sizing, demandsByMember, fy) {
   const categories = { top: [], bottom: [], web: [] };
   truss.members.forEach((m, i) => {
     const cat = (m.type === 'top') ? 'top' : (m.type === 'bottom') ? 'bottom' : 'web';
-    const peak = Math.max(...demandsByMember[i].map(d => Math.abs(d.N)));
-    categories[cat].push({ i, peak });
+    // Rank by the individually-converged section's area, not raw peak axial force: area already
+    // reflects each member's own combined axial+bending (beam-column) demand via the code check,
+    // whereas banding by |N| alone can bucket a bending-heavy member with an axial-heavy one and
+    // force the whole band to a much bigger section than either needed on its own.
+    categories[cat].push({ i, peak: sizing[i].section.A });
   });
   const newSizing = sizing.slice();
   const groupSummary = [];
@@ -95,22 +122,24 @@ function serviceDeflection(truss, sizing, Lt) {
 }
 
 // Full pipeline for one topology, sized for a single tributary width Lt.
-function runTopology({ n, dMid, webPattern, Lt, fy = 250, L }) {
+// opts.deckLateralCredit (default false/conservative) controls top-chord out-of-plane KL --
+// see effectiveLengths() in analyze.js.
+function runTopology({ n, dMid, webPattern, Lt, fy = 250, L, opts }) {
   const truss = buildTruss({ n, dMid, webPattern, L });
   if (!clearHeightOk(truss)) return { feasible: false, reason: 'clear-height' };
 
-  const step1 = converge(truss, Lt, fy, 12);
+  const step1 = converge(truss, Lt, fy, 40, opts);
   let workTruss = truss, workSizing = step1.sizing, workPass = step1.pass;
 
   const pruned = pruneLowUtil(truss, step1.sizing, step1.pass, 0.25);
   if (pruned) {
-    const step2 = converge(pruned.truss, Lt, fy, 12);
+    const step2 = converge(pruned.truss, Lt, fy, 40, opts);
     workTruss = pruned.truss; workSizing = step2.sizing; workPass = step2.pass;
   }
 
   const grouped = groupMembers(workTruss, workSizing, workPass.demandsByMember, fy);
   // final FEM check with grouped sizes (one more pass to get final report/util per member, no resizing)
-  const finalPass = sizingPassNoResize(workTruss, grouped.newSizing, Lt, fy);
+  const finalPass = sizingPassNoResize(workTruss, grouped.newSizing, Lt, fy, opts);
 
   const mass = totalMass(workTruss, grouped.newSizing);
   const lb = lowerBoundMass(workTruss, grouped.newSizing, finalPass.demandsByMember);
@@ -128,8 +157,8 @@ function runTopology({ n, dMid, webPattern, Lt, fy = 250, L }) {
 }
 
 // Like sizingPass but does NOT resize -- just recomputes demands/util for the given fixed sizing (for reporting).
-function sizingPassNoResize(truss, sizing, Lt, fy) {
-  const full = sizingPass(truss, sizing, Lt, fy);
+function sizingPassNoResize(truss, sizing, Lt, fy, opts) {
+  const full = sizingPass(truss, sizing, Lt, fy, opts);
   // sizingPass already resizes; we want the util of the GIVEN sizing, not resized.
   // Recompute utils directly against provided sizing using its own demands.
   const { memberUtilization } = require('./is800');

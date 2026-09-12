@@ -14,6 +14,20 @@ as a substitute for it. [Certain] the engine itself is arithmetically correct (s
 results); [Guessing] on whether every code-clause simplification below matches what a
 STAAD/detailed hand-check would produce to the last kN.
 
+**ERRATA (added during the 3D/STAAD audit pass):** the sizing loop had a real bug — an
+undamped self-weight/section feedback that could lock into a 2-cycle (a member flipping
+forever between two adjacent SHS sizes) and, separately, a grouping heuristic that banded
+members by peak axial force alone, which could bucket a bending-heavy member with an
+axial-heavy one and force a much bigger group section than either needed. Both are fixed in
+`optimize.js` (damped self-weight relaxation + heavier-of-final-two-states tie-break; banding
+now uses each member's own individually-converged section area, which reflects the full
+axial+bending demand). **Net effect on the numbers below: masses shift, mostly down** (e.g.
+the T1/T2/T3 tailored figures in `structural/tailored_schedule.json` from the follow-up audit
+are lower than the Top-5/winner-schedule figures in §3–§4 of this file, which predate the fix).
+Treat §3 and §4's *numbers* as superseded by the audit's schedule; the *method* and findings
+1–5 still hold. [Certain] on the bug and the fix; [Certain] the corrected numbers are lower,
+not higher, so nothing here understates risk — but re-verify before citing a tonnage figure.
+
 ---
 
 ## 0. Input Echo (as modeled)
