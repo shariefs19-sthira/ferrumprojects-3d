@@ -134,7 +134,17 @@ import os
 # unbraced condition. Superseded by UNIFORM_MANUAL_DESIGN below (which wants bracing back,
 # as its own single-named group) -- kept as a flag in case the diagnostic file is wanted
 # again later, but OFF by default now.
-NO_BRACING = False
+NO_BRACING = True  # engineer's ruling: plan bracing was this project's own D-3 design
+# recommendation, not a given part of the structure -- removed. The engineer picks
+# members and restraint conditions from here; this script's job is the model and the
+# IS 800 code-check framework, not a bracing/restraint design.
+
+# NO_CUSTOM_KL: skip every analysis-derived effective-length assumption (the segment-wise
+# bottom-chord braced/unbraced KL_op, the deck-lateral-credit top-chord value, the 0.85xL
+# web/diagonal factor) -- all of those were this project's own engineering judgment about
+# restraint conditions, not neutral modeling. Only the blanket KY 1.0 ALL / KZ 1.0 ALL stays
+# (STAAD's plain default: full member length, K=1.0) until the engineer declares otherwise.
+NO_CUSTOM_KL = True
 
 # USE_TUBE: engineer's live STAAD run rejected every TUBE DT/WT/TH property line ("MEMBER
 # PROPERTY command ignored by program. Check syntax", 13/13 statements) -- confirmed real,
@@ -169,8 +179,7 @@ UNIFORM_TOP_SECTION = "180x180x4 SHS"
 UNIFORM_BOTTOM_SECTION = "100x100x5 SHS"
 UNIFORM_WEB_SECTION = "72x72x3.2 SHS"  # T3's heavier web band -- conservative single starting size for every vertical/diagonal
 
-OUT_PATH = "CHRA2502_3D_NoBracing.std" if NO_BRACING else (
-    "CHRA2502_3D_ManualDesign.std" if UNIFORM_MANUAL_DESIGN else "CHRA2502_3D_Final.std")
+OUT_PATH = "CHRA2502_3D_ManualDesign.std" if UNIFORM_MANUAL_DESIGN else "CHRA2502_3D_Final.std"
 
 # ---------------------------------------------------------------- geometry --
 SPAN = 20.630
@@ -714,38 +723,35 @@ wc("FYLD explicit, not left to STAADs default: 250 MPa = 250000 "
    "that changes for any group, FYLD must be re-declared per member "
    "list, not left as one blanket value.")
 w("FYLD 250000 ALL")
-wc("Effective lengths, member-specific -- NEVER a blanket value (see "
-   "audit A4). LY/LZ mapping to in-plane vs out-of-plane depends on "
-   "each members local axis orientation as STAAD assigns it by "
-   "default; VERIFY visually (View, Structure, Show Beta Angle or "
-   "local axes) before trusting which is which -- not done here.")
-w("KY 1.0 ALL")
-w("KZ 1.0 ALL")
-
-PANEL_L = SPAN / N_PANELS
-for a, b in ranges(TOP_MEMBERS):
-    w(f"LY {1.474:.3f} MEMB {a} TO {b}" if a != b else f"LY {1.474:.3f} MEMB {a}")
-    w(f"LZ {0.85 * PANEL_L:.3f} MEMB {a} TO {b}" if a != b else f"LZ {0.85 * PANEL_L:.3f} MEMB {a}")
-if NO_BRACING:
-    wc(f"Bottom chord: NO_BRACING diagnostic variant -- plan bracing removed "
-       f"entirely. With ZERO intermediate lateral restraint, the WHOLE bottom "
-       f"chord buckles out-of-plane as one continuous {FULL_BOTTOM_UNBRACED_LEN:.3f}m "
-       f"unbraced length between the two column bases (the only remaining "
-       f"restraint points) -- not the panel length, not the D-3 braced-field "
-       f"value. This LY is applied identically to EVERY bottom-chord member so "
-       f"STAADs own CHECK CODE evaluates the TRUE (bracing-free) condition, not "
-       f"a falsely-optimistic one left over from the braced design. Sections are "
-       f"UNCHANGED from the braced design (88.9x88.9x3.6 / 91.5x91.5x3.6 / "
-       f"100x100x5) -- this is deliberately NOT re-sized, so the FAIL this "
-       f"produces is the honest cost of removing bracing, not hidden by a "
-       f"bigger section chosen to make it pass. Quantified before generating "
-       f"this file: KL/r for these sections at this length is in the "
-       f"550-600 range against an IS 800 Cl 3.7 limit of 180 -- expect a hard, "
-       f"large-margin FAIL from CHECK CODE, by design.")
-    for a, b in ranges(BOTTOM_MEMBERS):
-        w(f"LY {FULL_BOTTOM_UNBRACED_LEN:.3f} MEMB {a} TO {b}" if a != b else f"LY {FULL_BOTTOM_UNBRACED_LEN:.3f} MEMB {a}")
-        w(f"LZ {0.85 * PANEL_L:.3f} MEMB {a} TO {b}" if a != b else f"LZ {0.85 * PANEL_L:.3f} MEMB {a}")
+if NO_CUSTOM_KL:
+    wc("Effective lengths: NO custom LY/LZ declared anywhere in this file "
+       "(engineer's ruling -- restraint-condition assumptions, like the "
+       "prior segment-wise bottom-chord KL_op or the deck-lateral-credit "
+       "top-chord value, are engineering judgment calls, not neutral "
+       "modeling; that judgment is the engineer's from here). KY 1.0 ALL / "
+       "KZ 1.0 ALL is the only declaration -- STAAD's plain default "
+       "applies: each member's own physical length, K=1.0, in both "
+       "directions, until overridden.")
+    w("KY 1.0 ALL")
+    w("KZ 1.0 ALL")
 else:
+    wc("Effective lengths, member-specific -- NEVER a blanket value (see "
+       "audit A4). LY/LZ mapping to in-plane vs out-of-plane depends on "
+       "each members local axis orientation as STAAD assigns it by "
+       "default; VERIFY visually (View, Structure, Show Beta Angle or "
+       "local axes) before trusting which is which -- not done here.")
+    w("KY 1.0 ALL")
+    w("KZ 1.0 ALL")
+
+    def joint_dist(n1, n2):
+        x1, y1, z1 = joints[n1]
+        x2, y2, z2 = joints[n2]
+        return math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2 + (z2 - z1) ** 2)
+
+    PANEL_L = SPAN / N_PANELS
+    for a, b in ranges(TOP_MEMBERS):
+        w(f"LY {1.474:.3f} MEMB {a} TO {b}" if a != b else f"LY {1.474:.3f} MEMB {a}")
+        w(f"LZ {0.85 * PANEL_L:.3f} MEMB {a} TO {b}" if a != b else f"LZ {0.85 * PANEL_L:.3f} MEMB {a}")
     wc(f"Bottom chord: KL_op is segment-wise (D-3 final) -- "
        f"{BRACED_KL_OP:.3f}m within the braced field (panels 3-10, where "
        f"a bracing attachment lands every 2 panels), {UNBRACED_KL_OP:.3f}m "
@@ -760,25 +766,19 @@ else:
     for a, b in ranges(unbraced_bottom):
         w(f"LY {UNBRACED_KL_OP:.3f} MEMB {a} TO {b}" if a != b else f"LY {UNBRACED_KL_OP:.3f} MEMB {a}")
         w(f"LZ {0.85 * PANEL_L:.3f} MEMB {a} TO {b}" if a != b else f"LZ {0.85 * PANEL_L:.3f} MEMB {a}")
-
-def joint_dist(n1, n2):
-    x1, y1, z1 = joints[n1]
-    x2, y2, z2 = joints[n2]
-    return math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2 + (z2 - z1) ** 2)
-
-for mid in VERT_MEMBERS + DIAG_MEMBERS:
-    m = next(mm for mm in members if mm["id"] == mid)
-    L = joint_dist(m["n1"], m["n2"])
-    w(f"LY {L:.3f} MEMB {mid}")
-    w(f"LZ {0.85 * L:.3f} MEMB {mid}")
-for mid in COLUMN_MEMBERS:
-    m = next(mm for mm in members if mm["id"] == mid)
-    L = joint_dist(m["n1"], m["n2"])
-    w(f"LY {L:.3f} MEMB {mid}")
-    w(f"LZ {L:.3f} MEMB {mid}")
-wc("Ring + bracing: ASSUMPTION -- treated as fully laterally "
-   "restrained by the deck/purlins they carry; no separate KL "
-   "declared beyond the code default (span length, K=1.0).")
+    for mid in VERT_MEMBERS + DIAG_MEMBERS:
+        m = next(mm for mm in members if mm["id"] == mid)
+        L = joint_dist(m["n1"], m["n2"])
+        w(f"LY {L:.3f} MEMB {mid}")
+        w(f"LZ {0.85 * L:.3f} MEMB {mid}")
+    for mid in COLUMN_MEMBERS:
+        m = next(mm for mm in members if mm["id"] == mid)
+        L = joint_dist(m["n1"], m["n2"])
+        w(f"LY {L:.3f} MEMB {mid}")
+        w(f"LZ {L:.3f} MEMB {mid}")
+    wc("Ring: ASSUMPTION -- treated as fully laterally restrained by the "
+       "deck/purlins it carries; no separate KL declared beyond the code "
+       "default (span length, K=1.0).")
 w("TRACK 2 ALL")
 wc("CHECK CODE ALL issued below, kept even though sections reverted "
    "to PRISMATIC after the TUBE rejection above -- left in "
