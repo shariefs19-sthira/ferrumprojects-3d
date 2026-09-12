@@ -376,6 +376,13 @@ w("* D-6 CONFIRMED (was flagged [Guessing] in round 3, now verified against a li
 w("* session): PY/PZ are NOT valid PRISMATIC keywords -- STAAD.Pro rejected all 33 PRIS")
 w("* lines with 'PRISMATIC specification NOT valid' when they were present. Removed. AX/AY/")
 w("* AZ/IX/IY/IZ/YD/ZD are the accepted set and remain below.")
+w("* Line-length fix (confirmed against a live STAAD session, round 4): a section shared by")
+w("* many non-contiguous member ranges (e.g. 100x100x3, used across all 9 trusses) produced a")
+w("* single line long enough that STAAD's own auto-wrap split it BEFORE reaching the PRIS")
+w("* keyword -- 'ERROR - IN READING MEMBER PROPERTIES'. Fixed by chunking each section's")
+w("* member-range list into short groups (<=6 ranges), each issued as its own complete")
+w("* '<ranges> PRIS ...' statement -- no line ever needs auto-wrapping.")
+MAX_RANGES_PER_LINE = 4  # conservative -- exact per-line limit for this STAAD build is unconfirmed
 for sec_label, ids in by_section.items():
     p = SECTION_PROPS[sec_label]
     ax = p["A"] / 1e6         # mm^2 -> m^2
@@ -386,11 +393,13 @@ for sec_label, ids in by_section.items():
     zd = p["B"] / 1000.0
     ay = az = 2 * p["t"] * (p["B"] - 2 * p["t"]) / 1e6  # m^2, two walls carry shear each direction
     id_ranges = ranges(ids)
-    range_str = " ".join(f"{a} TO {b}" if a != b else f"{a}" for a, b in id_ranges)
     w(f"* {sec_label}  (A={p['A']:.0f}mm2 I={p['I']:.0f}mm4 Zp={p['Zp']:.0f}mm3 -- sharp-corner formula;")
     w(f"* Zp used directly by is800.js/optimize.js for capacity, not passed to STAAD -- see D-6)")
-    w(f"{range_str} PRIS AX {ax:.6f} AY {ay:.6f} AZ {az:.6f} IX {ix:.8f} IY {iy:.8f} IZ {iz:.8f} "
-      f"YD {yd:.4f} ZD {zd:.4f}")
+    for i in range(0, len(id_ranges), MAX_RANGES_PER_LINE):
+        chunk = id_ranges[i:i + MAX_RANGES_PER_LINE]
+        range_str = " ".join(f"{a} TO {b}" if a != b else f"{a}" for a, b in chunk)
+        w(f"{range_str} PRIS AX {ax:.6f} AY {ay:.6f} AZ {az:.6f} IX {ix:.8f} IY {iy:.8f} IZ {iz:.8f} "
+          f"YD {yd:.4f} ZD {zd:.4f}")
 
 # D-6 FINAL: report the validated Md (Cl 8.2.1.2, capped at 1.2*Ze*fy/gamma_m0) for the two
 # sections the engineer's own (now-withdrawn) hand references named. PRIS stands for both.
