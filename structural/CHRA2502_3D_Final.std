@@ -42,15 +42,15 @@ STAAD SPACE
 *
 * D-5: ring = 76x76x4 SHS. Plan bracing = 100x100x4 SHS (per D-3 final).
 *
-* D-6 FINAL: PRIS stands for every SHS in this design, including
-* 100x100x4 (the round-2 switch-to-TABLE flag on it is withdrawn -- the
-* engineers own hand Md references were the ones in error; this engines
-* Zp*fy/gamma_m0 values, capped at 1.2*Ze*fy/gamma_m0 per Cl 8.2.1.2,
-* are validated). PRIS carries AX/AY/AZ/IX/IY/IZ/YD/ZD. PY/PZ were tried
-* and CONFIRMED rejected by a live STAAD.Pro session (PRISMATIC
-* specification NOT valid on all 33 PRIS lines) -- removed. Md itself is
-* never passed to STAAD; its used directly by is800.js/optimize.js for
-* member sizing, outside this file.
+* D-6 FINAL: the Md values below (Zp*fy/gamma_m0, capped at
+* 1.2*Ze*fy/gamma_m0 per Cl 8.2.1.2) are validated for every SHS in this
+* design, including 100x100x4 (the round-2 switch-to-TABLE flag on it is
+* withdrawn -- the engineers own hand Md references were the ones in
+* error). Md itself is never passed to STAAD; its used directly by
+* is800.js/optimize.js for member sizing, outside this file. Section
+* TYPE as emitted to STAAD is now TUBE, not PRISMATIC -- see ROUND 8 at
+* the top of this script for why (PRISMATIC members are invisible to
+* STAADs own steel-design module; TUBE is not).
 *
 * DESIGN CASE: this file is TAILORED-AT-ACTUAL tributaries (T1=4.572m,
 * T2=5.098m, T3=7.121m) -- 6.32t trusses. The envelope variant
@@ -816,68 +816,74 @@ MEMBER PROPERTY
 * D-6 CONFIRMED (was flagged Guessing in round 3, now verified against a
 * live STAAD session): PY/PZ are NOT valid PRISMATIC keywords --
 * STAAD.Pro rejected all 33 PRIS lines with PRISMATIC specification NOT
-* valid when they were present. Removed. AX/AY/AZ/IX/IY/IZ/YD/ZD are the
-* accepted set and remain below. Zp is used directly by
-* is800.js/optimize.js for member capacity and never passed to STAAD.
+* valid when they were present. Removed.
 *
-* Line-length fix (confirmed against a live STAAD session, round 4): a
-* section shared by many non-contiguous member ranges (e.g. 100x100x3,
-* used across all 9 trusses) produced a single line long enough that
-* STAADs own auto-wrap split it before reaching the PRIS keyword --
-* ERROR IN READING MEMBER PROPERTIES. Fixed by chunking each sections
-* member-range list into short groups, each issued as its own complete
-* PRIS statement -- no line ever needs auto-wrapping.
+* SWITCHED FROM PRISMATIC TO TUBE (engineers ruling): a bare PRISMATIC
+* member carries no section classification, so STAADs own steel-design
+* module (CHECK CODE) cannot run on it -- it has no way to know these
+* are SHS members at all. TUBE is a named STAAD section type (DT/WT/TH =
+* outer depth/width/wall thickness); STAAD computes its own section
+* properties from those three numbers rather than taking AX/IX/etc.
+* directly, and IS 800 tubular-section design is a documented STAAD
+* code-check path for it. [Likely, not confirmed] this makes CHECK CODE
+* actually run on this file -- unverified against a live session, flag
+* any TUBE-related error the same way every prior PRIS/JOB
+* INFO/PARAMETER defect in this file was caught: run it and send the
+* .err back. Note: STAADs TUBE, like this projects own is800.js, uses a
+* sharp-corner idealization (no fillet radius), so its computed A/I/Zp
+* should match the audit comment above each block closely -- worth a
+* spot cross-check on the first live run.
 *
 * 150x150x3 SHS  A=1764mm2 I=6355692mm4 Zp=97254mm3
-1 TO 14 369 TO 382 PRIS AX 0.001764 AY 0.000864 AZ 0.000864 IX 0.00001271 IY 0.00000636 IZ 0.00000636 YD 0.1500 ZD 0.1500
+1 TO 14 369 TO 382 TUBE DT 0.1500 WT 0.1500 TH 0.0030
 * 100x100x3 SHS  A=1164mm2 I=1827092mm4 Zp=42354mm3
-15 TO 28 383 TO 396 PRIS AX 0.001164 AY 0.000564 AZ 0.000564 IX 0.00000365 IY 0.00000183 IZ 0.00000183 YD 0.1000 ZD 0.1000
+15 TO 28 383 TO 396 TUBE DT 0.1000 WT 0.1000 TH 0.0030
 * 40x40x3.6 SHS  A=524mm2 I=116881mm4 Zp=7178mm3
-29 TO 30 32 34 TO 35 40 TO 41 PRIS AX 0.000524 AY 0.000236 AZ 0.000236 IX 0.00000023 IY 0.00000012 IZ 0.00000012 YD 0.0400 ZD 0.0400
-43 397 TO 398 400 402 TO 403 PRIS AX 0.000524 AY 0.000236 AZ 0.000236 IX 0.00000023 IY 0.00000012 IZ 0.00000012 YD 0.0400 ZD 0.0400
-408 TO 409 411 PRIS AX 0.000524 AY 0.000236 AZ 0.000236 IX 0.00000023 IY 0.00000012 IZ 0.00000012 YD 0.0400 ZD 0.0400
+29 TO 30 32 34 TO 35 40 TO 41 TUBE DT 0.0400 WT 0.0400 TH 0.0036
+43 397 TO 398 400 402 TO 403 TUBE DT 0.0400 WT 0.0400 TH 0.0036
+408 TO 409 411 TUBE DT 0.0400 WT 0.0400 TH 0.0036
 * 60x60x3 SHS  A=684mm2 I=371412mm4 Zp=14634mm3
-31 33 36 TO 39 42 PRIS AX 0.000684 AY 0.000324 AZ 0.000324 IX 0.00000074 IY 0.00000037 IZ 0.00000037 YD 0.0600 ZD 0.0600
-44 123 125 128 TO 131 PRIS AX 0.000684 AY 0.000324 AZ 0.000324 IX 0.00000074 IY 0.00000037 IZ 0.00000037 YD 0.0600 ZD 0.0600
-134 136 169 171 PRIS AX 0.000684 AY 0.000324 AZ 0.000324 IX 0.00000074 IY 0.00000037 IZ 0.00000037 YD 0.0600 ZD 0.0600
-174 TO 177 180 182 215 PRIS AX 0.000684 AY 0.000324 AZ 0.000324 IX 0.00000074 IY 0.00000037 IZ 0.00000037 YD 0.0600 ZD 0.0600
-217 220 TO 223 226 228 PRIS AX 0.000684 AY 0.000324 AZ 0.000324 IX 0.00000074 IY 0.00000037 IZ 0.00000037 YD 0.0600 ZD 0.0600
-261 263 266 TO 269 272 PRIS AX 0.000684 AY 0.000324 AZ 0.000324 IX 0.00000074 IY 0.00000037 IZ 0.00000037 YD 0.0600 ZD 0.0600
-274 307 309 312 TO 315 PRIS AX 0.000684 AY 0.000324 AZ 0.000324 IX 0.00000074 IY 0.00000037 IZ 0.00000037 YD 0.0600 ZD 0.0600
-318 320 353 355 PRIS AX 0.000684 AY 0.000324 AZ 0.000324 IX 0.00000074 IY 0.00000037 IZ 0.00000037 YD 0.0600 ZD 0.0600
-358 TO 361 364 366 399 PRIS AX 0.000684 AY 0.000324 AZ 0.000324 IX 0.00000074 IY 0.00000037 IZ 0.00000037 YD 0.0600 ZD 0.0600
-401 404 TO 407 410 412 PRIS AX 0.000684 AY 0.000324 AZ 0.000324 IX 0.00000074 IY 0.00000037 IZ 0.00000037 YD 0.0600 ZD 0.0600
+31 33 36 TO 39 42 TUBE DT 0.0600 WT 0.0600 TH 0.0030
+44 123 125 128 TO 131 TUBE DT 0.0600 WT 0.0600 TH 0.0030
+134 136 169 171 TUBE DT 0.0600 WT 0.0600 TH 0.0030
+174 TO 177 180 182 215 TUBE DT 0.0600 WT 0.0600 TH 0.0030
+217 220 TO 223 226 228 TUBE DT 0.0600 WT 0.0600 TH 0.0030
+261 263 266 TO 269 272 TUBE DT 0.0600 WT 0.0600 TH 0.0030
+274 307 309 312 TO 315 TUBE DT 0.0600 WT 0.0600 TH 0.0030
+318 320 353 355 TUBE DT 0.0600 WT 0.0600 TH 0.0030
+358 TO 361 364 366 399 TUBE DT 0.0600 WT 0.0600 TH 0.0030
+401 404 TO 407 410 412 TUBE DT 0.0600 WT 0.0600 TH 0.0030
 * 150x150x4 SHS  A=2336mm2 I=8305259mm4 Zp=127928mm3
-45 TO 46 91 TO 92 137 TO 138 183 TO 184 PRIS AX 0.002336 AY 0.001136 AZ 0.001136 IX 0.00001661 IY 0.00000831 IZ 0.00000831 YD 0.1500 ZD 0.1500
-229 TO 230 275 TO 276 321 TO 322 367 TO 368 PRIS AX 0.002336 AY 0.001136 AZ 0.001136 IX 0.00001661 IY 0.00000831 IZ 0.00000831 YD 0.1500 ZD 0.1500
-413 TO 414 PRIS AX 0.002336 AY 0.001136 AZ 0.001136 IX 0.00001661 IY 0.00000831 IZ 0.00000831 YD 0.1500 ZD 0.1500
+45 TO 46 91 TO 92 137 TO 138 183 TO 184 TUBE DT 0.1500 WT 0.1500 TH 0.0040
+229 TO 230 275 TO 276 321 TO 322 367 TO 368 TUBE DT 0.1500 WT 0.1500 TH 0.0040
+413 TO 414 TUBE DT 0.1500 WT 0.1500 TH 0.0040
 * 200x200x3 SHS  A=2364mm2 I=15294292mm4 Zp=174654mm3
-47 TO 60 PRIS AX 0.002364 AY 0.001164 AZ 0.001164 IX 0.00003059 IY 0.00001529 IZ 0.00001529 YD 0.2000 ZD 0.2000
+47 TO 60 TUBE DT 0.2000 WT 0.2000 TH 0.0030
 * 140x140x3 SHS  A=1644mm2 I=5145172mm4 Zp=84474mm3
-61 TO 74 PRIS AX 0.001644 AY 0.000804 AZ 0.000804 IX 0.00001029 IY 0.00000515 IZ 0.00000515 YD 0.1400 ZD 0.1400
+61 TO 74 TUBE DT 0.1400 WT 0.1400 TH 0.0030
 * 50x50x3 SHS  A=564mm2 I=208492mm4 Zp=9954mm3
-75 TO 76 78 80 TO 81 86 TO 87 PRIS AX 0.000564 AY 0.000264 AZ 0.000264 IX 0.00000042 IY 0.00000021 IZ 0.00000021 YD 0.0500 ZD 0.0500
-89 121 TO 122 124 126 TO 127 PRIS AX 0.000564 AY 0.000264 AZ 0.000264 IX 0.00000042 IY 0.00000021 IZ 0.00000021 YD 0.0500 ZD 0.0500
-132 TO 133 135 167 TO 168 170 PRIS AX 0.000564 AY 0.000264 AZ 0.000264 IX 0.00000042 IY 0.00000021 IZ 0.00000021 YD 0.0500 ZD 0.0500
-172 TO 173 178 TO 179 181 213 TO 214 PRIS AX 0.000564 AY 0.000264 AZ 0.000264 IX 0.00000042 IY 0.00000021 IZ 0.00000021 YD 0.0500 ZD 0.0500
-216 218 TO 219 224 TO 225 227 PRIS AX 0.000564 AY 0.000264 AZ 0.000264 IX 0.00000042 IY 0.00000021 IZ 0.00000021 YD 0.0500 ZD 0.0500
-259 TO 260 262 264 TO 265 270 TO 271 PRIS AX 0.000564 AY 0.000264 AZ 0.000264 IX 0.00000042 IY 0.00000021 IZ 0.00000021 YD 0.0500 ZD 0.0500
-273 305 TO 306 308 310 TO 311 PRIS AX 0.000564 AY 0.000264 AZ 0.000264 IX 0.00000042 IY 0.00000021 IZ 0.00000021 YD 0.0500 ZD 0.0500
-316 TO 317 319 351 TO 352 354 PRIS AX 0.000564 AY 0.000264 AZ 0.000264 IX 0.00000042 IY 0.00000021 IZ 0.00000021 YD 0.0500 ZD 0.0500
-356 TO 357 362 TO 363 365 PRIS AX 0.000564 AY 0.000264 AZ 0.000264 IX 0.00000042 IY 0.00000021 IZ 0.00000021 YD 0.0500 ZD 0.0500
+75 TO 76 78 80 TO 81 86 TO 87 TUBE DT 0.0500 WT 0.0500 TH 0.0030
+89 121 TO 122 124 126 TO 127 TUBE DT 0.0500 WT 0.0500 TH 0.0030
+132 TO 133 135 167 TO 168 170 TUBE DT 0.0500 WT 0.0500 TH 0.0030
+172 TO 173 178 TO 179 181 213 TO 214 TUBE DT 0.0500 WT 0.0500 TH 0.0030
+216 218 TO 219 224 TO 225 227 TUBE DT 0.0500 WT 0.0500 TH 0.0030
+259 TO 260 262 264 TO 265 270 TO 271 TUBE DT 0.0500 WT 0.0500 TH 0.0030
+273 305 TO 306 308 310 TO 311 TUBE DT 0.0500 WT 0.0500 TH 0.0030
+316 TO 317 319 351 TO 352 354 TUBE DT 0.0500 WT 0.0500 TH 0.0030
+356 TO 357 362 TO 363 365 TUBE DT 0.0500 WT 0.0500 TH 0.0030
 * 75x75x3 SHS  A=864mm2 I=747792mm4 Zp=23342mm3
-77 79 82 TO 85 88 PRIS AX 0.000864 AY 0.000414 AZ 0.000414 IX 0.00000150 IY 0.00000075 IZ 0.00000075 YD 0.0750 ZD 0.0750
-90 PRIS AX 0.000864 AY 0.000414 AZ 0.000414 IX 0.00000150 IY 0.00000075 IZ 0.00000075 YD 0.0750 ZD 0.0750
+77 79 82 TO 85 88 TUBE DT 0.0750 WT 0.0750 TH 0.0030
+90 TUBE DT 0.0750 WT 0.0750 TH 0.0030
 * 160x160x3 SHS  A=1884mm2 I=7742612mm4 Zp=110934mm3
-93 TO 106 139 TO 152 185 TO 198 231 TO 244 PRIS AX 0.001884 AY 0.000924 AZ 0.000924 IX 0.00001549 IY 0.00000774 IZ 0.00000774 YD 0.1600 ZD 0.1600
-277 TO 290 323 TO 336 PRIS AX 0.001884 AY 0.000924 AZ 0.000924 IX 0.00001549 IY 0.00000774 IZ 0.00000774 YD 0.1600 ZD 0.1600
+93 TO 106 139 TO 152 185 TO 198 231 TO 244 TUBE DT 0.1600 WT 0.1600 TH 0.0030
+277 TO 290 323 TO 336 TUBE DT 0.1600 WT 0.1600 TH 0.0030
 * 90x90x3.6 SHS  A=1244mm2 I=1550621mm4 Zp=40334mm3
-107 TO 120 153 TO 166 199 TO 212 245 TO 258 PRIS AX 0.001244 AY 0.000596 AZ 0.000596 IX 0.00000310 IY 0.00000155 IZ 0.00000155 YD 0.0900 ZD 0.0900
-291 TO 304 337 TO 350 PRIS AX 0.001244 AY 0.000596 AZ 0.000596 IX 0.00000310 IY 0.00000155 IZ 0.00000155 YD 0.0900 ZD 0.0900
+107 TO 120 153 TO 166 199 TO 212 245 TO 258 TUBE DT 0.0900 WT 0.0900 TH 0.0036
+291 TO 304 337 TO 350 TUBE DT 0.0900 WT 0.0900 TH 0.0036
 * 76x76x4 SHS  A=1152mm2 I=998400mm4 Zp=31136mm3
-415 TO 430 PRIS AX 0.001152 AY 0.000544 AZ 0.000544 IX 0.00000200 IY 0.00000100 IZ 0.00000100 YD 0.0760 ZD 0.0760
+415 TO 430 TUBE DT 0.0760 WT 0.0760 TH 0.0040
 * 100x100x4 SHS  A=1536mm2 I=2363392mm4 Zp=55328mm3
-431 TO 450 PRIS AX 0.001536 AY 0.000736 AZ 0.000736 IX 0.00000473 IY 0.00000236 IZ 0.00000236 YD 0.1000 ZD 0.1000
+431 TO 450 TUBE DT 0.1000 WT 0.1000 TH 0.0040
 *
 CONSTANTS
 MATERIAL STEEL MEMB 1 TO 450
@@ -1362,6 +1368,13 @@ PDELTA ANALYSIS
 *
 PARAMETER
 CODE IS800
+* FYLD explicit, not left to STAADs default: 250 MPa = 250000 kN/m2
+* under the UNIT METER KN in force. Every member in this design is E250
+* (see REPORT.md Finding on grade choice) -- if that changes for any
+* group, FYLD must be re-declared per member list, not left as one
+* blanket value.
+*
+FYLD 250000 ALL
 * Effective lengths, member-specific -- NEVER a blanket value (see audit
 * A4). LY/LZ mapping to in-plane vs out-of-plane depends on each members
 * local axis orientation as STAAD assigns it by default; VERIFY visually
@@ -1775,10 +1788,17 @@ LZ 7.339 MEMB 414
 * the deck/purlins they carry; no separate KL declared beyond the code
 * default (span length, K=1.0).
 *
-* NOTE: no CHECK CODE issued -- member sizing/utilization in this
-* project comes from the independent Node stiffness engine
-* (structural/optimize.js), not from STAADs own IS800 design module.
-* This PARAMETER block documents the effective-length basis for a
-* reviewer who DOES want to run STAADs CHECK CODE as a second opinion.
+TRACK 2 ALL
+* CHECK CODE issued below (engineers ruling, superseding the earlier
+* no-CHECK-CODE note): sections are now TUBE, not bare PRISMATIC,
+* specifically so STAADs own IS800 steel-design module can run natively
+* -- TRACK 2 for full member-by-member capacity detail, not just the
+* PASS/FAIL summary. This is now a genuine second, independent design
+* check against this projects own Node/is800.js engine
+* (structural/optimize.js), which is still what sized every member -- if
+* the two disagree by more than a rounding amount, that is a real
+* finding to bring back, not something to silently prefer one source
+* over the other on.
 *
+CHECK CODE ALL
 FINISH
