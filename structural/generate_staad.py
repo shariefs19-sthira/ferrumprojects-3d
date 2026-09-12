@@ -524,8 +524,19 @@ w("1 0.9 3 1.5")
 w("LOAD COMBINATION 105 C5: 1.5(DL+WLUP)")
 w("1 1.5 3 1.5")
 w("*")
+w("PERFORM ANALYSIS PRINT STATICS CHECK")
+wc("P-Delta requested per brief -- syntax below not verified against "
+   "an actual STAAD session (A9 -- confirm before running).")
+w("PDELTA ANALYSIS")
 w("*")
-w("PARAMETER 1")
+wc("PARAMETER block moved here, AFTER the analysis commands (round 6 "
+   "fix): a live STAAD.Pro session read PARAMETER 1 placed between "
+   "LOAD COMBINATION 105 and PERFORM ANALYSIS as UNEXPECTED COMMAND "
+   "IN LOAD DATA for case 105 and aborted into DATA-CHECK MODE before "
+   "any analysis ran. PARAMETER blocks belong after analysis in "
+   "STAADs command sequence; the numeric 1 after PARAMETER was also "
+   "wrong -- the bare keyword is correct.")
+w("PARAMETER")
 w("CODE IS800")
 wc("Effective lengths, member-specific -- NEVER a blanket value (see "
    "audit A4). LY/LZ mapping to in-plane vs out-of-plane depends on "
@@ -534,11 +545,6 @@ wc("Effective lengths, member-specific -- NEVER a blanket value (see "
    "local axes) before trusting which is which -- not done here.")
 w("KY 1.0 ALL")
 w("KZ 1.0 ALL")
-
-def joint_dist(n1, n2):
-    x1, y1, z1 = joints[n1]
-    x2, y2, z2 = joints[n2]
-    return math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2 + (z2 - z1) ** 2)
 
 PANEL_L = SPAN / N_PANELS
 for a, b in ranges(TOP_MEMBERS):
@@ -558,6 +564,12 @@ for a, b in ranges(braced_bottom):
 for a, b in ranges(unbraced_bottom):
     w(f"LY {UNBRACED_KL_OP:.3f} MEMB {a} TO {b}" if a != b else f"LY {UNBRACED_KL_OP:.3f} MEMB {a}")
     w(f"LZ {0.85 * PANEL_L:.3f} MEMB {a} TO {b}" if a != b else f"LZ {0.85 * PANEL_L:.3f} MEMB {a}")
+
+def joint_dist(n1, n2):
+    x1, y1, z1 = joints[n1]
+    x2, y2, z2 = joints[n2]
+    return math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2 + (z2 - z1) ** 2)
+
 for mid in VERT_MEMBERS + DIAG_MEMBERS:
     m = next(mm for mm in members if mm["id"] == mid)
     L = joint_dist(m["n1"], m["n2"])
@@ -577,11 +589,6 @@ wc("NOTE: no CHECK CODE issued -- member sizing/utilization in this "
    "module. This PARAMETER block documents the effective-length "
    "basis for a reviewer who DOES want to run STAADs CHECK CODE as "
    "a second opinion.")
-w("*")
-w("PERFORM ANALYSIS PRINT STATICS CHECK")
-wc("P-Delta requested per brief -- syntax below not verified against "
-   "an actual STAAD session (A9 -- confirm before running).")
-w("PDELTA ANALYSIS")
 w("FINISH")
 
 with open(OUT_PATH, "w") as f:

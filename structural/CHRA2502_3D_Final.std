@@ -1362,8 +1362,21 @@ LOAD COMBINATION 104 C4: 0.9DL+1.5WLUP
 LOAD COMBINATION 105 C5: 1.5(DL+WLUP)
 1 1.5 3 1.5
 *
+PERFORM ANALYSIS PRINT STATICS CHECK
+* P-Delta requested per brief -- syntax below not verified against an
+* actual STAAD session (A9 -- confirm before running).
 *
-PARAMETER 1
+PDELTA ANALYSIS
+*
+* PARAMETER block moved here, AFTER the analysis commands (round 6 fix):
+* a live STAAD.Pro session read PARAMETER 1 placed between LOAD
+* COMBINATION 105 and PERFORM ANALYSIS as UNEXPECTED COMMAND IN LOAD
+* DATA for case 105 and aborted into DATA-CHECK MODE before any analysis
+* ran. PARAMETER blocks belong after analysis in STAADs command
+* sequence; the numeric 1 after PARAMETER was also wrong -- the bare
+* keyword is correct.
+*
+PARAMETER
 CODE IS800
 * Effective lengths, member-specific -- NEVER a blanket value (see audit
 * A4). LY/LZ mapping to in-plane vs out-of-plane depends on each members
@@ -1784,10 +1797,4 @@ LZ 7.339 MEMB 414
 * This PARAMETER block documents the effective-length basis for a
 * reviewer who DOES want to run STAADs CHECK CODE as a second opinion.
 *
-*
-PERFORM ANALYSIS PRINT STATICS CHECK
-* P-Delta requested per brief -- syntax below not verified against an
-* actual STAAD session (A9 -- confirm before running).
-*
-PDELTA ANALYSIS
 FINISH
