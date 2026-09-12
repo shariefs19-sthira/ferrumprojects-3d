@@ -64,6 +64,27 @@ only, no effect on analysis. Neither issue changes any tonnage, utilization, or 
 in this document — both are STAAD input syntax only. Re-run the regenerated file before
 trusting any further STAAD output.
 
+**ERRATA 4 (rounds 5-7, engineer-side runs):** three more STAAD input-syntax defects surfaced
+and were fixed, none of which touch any tonnage/utilization/force number in this document:
+(1) STAAD.Pro V8i SELECTseries6 has a hard ~80-column line limit; long **comment** lines
+(unlike data lines, which auto-wrap safely with a `-` continuation) lose their leading `*` on
+wrap and get parsed as bogus commands, erroring near quote characters — every comment is now
+reflowed under 72 columns with apostrophes stripped. (2) `PARAMETER 1` is invalid syntax (bare
+`PARAMETER`, no argument) and was also sequenced *before* `PERFORM ANALYSIS` instead of after,
+which a live session read as `UNEXPECTED COMMAND IN LOAD DATA` for the last load combination
+and aborted into DATA-CHECK MODE before any analysis ran at all — moved after the analysis
+commands, keyword fixed. (3) A separate `PERFORM ANALYSIS` immediately followed by `PDELTA
+ANALYSIS` triggered `CONSECUTIVE ANALYSIS COMMANDS, ONLY FIRST USED` — P-Delta was silently
+never running; collapsed to one `PDELTA ANALYSIS` command.
+
+**First successful analysis (round 6 file, before the P-Delta fix above):** confirmed via the
+engineer's own `.ANL` output — Case 1 (DL) reaction summary balances to the kN (applied
+336.74 kN, reaction 336.74 kN), matching this report's own independent hand-check of deck DL
++ total steel self-weight (≈336.68 kN) to within 0.02%. Max Y-displacement under DL alone,
+7.625mm, is consistent with this report's service-deflection figures once LL's larger share
+of the total gravity load is accounted for. This is the first real external validation of the
+model against a live STAAD run, independent of this project's own Node engine.
+
 ---
 
 ## 0. Input Echo (as modeled)

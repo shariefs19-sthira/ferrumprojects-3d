@@ -1362,9 +1362,14 @@ LOAD COMBINATION 104 C4: 0.9DL+1.5WLUP
 LOAD COMBINATION 105 C5: 1.5(DL+WLUP)
 1 1.5 3 1.5
 *
-PERFORM ANALYSIS PRINT STATICS CHECK
-* P-Delta requested per brief -- syntax below not verified against an
-* actual STAAD session (A9 -- confirm before running).
+* P-Delta requested per brief. Round 7 fix: this used to be a plain
+* PERFORM ANALYSIS immediately followed by PDELTA ANALYSIS -- a live
+* STAAD session threw CONSECUTIVE ANALYSIS COMMANDS, ONLY FIRST USED,
+* silently dropping P-Delta and running plain static only. Down to one
+* analysis command. Deliberately bare (no PRINT STATICS CHECK appended)
+* given two prior guesses at combined syntax on this file were both
+* wrong -- reactions/forces remain available via STAADs own
+* Post-Processing regardless of this print option.
 *
 PDELTA ANALYSIS
 *

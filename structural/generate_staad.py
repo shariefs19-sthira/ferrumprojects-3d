@@ -524,9 +524,15 @@ w("1 0.9 3 1.5")
 w("LOAD COMBINATION 105 C5: 1.5(DL+WLUP)")
 w("1 1.5 3 1.5")
 w("*")
-w("PERFORM ANALYSIS PRINT STATICS CHECK")
-wc("P-Delta requested per brief -- syntax below not verified against "
-   "an actual STAAD session (A9 -- confirm before running).")
+wc("P-Delta requested per brief. Round 7 fix: this used to be a "
+   "plain PERFORM ANALYSIS immediately followed by PDELTA ANALYSIS -- "
+   "a live STAAD session threw CONSECUTIVE ANALYSIS COMMANDS, ONLY "
+   "FIRST USED, silently dropping P-Delta and running plain static "
+   "only. Down to one analysis command. Deliberately bare (no PRINT "
+   "STATICS CHECK appended) given two prior guesses at combined "
+   "syntax on this file were both wrong -- reactions/forces remain "
+   "available via STAADs own Post-Processing regardless of this "
+   "print option.")
 w("PDELTA ANALYSIS")
 w("*")
 wc("PARAMETER block moved here, AFTER the analysis commands (round 6 "
